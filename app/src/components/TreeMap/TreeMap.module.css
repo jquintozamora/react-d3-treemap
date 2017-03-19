@@ -1,0 +1,18 @@
+
+
+:global text {
+  font: 10px sans-serif;
+}
+
+:global tspan:last-child {
+  font-size: 9px;
+  fill-opacity: 0.8;
+}
+
+:global .node rect {
+  shape-rendering: crispEdges;
+}
+
+:global .node--hover rect {
+  stroke: #000;
+}

@@ -1,3 +1,8 @@
+# react-d3-treemap
+TreeMap component based on d3.treemap
+
+
+## License
 BSD 3-Clause License
 
 Copyright (c) 2017, José Quinto (https://blog.josequinto.com)

@@ -1,0 +1,12 @@
+/*
+  * Break Points used in Media Queriess
+      768px;  ipad
+      320px;  iphone 5
+
+:root {
+  --maxWitdh: 1280px;
+  --breakPointOne: 768px;
+  --breakPointTwo: 320px;
+}
+
+*/
