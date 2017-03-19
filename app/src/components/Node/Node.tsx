@@ -5,43 +5,58 @@ import { INodeProps } from "./INodeProps";
 class Node extends React.Component<INodeProps, {}> {
 
     public render() {
+        return this._getNestedFolderTypeNode();
+    }
+
+    private _getNestedFolderTypeNode() {
         const {
-            x,
-            y,
-            width,
-            height,
-            fill,
+            x0,
+            x1,
+            y0,
+            y1,
+            backgroundColor,
+            onMouseOut,
+            onMouseOver,
+            id,
             label,
             textColor,
+            value,
+            className,
             fontSize,
-            handleMouseOver,
-            handleMouseLeave } = this.props;
-
-        const textStyle = {
-            textAnchor: "middle",
-            fill: textColor,
-            fontSize
-        };
-        const transform = `translate(${x},${y})`;
+            hasChildren
+        } = this.props;
         return (
-            <g transform={transform}>
+            <g
+                transform={`translate(${x0},${y0})`}
+                className="node"
+                onMouseOver={onMouseOver}
+                onMouseOut={onMouseOut}
+            >
                 <rect
-                    className="rd3-treemap-cell"
-                    width={width}
-                    height={height}
-                    fill={fill}
-                    onMouseOver={handleMouseOver}
-                    onMouseLeave={handleMouseLeave}
+                    id={"rect-" + id}
+                    width={x1 - x0}
+                    height={y1 - y0}
+                    fill={backgroundColor}
                 />
-                <text
-                    x={width / 2}
-                    y={height / 2}
-                    dy=".35em"
-                    style={textStyle}
-                    className="rd3-treemap-cell-text"
+                <clipPath
+                    id={"clip-" + id}
                 >
-                    {label}
+                    <use xlinkHref={"#rect-" + id + ""} />
+                </clipPath>
+                <text
+                    clipPath={"url(#clip-" + id + ")"}
+                >
+                    {
+                        hasChildren === true ?
+                            <tspan x={x0} y={y0}>
+                                {id.substring(id.lastIndexOf(".") + 1).split(/(?=[A-Z][^A-Z])/g).concat("\xa0" + value)}
+                            </tspan> :
+                            <tspan x={x0} y={y0}>
+                                {id.substring(id.lastIndexOf(".") + 1).split(/(?=[A-Z][^A-Z])/g).concat(value)}
+                            </tspan>
+                    }
                 </text>
+                <title>{name + "\n" + value}</title>
             </g>
         );
     }

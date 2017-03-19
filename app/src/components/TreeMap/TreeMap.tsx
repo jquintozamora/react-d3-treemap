@@ -67,7 +67,7 @@ class TreeMap extends React.Component<ITreeMapProps, {}> {
 
         // Get array of nodes
         const nodes = treemap(root).descendants();
-        const reactNodes = nodes.map((node, idx) => {
+        const reactNodes3 = nodes.map((node, idx) => {
             const name = (node as any).data.name;
             return (
                 <g
@@ -84,9 +84,6 @@ class TreeMap extends React.Component<ITreeMapProps, {}> {
                     />
                     <clipPath
                         id={"clip-" + name}
-                        width={node.x1 - node.x0}
-                        height={node.y1 - node.y0}
-                        fill={color(node.depth)}
                     >
                         <use xlinkHref={"#rect-" + name + ""} />
                     </clipPath>
@@ -108,20 +105,29 @@ class TreeMap extends React.Component<ITreeMapProps, {}> {
             );
         }, this);
 
-        const reactNodesOld = nodes.map((node, idx) => (
-            <NodeContainer
-                key={idx}
-                x={node.x0}
-                y={node.y0}
-                width={node.x1}
-                height={node.y1}
-                fill={(color as any)(node.id)}
-                label={(node as any).data.name}
-                fontSize={"14px"}
-                textColor={"white"}
-                hoverAnimation={true}
-            />
-        ), this);
+        const reactNodes = nodes.map((node, idx) => {
+            const name = (node as any).data.name;
+            const hasChildren = node.children && node.children.length > 0 ? true : false;
+            return (
+                <NodeContainer
+                    key={idx}
+                    x0={node.x0}
+                    y0={node.y0}
+                    x1={node.x1}
+                    y1={node.y1}
+                    backgroundColor={color(node.depth)}
+                    label={name}
+                    id={name}
+                    fontSize={"14px"}
+                    textColor={"white"}
+                    className="node"
+                    depth={node.depth}
+                    hasChildren={hasChildren}
+                    value={node.value.toString()}
+                    hoverAnimation={true}
+                />
+            );
+        }, this);
 
         return (
             <svg
