@@ -14,20 +14,16 @@ import { data } from "../../data/data";
 import NodeContainer from "../NodeContainer/NodeContainer";
 
 import { ITreeMapProps } from "./ITreeMapProps";
+import { ITreeMapState } from "./ITreeMapState";
 
-class TreeMap extends React.Component<ITreeMapProps, {}> {
+class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
-    public hovered(hover: number) {
-        return (e: any) => {
-            e.stopPropagation();
-            console.log(e.target);
-            // Todo, transfer the hover class to React state at Node component level
+    constructor(props: any, context: any) {
+        super(props, context);
 
-            // d.ancestors().map(function (d: any) { return d.node; })
-            //     .classed("node--hover", hover)
-            //     .select("rect")
-            //     .attr("width", function (d: any) { return d.x1 - d.x0 - hover; })
-            //     .attr("height", function (d: any) { return d.y1 - d.y0 - hover; });
+        // Default State values
+        this.state = {
+            scopedData: data
         };
     }
 
@@ -40,8 +36,8 @@ class TreeMap extends React.Component<ITreeMapProps, {}> {
         // Other react projects:
         // https://github.com/yang-wei/rd3/blob/master/src/treemap/Treemap.jsx
 
-        const width = 600,
-            height = 300;
+        const width = 1600,
+            height = 900;
 
         const formatConst = format(",d");
         // var color = d3.scaleMagma()
@@ -61,49 +57,12 @@ class TreeMap extends React.Component<ITreeMapProps, {}> {
         //      If the data is in JSON we use d3.hierarchy
         //      If the data is in flat CSV we can use d3.stratify
         // const root = d3.hierarchy(data, (d: any) => { return d && d.map((item: any) => {return { item: item, my: "hi"}; });});
-        const root = d3.hierarchy(data)
+        const root = d3.hierarchy(this.state.scopedData)
             .sum((d: any) => d.value)
             .sort((a, b) => b.height - a.height || b.value - a.value);
 
         // Get array of nodes
         const nodes = treemap(root).descendants();
-        const reactNodes3 = nodes.map((node, idx) => {
-            const name = (node as any).data.name;
-            return (
-                <g
-                    transform={`translate(${node.x0},${node.y0})`}
-                    className="node"
-                    onMouseOver={this.hovered(1)}
-                    onMouseOut={this.hovered(0)}
-                >
-                    <rect
-                        id={"rect-" + name}
-                        width={node.x1 - node.x0}
-                        height={node.y1 - node.y0}
-                        fill={color(node.depth)}
-                    />
-                    <clipPath
-                        id={"clip-" + name}
-                    >
-                        <use xlinkHref={"#rect-" + name + ""} />
-                    </clipPath>
-                    <text
-                        clipPath={"url(#clip-" + name + ")"}
-                    >
-                        {
-                            node.children ?
-                                <tspan x={idx ? null : 4} y={13}>
-                                    {name.substring(name.lastIndexOf(".") + 1).split(/(?=[A-Z][^A-Z])/g).concat("\xa0" + formatConst(node.value))}
-                                </tspan> :
-                                <tspan x={4} y={13 + idx * 10}>
-                                    {name.substring(name.lastIndexOf(".") + 1).split(/(?=[A-Z][^A-Z])/g).concat(formatConst(node.value))}
-                                </tspan>
-                        }
-                    </text>
-                    <title>{name + "\n" + formatConst(node.value)}</title>
-                </g>
-            );
-        }, this);
 
         const reactNodes = nodes.map((node, idx) => {
             const name = (node as any).data.name;
@@ -116,15 +75,18 @@ class TreeMap extends React.Component<ITreeMapProps, {}> {
                     x1={node.x1}
                     y1={node.y1}
                     backgroundColor={color(node.depth)}
+                    rectStroke={"transparent"}
+                    id={idx}
                     label={name}
-                    id={name}
+                    name={name}
                     fontSize={"14px"}
                     textColor={"white"}
                     className="node"
                     depth={node.depth}
                     hasChildren={hasChildren}
-                    value={node.value.toString()}
+                    value={formatConst(node.value)}
                     hoverAnimation={true}
+                    onClick={this._onNodeClick}
                 />
             );
         }, this);
@@ -138,6 +100,12 @@ class TreeMap extends React.Component<ITreeMapProps, {}> {
                 {reactNodes}
             </svg>
         );
+    }
+
+    private _onNodeClick = (e: any ) => {
+        debugger;
+        console.log(e);
+        // this.setState({scopedData:{}});
     }
 
 }

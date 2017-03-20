@@ -15,9 +15,11 @@ class Node extends React.Component<INodeProps, {}> {
             y0,
             y1,
             backgroundColor,
+            rectStroke,
             onMouseOut,
             onMouseOver,
-            id,
+            onClick,
+            name,
             label,
             textColor,
             value,
@@ -31,34 +33,50 @@ class Node extends React.Component<INodeProps, {}> {
                 className="node"
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
+                onClick={onClick}
             >
                 <rect
-                    id={"rect-" + id}
+                    id={"rect-" + name}
                     width={x1 - x0}
                     height={y1 - y0}
                     fill={backgroundColor}
+                    stroke={rectStroke}
                 />
                 <clipPath
-                    id={"clip-" + id}
+                    id={"clip-" + name}
                 >
-                    <use xlinkHref={"#rect-" + id + ""} />
+                    <use xlinkHref={"#rect-" + name + ""} />
                 </clipPath>
                 <text
-                    clipPath={"url(#clip-" + id + ")"}
+                    clipPath={"url(#clip-" + name + ")"}
                 >
-                    {
-                        hasChildren === true ?
-                            <tspan x={x0} y={y0}>
-                                {id.substring(id.lastIndexOf(".") + 1).split(/(?=[A-Z][^A-Z])/g).concat("\xa0" + value)}
-                            </tspan> :
-                            <tspan x={x0} y={y0}>
-                                {id.substring(id.lastIndexOf(".") + 1).split(/(?=[A-Z][^A-Z])/g).concat(value)}
-                            </tspan>
-                    }
+                    {this._getLabelNewLine(label, value, hasChildren)}
                 </text>
-                <title>{name + "\n" + value}</title>
+                <title>{label + "\n" + value}</title>
             </g>
         );
+    }
+
+    private _getLabelNewLine(label: string, value: string, hasChildren: boolean) {
+        if (hasChildren === true) {
+            return (
+                <tspan x={4} y={13} >
+                    {label + "\xa0" + value}
+                </tspan>
+            );
+        } else {
+            if (label) {
+                return label.split(/(?=[A-Z][^A-Z])/g).concat(value).map((item, index) => {
+                    return (
+                        <tspan key={index} x={4} y={13 + index * 10} >
+                            {item}
+                        </tspan>
+                    );
+                });
+            }
+
+        }
+
     }
 }
 export default Node;

@@ -13,20 +13,21 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
 
         // Default State values
         this.state = {
-            fill: this.props.backgroundColor
+            fill: this.props.backgroundColor,
+            rectStroke: this.props.rectStroke
         };
     }
 
     public render() {
-        console.log("Render. NodeContainer");
-        const { hoverAnimation } = this.props;
-
+        const { hoverAnimation, onClick } = this.props;
         return (
             <Node
                 {...this.props}
                 backgroundColor={this.state.fill}
+                rectStroke={this.state.rectStroke}
                 onMouseOver={hoverAnimation ? this._animateCell : null}
                 onMouseOut={hoverAnimation ? this._restoreCell : null}
+                onClick={onClick}
             />
         );
     }
@@ -34,13 +35,15 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
 
     private _animateCell = () => {
         this.setState({
-            fill: Utils.shade(this.props.backgroundColor, 0.05)
+            fill: Utils.shade(this.props.backgroundColor, 0.05),
+            rectStroke: "#000"
         });
     }
 
     private _restoreCell = () => {
         this.setState({
-            fill: this.props.backgroundColor
+            fill: this.props.backgroundColor,
+            rectStroke: ""
         });
     }
 }

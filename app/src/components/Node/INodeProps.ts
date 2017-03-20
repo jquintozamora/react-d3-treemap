@@ -8,8 +8,9 @@ export interface INodeProps {
     depth: number;
 
     // Label and name props
-    id: string;
-    label: string; // name
+    id: number;
+    name: string;
+    label: string;
     value: string;
 
     // Style props
@@ -17,10 +18,12 @@ export interface INodeProps {
     backgroundColor: string; // fill
     textColor: string;
     fontSize: string;
+    rectStroke: string;
 
     // Events props
     onMouseOver?: any;
     onMouseOut?: any;
+    onClick?: any;
 
     // Others
     hasChildren: boolean;
