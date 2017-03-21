@@ -6,8 +6,10 @@ TreeMap component based on d3.treemap
 - Add transitions:
     https://facebook.github.io/react/docs/animation.html
     https://swizec.com/blog/using-d3js-transitions-in-react/swizec/6797
+    https://github.com/Swizec/react-d3js-es6-ebook/tree/master/manuscript/code_samples/es6/Histogram
 
-- Add router: https://github.com/kuy/treemap-with-router/blob/master/src/treemap.js
+- Add router:
+    https://github.com/kuy/treemap-with-router/blob/master/src/treemap.js
 
 ## License
 BSD 3-Clause License
