@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-// AppContainer is a necessary wrapper component for HMR
+// AppContainer is a necessary wrapper component for HMR.
 // We use require because TypeScript type warning,
 // tslint:disable
 const { AppContainer } = require("react-hot-loader");

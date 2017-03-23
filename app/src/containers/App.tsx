@@ -8,8 +8,8 @@ export default class App extends React.Component<{}, {}> {
     public render() {
         return (
             <TreeMap
-                height={700}
-                width={700}
+                height={600}
+                width={600}
                 data={data}
             />
         );

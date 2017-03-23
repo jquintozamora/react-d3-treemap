@@ -7,7 +7,7 @@ export interface INodeProps {
     y1: number;
     depth: number;
 
-    // Label and name props
+    // Label and name props.
     id: number;
     name: string;
     label: string;

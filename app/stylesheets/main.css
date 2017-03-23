@@ -8,7 +8,7 @@
         4. Base:        bare elements, Unclassed HTML elements (type selectors), Page, Headings, Images, Tables
         5. Objects:     layout classes, wrapper, layout, media
         6. Components:  UI Classes
-        7. Trumps:      Overrides, IDs and !important (Rules with high specificity)
+        7. Trumps:      Overrides, IDs and !important (Rules with high specificity).
 
     https://github.com/inuitcss/inuitcss
  */
@@ -20,24 +20,14 @@
 @import '1_Settings/_settings.breakpoints.css';
 @import '1_Settings/_settings.colors.css';
 
-
 /**
  * 2. TOOLS
     Node Modules Styles
-
-    @import 'react-select/dist/react-select.css';
  */
-/*
-@import 'office-ui-fabric-core/dist/css/fabric.min.css';
-*/
 
 /**
  * 3. GENERIC
  */
-/*
-@import '3_Generic/_generic.reset.css';
-*/
-
 
 /**
  * 4. BASE
@@ -46,16 +36,12 @@
 /**
  * 5. OBJECTS
  */
-@import '5_Objects/_objects.reactSelect.css';
-
-
 
 /**
  * 6. COMPONENTS
  *  NOTE: On this project, we decided to use CSS-Modules for components,
  *        Then, every React component will have Component.module.css under its folder
  */
-
 
 /**
  * 7. TRUMPS
