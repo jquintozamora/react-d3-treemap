@@ -1,12 +1,17 @@
 import * as React from "react";
 import TreeMap from "../components/TreeMap/TreeMap";
 
+import { data } from "../data/data";
 
 
 export default class App extends React.Component<{}, {}> {
     public render() {
         return (
-            <TreeMap />
+            <TreeMap
+                height={700}
+                width={700}
+                data={data}
+            />
         );
     }
 }

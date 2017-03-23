@@ -11,6 +11,15 @@ TreeMap component based on d3.treemap
 - Add router:
     https://github.com/kuy/treemap-with-router/blob/master/src/treemap.js
 
+- Samples
+Tree map based on d3:
+https://bl.ocks.org/mbostock/911ad09bdead40ec0061
+https://bl.ocks.org/mbostock/f85ffb3a5ac518598043
+CLickable: https://bl.ocks.org/mbostock/8fe6fa6ed1fa976e5dd76cfa4d816fec
+Other react projects:
+https://github.com/yang-wei/rd3/blob/master/src/treemap/Treemap.jsx
+
+
 ## License
 BSD 3-Clause License
 

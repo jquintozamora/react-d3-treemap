@@ -30,10 +30,12 @@
     "@types/d3-color": "^1.0.4",
     "@types/d3-format": "^1.1.0",
     "@types/d3-hierarchy": "^1.1.0",
+    "@types/d3-interpolate": "^1.1.5",
     "@types/d3-scale": "^1.0.7",
     "d3-color": "^1.0.3",
     "d3-format": "^1.1.1",
     "d3-hierarchy": "^1.1.4",
+    "d3-interpolate": "^1.1.4",
     "d3-scale": "^1.0.5"
   },
   "peerDependencies": {
