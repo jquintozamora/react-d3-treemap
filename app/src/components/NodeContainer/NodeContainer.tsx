@@ -13,8 +13,8 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
 
         // Default State values
         this.state = {
-            fill: this.props.backgroundColor,
-            rectStroke: this.props.rectStroke
+            bgOpacity: "1",
+            borderColorHover: "transparent"
         };
     }
 
@@ -23,8 +23,8 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         return (
             <Node
                 {...this.props}
-                backgroundColor={this.state.fill}
-                rectStroke={this.state.rectStroke}
+                bgOpacity={this.state.bgOpacity}
+                borderColorHover={this.state.borderColorHover}
                 onMouseOver={hoverAnimation ? this._animateCell : null}
                 onMouseOut={hoverAnimation ? this._restoreCell : null}
                 onClick={onClick}
@@ -35,15 +35,15 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
 
     private _animateCell = () => {
         this.setState({
-            fill: Utils.shade(this.props.backgroundColor, 0.05),
-            rectStroke: "#000"
+            bgOpacity:  "0.8",
+            borderColorHover: this.props.borderColorHover
         });
     }
 
     private _restoreCell = () => {
         this.setState({
-            fill: this.props.backgroundColor,
-            rectStroke: ""
+            bgOpacity: "1",
+            borderColorHover: ""
         });
     }
 }

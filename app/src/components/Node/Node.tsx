@@ -14,8 +14,9 @@ class Node extends React.Component<INodeProps, {}> {
             x1,
             y0,
             y1,
-            backgroundColor,
-            rectStroke,
+            bgColor,
+            bgOpacity,
+            borderColorHover,
             onMouseOut,
             onMouseOver,
             onClick,
@@ -39,8 +40,9 @@ class Node extends React.Component<INodeProps, {}> {
                     id={"rect-" + name}
                     width={x1 - x0}
                     height={y1 - y0}
-                    fill={backgroundColor}
-                    stroke={rectStroke}
+                    fill={bgColor}
+                    fillOpacity={bgOpacity}
+                    stroke={borderColorHover}
                 />
                 <clipPath
                     id={"clip-" + name}
@@ -58,9 +60,10 @@ class Node extends React.Component<INodeProps, {}> {
     }
 
     private _getLabelNewLine(label: string, value: string, hasChildren: boolean) {
+        const { textColor } = this.props;
         if (hasChildren === true) {
             return (
-                <tspan x={4} y={13} >
+                <tspan fill={textColor} x={4} y={13} >
                     {label + "\xa0" + value}
                 </tspan>
             );
@@ -68,7 +71,7 @@ class Node extends React.Component<INodeProps, {}> {
             if (label) {
                 return label.split(/(?=[A-Z][^A-Z])/g).concat(value).map((item, index) => {
                     return (
-                        <tspan key={index} x={4} y={13 + index * 10} >
+                        <tspan fill={textColor} key={index} x={4} y={13 + index * 10} >
                             {item}
                         </tspan>
                     );

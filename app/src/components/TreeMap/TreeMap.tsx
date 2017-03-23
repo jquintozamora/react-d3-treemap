@@ -7,14 +7,9 @@ import {
     hierarchy as d3hierarchy
 } from "d3-hierarchy";
 import {
-    scaleSequential,
     scaleLinear,
-    interpolateViridis,
-    interpolateCool,
-    interpolateCubehelixDefault
 } from "d3-scale";
-import { interpolateRgb, interpolateHcl } from "d3-interpolate";
-import { rgb } from "d3-color";
+import { interpolateHcl } from "d3-interpolate";
 
 /* tslint:disable:no-var-requires */
 const styles: any = require("./TreeMap.module.css");
@@ -31,15 +26,19 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         data: null,
         height: 600,
         width: 600,
-        valueFormat: ",d"
+        valueFormat: ",d",
+        bgColorRangeLow: "#007AFF",
+        bgColorRangeHigh: "#FFF500",
+        colorText: "#000",
+        borderColorHover: "#000"
     };
 
-    // Internal property to store the value format function
+    // Numeric value format function
     private _valueFormatFunction: (n: number) => string;
-    // Internal property to store the value format function
+    // Background Color function
     private _nodesBackgroundColorFunction: (t: number) => string;
 
-    constructor(props: any, context: any) {
+    constructor(props: ITreeMapProps, context: any) {
         super(props, context);
 
         // Default State values
@@ -50,39 +49,21 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         };
 
         this._valueFormatFunction = format(this.props.valueFormat);
-        this._nodesBackgroundColorFunction = scaleSequential(interpolateViridis)
-            .domain([-4, 4]);
 
-            // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/8941
-            // http://bl.ocks.org/jfreyre/b1882159636cc9e1283a
-        var colorScale = scaleLinear<string>()
-            .domain([-1, 5])
-            .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
-            .interpolate(interpolateHcl);
-
-        // this._nodesBackgroundColorFunction = scaleLinear<string>()
-        //     .domain([1, 100])
-        //     .interpolate(interpolateHcl)
-        //     .range(["#007AFF", '#FFF500']);
-        ;
-        //.domain([1, 20])
-        //.interpolate(interpolateRgb)
-        //.range(["#007AFF", '#FFF500']); //interpolateHsl interpolateHcl interpolateRgb
-        //.domain([1, 100])
-        //.interpolate(interpolateHcl)
-        //.range([rgb("#007AFF"), rgb('#FFF500')]);
-
+        // this._nodesBackgroundColorFunction = scaleSequential(interpolateViridis)
+        //    .domain([-4, 4]);
+        this._nodesBackgroundColorFunction = scaleLinear<any>()
+            .domain([0, Utils.getDepth(this.props.data) - 1])
+            .interpolate(interpolateHcl)
+            .range([props.bgColorRangeLow, props.bgColorRangeHigh]);
     }
 
 
     public render() {
         console.log("TreeMap. Render");
 
-        const { valueFormat } = this.props;
+        const { valueFormat, colorText, borderColorHover } = this.props;
         const { width, height } = this.state;
-
-        // var color = d3.scaleMagma()
-
 
         // 1. Create treemap structure
         const treemap = d3treemap()
@@ -106,6 +87,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         const reactNodes = nodes.map((node, idx) => {
             const name = (node as any).data.name;
             const hasChildren = node.children && node.children.length > 0 ? true : false;
+            const backgroundColor = this._nodesBackgroundColorFunction(node.depth);
+            const value = this._valueFormatFunction(node.value);
             return (
                 <NodeContainer
                     key={idx}
@@ -113,17 +96,18 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                     y0={node.y0}
                     x1={node.x1}
                     y1={node.y1}
-                    backgroundColor={this._nodesBackgroundColorFunction(node.depth)}
-                    rectStroke={"transparent"}
+                    bgColor={backgroundColor}
+                    bgOpacity="1"
+                    borderColorHover={borderColorHover}
                     id={idx}
                     label={name}
                     name={name}
                     fontSize={"14px"}
-                    textColor={"white"}
+                    textColor={colorText}
                     className="node"
                     depth={node.depth}
                     hasChildren={hasChildren}
-                    value={this._valueFormatFunction(node.value)}
+                    value={value}
                     hoverAnimation={true}
                     onClick={this._onNodeClick}
                 />

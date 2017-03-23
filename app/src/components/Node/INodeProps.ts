@@ -15,10 +15,11 @@ export interface INodeProps {
 
     // Style props
     className: string;
-    backgroundColor: string; // fill
+    bgColor: string; // fill
+    bgOpacity: string;
     textColor: string;
     fontSize: string;
-    rectStroke: string;
+    borderColorHover: string;
 
     // Events props
     onMouseOver?: any;

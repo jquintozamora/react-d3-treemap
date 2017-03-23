@@ -19,6 +19,9 @@ CLickable: https://bl.ocks.org/mbostock/8fe6fa6ed1fa976e5dd76cfa4d816fec
 Other react projects:
 https://github.com/yang-wei/rd3/blob/master/src/treemap/Treemap.jsx
 
+custom colors:
+https://github.com/DefinitelyTyped/DefinitelyTyped/issues/8941
+http://bl.ocks.org/jfreyre/b1882159636cc9e1283a
 
 ## License
 BSD 3-Clause License
