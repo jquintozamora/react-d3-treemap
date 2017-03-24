@@ -32,6 +32,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         height: 600,
         width: 600,
         valueFormat: ",d",
+        // These props will be passed from outer component if needed
         // bgColorRangeLow: "#007AFF",
         // bgColorRangeHigh: "#FFF500",
         colorText: "#000",
