@@ -1,6 +1,8 @@
 # react-d3-treemap
 TreeMap component based on d3.treemap
 
+It´s based on [Mike Bostock´s Treemap](https://bl.ocks.org/mbostock/911ad09bdead40ec0061) design.
+
 ![React-d3-treemap-png](./assets/react-d3-treemap.png)
 
 ## License
