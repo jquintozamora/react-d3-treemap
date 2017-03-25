@@ -1,6 +1,7 @@
 # react-d3-treemap
 TreeMap component based on d3.treemap
 
+![React-d3-treemap-png](./assets/react-d3-treemap.png)
 
 ## License
 BSD 3-Clause License
