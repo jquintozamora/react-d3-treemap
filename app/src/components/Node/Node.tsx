@@ -22,9 +22,10 @@ class Node extends React.Component<INodeProps, {}> {
             onMouseOver,
             onClick,
             name,
+            id,
             label,
             textColor,
-            value,
+            valueWithFormat,
             className,
             fontSize,
             hasChildren
@@ -33,6 +34,7 @@ class Node extends React.Component<INodeProps, {}> {
             <g
                 transform={`translate(${x0},${y0})`}
                 className="node"
+                id={id}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
                 onClick={onClick}
@@ -53,9 +55,9 @@ class Node extends React.Component<INodeProps, {}> {
                 <text
                     clipPath={"url(#clip-" + name + ")"}
                 >
-                    {this._getLabelNewLine(label, value, hasChildren)}
+                    {this._getLabelNewLine(label, valueWithFormat, hasChildren)}
                 </text>
-                <title>{label + "\n" + value}</title>
+                <title>{label + "\n" + valueWithFormat}</title>
             </g>
         );
     }

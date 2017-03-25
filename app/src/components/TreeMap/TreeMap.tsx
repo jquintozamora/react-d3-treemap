@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as ReactTransitionGroup from "react-addons-transition-group";
 
 import NodeContainer from "../NodeContainer/NodeContainer";
 import { Utils } from "../../utils/Utils";
@@ -58,8 +57,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             width: this.props.width
         };
 
-
-
+        // Format function
         this._valueFormatFunction = format(this.props.valueFormat);
 
         // Create bgColorFunction
@@ -78,13 +76,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
 
     public render() {
-        console.log("TreeMap. Render.");
-
         const { valueFormat, colorText, borderColorHover } = this.props;
         const { width, height } = this.state;
-
-        this._x = scaleLinear().range([0, width]);
-        this._y = scaleLinear().range([0, height]);
 
         // 1. Create treemap structure
         this._treemap = d3treemap()
@@ -108,80 +101,41 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             const name = (node as any).data.name;
             const hasChildren = node.children && node.children.length > 0 ? true : false;
             const backgroundColor = this._nodesbgColorFunction(node.depth);
-            const value = this._valueFormatFunction(node.value);
+            const valueWithFormat = this._valueFormatFunction(node.value);
             return (
                 <NodeContainer
+                    {...node}
+                    id={"g-" + idx}
                     key={idx}
-                    x0={node.x0}
-                    y0={node.y0}
-                    x1={node.x1}
-                    y1={node.y1}
                     bgColor={backgroundColor}
                     bgOpacity="1"
                     borderColorHover={borderColorHover}
-                    id={idx}
                     label={name}
                     name={name}
                     fontSize={"14px"}
                     textColor={colorText}
                     className="node"
-                    depth={node.depth}
                     hasChildren={hasChildren}
-                    value={value}
                     hoverAnimation={true}
                     onClick={this._onNodeClick}
+                    valueWithFormat={valueWithFormat}
                 />
             );
         });
 
-        let transform = `translate(${120}, ${50})`;
         return (
             <svg
                 className="treemap__Container"
                 height={height}
                 width={width}
-                transform={transform}
             >
-                <ReactTransitionGroup component="g">
-                    {reactNodes}
-                </ReactTransitionGroup>
+                {reactNodes}
             </svg>
         );
     }
 
-    // private zoom(d: any) {
-    //     const kx = this.state.width / d.dx;
-    //     const ky = this.state.height / d.dy;
-    //     this._x.domain([d.x, d.x + d.dx]);
-    //     this._x.domain([d.y, d.y + d.dy]);
-
-    //     var t = svg.selectAll("g.cell").transition()
-    //         .duration(750)
-    //         .attr("transform", (d: any) => {
-    //             return "translate(" + this._x(d.x) + "," + this._y(d.y) + ")";
-    //         });
-
-    //     t.select("rect")
-    //         .attr("width", function (d) { return kx * d.dx - 1; })
-    //         .attr("height", function (d) { return ky * d.dy - 1; })
-
-    //     t.select("text")
-    //         .attr("x", function (d) { return kx * d.dx / 2; })
-    //         .attr("y", function (d) { return ky * d.dy / 2; })
-    //         .style("opacity", function (d) { return kx * d.dx > d.w ? 1 : 0; });
-
-    //     node = d;
-    //     d3.event.stopPropagation();
-    // }
-
-
     private _onNodeClick = (e: any) => {
-        console.log(e);
-        // this.setState({scopedData:{}});
-        // this.setState({
-        //     height: 900,
-        //     width: 1200
-        // });
+        console.log(e.currentTarget);
     }
 
 }
