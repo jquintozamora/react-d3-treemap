@@ -1,11 +1,6 @@
 import * as React from "react";
 import { Utils } from "../../utils/Utils";
 
-import { findDOMNode } from "react-dom";
-import { select } from "d3-selection";
-import { transition } from "d3-transition";
-import { easeCubicInOut } from "d3-ease";
-
 import Node from "../Node/Node";
 
 import { INodeContainerProps } from "./INodeContainerProps";

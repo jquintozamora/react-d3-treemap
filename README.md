@@ -2,39 +2,6 @@
 TreeMap component based on d3.treemap
 
 
-### Todo
-- Add transitions:
-    https://facebook.github.io/react/docs/animation.html
-    https://swizec.com/blog/using-d3js-transitions-in-react/swizec/6797
-    https://github.com/Swizec/react-d3js-es6-ebook/tree/master/manuscript/code_samples/es6/Histogram
-    http://mbostock.github.io/d3/talk/20111018/treemap.html
-
-- Add router:
-    https://github.com/kuy/treemap-with-router/blob/master/src/treemap.js
-
-- Samples
-Nice animations:
-https://sghall.github.io/resonance/#/examples/alluvial-chart
-https://github.com/sghall/react-d3-transitions/tree/master/src/routes/examples/statesByAge
-https://github.com/sghall/react-d3-transitions/blob/master/src/routes/examples/packedByAge/components/Circle.js
-
-https://github.com/sghall/react-d3-transitions/blob/master/src/routes/examples/packedByAge/components/index.js
-https://github.com/sghall/resonance/blob/master/src/NodeGroup/NodeGroup.js
-https://github.com/sghall/resonance/blob/master/src/core/withTransitions/withTransitions.js
-
-
-
-Tree map based on d3:
-https://bl.ocks.org/mbostock/911ad09bdead40ec0061
-https://bl.ocks.org/mbostock/f85ffb3a5ac518598043
-CLickable: https://bl.ocks.org/mbostock/8fe6fa6ed1fa976e5dd76cfa4d816fec
-Other react projects:
-https://github.com/yang-wei/rd3/blob/master/src/treemap/Treemap.jsx
-
-custom colors:
-https://github.com/DefinitelyTyped/DefinitelyTyped/issues/8941
-http://bl.ocks.org/jfreyre/b1882159636cc9e1283a
-
 ## License
 BSD 3-Clause License
 

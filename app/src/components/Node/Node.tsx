@@ -1,6 +1,5 @@
 import * as React from "react";
 
-
 import { INodeProps } from "./INodeProps";
 
 class Node extends React.Component<INodeProps, {}> {

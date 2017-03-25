@@ -8,14 +8,6 @@ const { AppContainer } = require("react-hot-loader");
 // tslint:enable
 
 /*
-  Main App CSS
-    - Used for introduce CSS in webpack workflow
-    - In webpack Dev it will be injected as /**
-    - In webpack prod it will be extracted as a separate bundled file
- */
-import "./../stylesheets/main.css";
-
-/*
   Main App Container
  */
 import App from "./containers/App";

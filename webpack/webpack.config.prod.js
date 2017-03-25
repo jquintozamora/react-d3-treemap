@@ -107,37 +107,6 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                include: resolve(__dirname, './../app/stylesheets'),  // Use include instead exclude to improve the build performance
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                sourceMap: true,
-                                importLoaders: 1,
-                                minimize: true
-                            }
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                sourceMap: true,
-                                plugins: () => [
-                                    require("postcss-import")(),
-                                    require("postcss-nesting")(),
-                                    require("postcss-custom-properties")(),
-                                    require("autoprefixer")({
-                                        browsers: ['last 2 versions', 'ie >= 9']
-                                    })
-                                ]
-                            }
-                        }
-                    ]
-                })
-            },
-            {
-                test: /\.css$/i,
                 include: resolve(__dirname, './../app/src'),
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
