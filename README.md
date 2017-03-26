@@ -1,6 +1,11 @@
 # react-d3-treemap
 TreeMap component based on d3.treemap
 
+- TODO: Refactor
+- Join with react-d3-treemap project
+- Create combined props
+- Add animations for zoom
+
 It´s based on [Mike Bostock´s Treemap](https://bl.ocks.org/mbostock/911ad09bdead40ec0061) design.
 
 ![React-d3-treemap-png](./assets/react-d3-treemap.png)

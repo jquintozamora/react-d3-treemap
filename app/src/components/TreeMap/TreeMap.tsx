@@ -5,6 +5,7 @@ import { Utils } from "../../utils/Utils";
 import { format } from "d3-format";
 import {
     TreemapLayout,
+    HierarchyRectangularNode,
     treemap as d3treemap,
     hierarchy as d3hierarchy
 } from "d3-hierarchy";
@@ -14,6 +15,9 @@ import {
     interpolateViridis
 } from "d3-scale";
 import { interpolateHcl } from "d3-interpolate";
+import {
+    Breadcrumb, IBreadcrumbItem
+} from 'office-ui-fabric-react/lib/Breadcrumb';
 
 /* tslint:disable:no-var-requires */
 const styles: any = require("./TreeMap.module.css");
@@ -44,8 +48,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     private _nodesbgColorFunction: (t: number) => string;
 
     private _treemap: TreemapLayout<{}>;
-    private _x: any;
-    private _y: any;
+    private _rootData: any;
+    private _nodes: HierarchyRectangularNode<{}>[];
 
     constructor(props: ITreeMapProps, context: any) {
         super(props, context);
@@ -54,7 +58,15 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         this.state = {
             scopedData: this.props.data,
             height: this.props.height,
-            width: this.props.width
+            width: this.props.width,
+            xScaleFactor: 1,
+            yScaleFactor: 1,
+            xScaleFunction: scaleLinear().range([0, this.props.width]),
+            yScaleFunction: scaleLinear().range([0, this.props.height]),
+            zoomEnabled: false,
+            // TODO: Replace data.name by id
+            breadCrumbItems: [{ text: '[Root]', 'key': this.props.data.name, onClick: this._onBreadcrumbItemClicked }],
+            selectedId: this.props.data.name
         };
 
         // Format function
@@ -89,23 +101,41 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         // 2. Before compute a hierarchical layout, we need a root node
         //    If the data is in JSON we use d3.hierarchy
-        const root = d3hierarchy(this.state.scopedData)
+        this._rootData = d3hierarchy(this.state.scopedData)
             .sum((d: any) => d.value)
             .sort((a, b) => b.height - a.height || b.value - a.value);
 
-        // Get array of nodes
-        const nodes = this._treemap(root)
-            .descendants();
+        // 3. Get array of nodes
+        this._nodes = this._treemap(this._rootData)
+            .descendants()
 
-        const reactNodes = nodes.map((node, idx) => {
+        let breadCrumbItems;
+        const reactNodes = this._nodes.map((node, idx) => {
             const name = (node as any).data.name;
+            // TODO: Change this Id value by the right id
+            const id = (node as any).data.name;
             const hasChildren = node.children && node.children.length > 0 ? true : false;
             const backgroundColor = this._nodesbgColorFunction(node.depth);
             const valueWithFormat = this._valueFormatFunction(node.value);
+
+            // Get breadcrumb nodes using path function.
+            if (id === this.state.selectedId) {
+                breadCrumbItems = this._treemap(this._rootData)
+                    .path(node)
+                    .map((n: any) => {
+                        return { text: n.data.name, 'key': n.data.name, onClick: this._onBreadcrumbItemClicked };
+                    });
+            }
+
             return (
                 <NodeContainer
                     {...node}
-                    id={"g-" + idx}
+                    id={id}
+                    xScaleFactor={this.state.xScaleFactor}
+                    yScaleFactor={this.state.yScaleFactor}
+                    xScaleFunction={this.state.xScaleFunction}
+                    yScaleFunction={this.state.yScaleFunction}
+                    zoomEnabled={this.state.zoomEnabled}
                     key={idx}
                     bgColor={backgroundColor}
                     bgOpacity="1"
@@ -123,19 +153,56 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             );
         });
 
+
+
         return (
-            <svg
-                className="treemap__Container"
-                height={height}
-                width={width}
-            >
-                {reactNodes}
-            </svg>
+            <div>
+                <Breadcrumb
+                    items={breadCrumbItems}
+                    maxDisplayedItems={4} />
+                <svg
+                    className="treemap__Container"
+                    height={height}
+                    width={width}
+                >
+                    {reactNodes}
+                </svg>
+            </div>
+
         );
     }
 
-    private _onNodeClick = (e: any) => {
-        console.log(e.currentTarget);
+    private _onBreadcrumbItemClicked = (ev: React.MouseEvent<HTMLElement>, item: IBreadcrumbItem) => {
+        this._zoomTo(item.key);
+    }
+
+    private _onNodeClick = (ev: React.MouseEvent<HTMLElement>) => {
+        this._zoomTo(ev.currentTarget.id);
+    }
+
+    private _zoomTo(nodeId: string) {
+        const currentNodeArray = this._nodes.filter((item: any) => {
+            return item.data.name === nodeId;
+        });
+        if (currentNodeArray.length > 0) {
+            const currentNode = currentNodeArray[0];
+            var x = currentNode.x0;
+            var y = currentNode.y0;
+            var dx = currentNode.x1 - currentNode.x0;
+            var dy = currentNode.y1 - currentNode.y0;
+            const xScaleFactor = this.state.width / dx;
+            const yScaleFactor = this.state.height / dy;
+            this.setState({
+                xScaleFactor,
+                yScaleFactor,
+                xScaleFunction: this.state.xScaleFunction.domain([x, x + dx]),
+                yScaleFunction: this.state.yScaleFunction.domain([y, y + dy]),
+                zoomEnabled: true,
+                selectedId: nodeId
+            });
+        } else {
+            console.warn("No node found for " + nodeId);
+        }
     }
 
 }

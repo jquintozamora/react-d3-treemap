@@ -30,6 +30,11 @@ export interface INodeProps {
     // x1: number;
     // y1: number;
     // depth: number;
+    xScaleFactor: number;
+    yScaleFactor: number;
+    xScaleFunction: any;
+    yScaleFunction: any;
+    zoomEnabled: boolean;
 
     // Label and name props.
     name: string;

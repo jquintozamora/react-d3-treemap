@@ -27,11 +27,20 @@ class Node extends React.Component<INodeProps, {}> {
             valueWithFormat,
             className,
             fontSize,
-            hasChildren
+            hasChildren,
+            xScaleFactor,
+            yScaleFactor,
+            xScaleFunction,
+            yScaleFunction,
+            zoomEnabled
         } = this.props;
+        const translate = zoomEnabled === true
+        ?
+        `translate(${xScaleFunction(x0)},${yScaleFunction(y0)})`
+        :`translate(${x0},${y0})`;
         return (
             <g
-                transform={`translate(${x0},${y0})`}
+                transform={translate}
                 className="node"
                 id={id}
                 onMouseOver={onMouseOver}
@@ -40,8 +49,8 @@ class Node extends React.Component<INodeProps, {}> {
             >
                 <rect
                     id={"rect-" + name}
-                    width={x1 - x0}
-                    height={y1 - y0}
+                    width={xScaleFactor * (x1 - x0)}
+                    height={yScaleFactor * (y1 - y0)}
                     fill={bgColor}
                     fillOpacity={bgOpacity}
                     stroke={borderColorHover}

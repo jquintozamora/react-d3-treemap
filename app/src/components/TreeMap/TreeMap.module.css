@@ -1,4 +1,6 @@
-
+:global .node {
+  cursor: pointer;
+}
 
 :global text {
   font: 10px sans-serif;
