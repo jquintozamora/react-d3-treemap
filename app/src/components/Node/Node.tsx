@@ -41,6 +41,7 @@ class Node extends React.Component<INodeProps, {}> {
         return (
             <g
                 transform={translate}
+                ref={id}
                 className="node"
                 id={id}
                 onMouseOver={onMouseOver}
