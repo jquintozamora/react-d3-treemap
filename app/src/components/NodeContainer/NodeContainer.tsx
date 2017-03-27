@@ -26,6 +26,42 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         };
     }
 
+    public shouldComponentUpdate(nextProps: INodeContainerProps, nextState: INodeContainerState) {
+        // if (this.props.x0 === nextProps.x0
+        //     && this.props.y0 === nextProps.y0
+        //     && this.props.xScaleFactor === nextProps.xScaleFactor
+        //     && this.props.yScaleFactor === nextProps.yScaleFactor) {
+        //     return false;
+        // }
+
+        if (nextProps.x0 < 0) {
+            return false;
+        }
+        if (nextProps.y0 < 0) {
+            return false;
+        }
+        // if (nextProps.xScaleFunction(nextProps.x0) > nextProps.globalWidth) {
+        //     return false;
+        // }
+        // if (nextProps.xScaleFunction(nextProps.x0) < 0) {
+        //     return false;
+        // }
+        // if (nextProps.yScaleFunction(nextProps.y0) > nextProps.globalHeight) {
+        //     return false;
+        // }
+        // if (nextProps.yScaleFunction(nextProps.y0) < 0) {
+        //     return false;
+        // }
+
+        return true;
+    }
+
+    public componentDidMount() {
+        //console.log("componentDidMount");
+    }
+    public componentWillUnmount() {
+        //console.log("componentDidUnmount");
+    }
 
     //     let node = d3.select(findDOMNode(this));
 
@@ -89,6 +125,8 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         return this._getNestedFolderTypeNode();
     }
 
+
+
     private _getNestedFolderTypeNode() {
         const {
             x0,
@@ -109,21 +147,35 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
             xScaleFunction,
             yScaleFunction,
             zoomEnabled,
-            onClick
+            onClick,
+            isSelectedNode
         } = this.props;
         const bgOpacity = this.state.bgOpacity;
         const borderColorHover = this.state.borderColorHover;
         const onMouseOver = this.props.hoverAnimation ? this._animateCell : null;
         const onMouseOut = this.props.hoverAnimation ? this._restoreCell : null;
-
+         console.log("motion. Render");
+        // if (id === "util") {debugger;}
+        const xTranslated = zoomEnabled === true ? xScaleFunction(x0) : x0;
+        const yTranslated = zoomEnabled === true ? yScaleFunction(y0) : y0;
+        const width = xScaleFactor * (x1 - x0);
+        const height = yScaleFactor * (y1 - y0);
         return (
             <Motion
+                defaultStyle={
+                    {
+                        xTranslated: x0,
+                        yTranslated: y0,
+                        width: x1 - x0,
+                        height: y1 - y0
+                    }
+                }
                 style={
                     {
-                        xTranslated: spring(zoomEnabled === true ? xScaleFunction(x0) : x0),
-                        yTranslated: spring(zoomEnabled === true ? yScaleFunction(y0) : y0),
-                        width: spring(xScaleFactor * (x1 - x0)),
-                        height: spring(yScaleFactor * (y1 - y0))
+                        xTranslated: spring(xTranslated),
+                        yTranslated: spring(yTranslated),
+                        width: spring(width),
+                        height: spring(height)
                     }
                 }
             >
@@ -133,11 +185,12 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
                             <g
                                 transform={`translate(${value.xTranslated},${value.yTranslated})`}
                                 ref={id}
-                                className="node"
+                                className={"node " + (isSelectedNode === true ? "selectedNode" : null)}
                                 id={id}
                                 onMouseOver={onMouseOver}
                                 onMouseOut={onMouseOut}
-                                onClick={onClick}
+                                onClick={hasChildren ? onClick : null}
+                                style={{ cursor: hasChildren ? "pointer" : "auto" }}
                             >
                                 <rect
                                     id={"rect-" + name}
@@ -189,17 +242,17 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
     }
 
     private _animateCell = () => {
-        this.setState({
-            bgOpacity: "0.8",
-            borderColorHover: this.props.borderColorHover
-        });
+        // this.setState({
+        //     bgOpacity: "0.8",
+        //     borderColorHover: this.props.borderColorHover
+        // });
     }
 
     private _restoreCell = () => {
-        this.setState({
-            bgOpacity: "1",
-            borderColorHover: ""
-        });
+        // this.setState({
+        //     bgOpacity: "1",
+        //     borderColorHover: ""
+        // });
     }
 }
 export default NodeContainer;

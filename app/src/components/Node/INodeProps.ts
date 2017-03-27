@@ -35,6 +35,9 @@ export interface INodeProps {
     xScaleFunction: any;
     yScaleFunction: any;
     zoomEnabled: boolean;
+    globalHeight: number;
+    globalWidth: number;
+    isSelectedNode: boolean;
 
     // Label and name props.
     name: string;

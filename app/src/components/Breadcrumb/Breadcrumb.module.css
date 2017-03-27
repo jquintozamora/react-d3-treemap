@@ -1,0 +1,63 @@
+/*
+  Source: http://codepen.io/Shyam-Chen/pen/WvYYLK/?html-preprocessor=slim
+*/
+
+.breadcrumb {
+  text-align: center;
+  display: block;
+  overflow: hidden;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.breadcrumb > a {
+  text-decoration: none;
+  outline: none;
+  display: block;
+  float: left;
+  font-size: 12px;
+  line-height: 36px;
+  color: black;
+  padding: 0 10px 0 30px;
+  position: relative;
+  cursor: pointer;
+}
+
+.breadcrumb a:first-child {
+  padding-left: 16px;
+}
+
+.breadcrumb a::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -18px;
+  width: 36px;
+  height: 36px;
+  transform: scale(.707) rotate(45deg);
+  z-index: 1;
+  box-shadow: 2px -2px 0 2px rgb(206, 230, 140);
+  border-radius: 0 5px 0 50px;
+  background: #ffffff;
+  color: rgb(206, 230, 140);
+}
+
+.breadcrumb a:hover,
+.breadcrumb a:hover::after {
+  background: rgb(206, 230, 140);
+  color: white;
+}
+
+/* Last child is the active one */
+.breadcrumb a:last-child {
+  padding-right: 20px;
+  background: rgb(206, 230, 140);
+  color: white;
+  cursor: auto;
+}
+
+.breadcrumb a:last-child::after {
+  background: rgb(206, 230, 140);
+  color: #ffffff;
+}
+

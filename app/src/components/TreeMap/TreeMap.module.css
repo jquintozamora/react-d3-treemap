@@ -2,6 +2,10 @@
   cursor: pointer;
 }
 
+:global .selectedNode {
+  z-index: 10;
+}
+
 :global text {
   font: 10px sans-serif;
 }
@@ -17,4 +21,8 @@
 
 :global .node--hover rect {
   stroke: #000;
+}
+
+.mainSvg {
+  overflow: hidden;
 }
