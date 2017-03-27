@@ -37,7 +37,8 @@ class Node extends React.Component<INodeProps, {}> {
         const translate = zoomEnabled === true
         ?
         `translate(${xScaleFunction(x0)},${yScaleFunction(y0)})`
-        :`translate(${x0},${y0})`;
+        :
+        `translate(${x0},${y0})`;
         return (
             <g
                 transform={translate}

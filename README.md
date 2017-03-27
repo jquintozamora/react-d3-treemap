@@ -5,6 +5,16 @@ TreeMap component based on d3.treemap
 - Join with react-d3-treemap project
 - Create combined props
 - Add animations for zoom
+- Make it [responsive](https://truongtx.me/2016/08/20/moving-away-from-d3js-im-using-reactjs-for-dom-manipulation-now)
+- Delayed animation> https://github.com/chenglou/react-motion/issues/271
+- Sample: https://github.com/dantrain/react-stonecutter/blob/master/src/components/SpringGrid.jsx
+
+
+Perfect combination:
+- d3, React, React-Motion
+- ReactTransitionGroup to be deprecated: https://github.com/facebook/react/issues/1368
+- [Playing with D3 Version 4, React, React-Motion](https://medium.com/@ilikepiecharts/playing-with-d3-version-4-react-react-motion-3d04c6eb21c9#.25pnrcyg3))
+-
 
 It´s based on [Mike Bostock´s Treemap](https://bl.ocks.org/mbostock/911ad09bdead40ec0061) design.
 

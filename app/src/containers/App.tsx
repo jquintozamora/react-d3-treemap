@@ -5,10 +5,14 @@ import { data } from "../data/data";
 export default class App extends React.Component<{}, {}> {
     public render() {
         return (
-           <TreeMap
-                height={600}
-                width={600}
+            <TreeMap
+                height={400}
+                width={900}
                 data={data}
+                // bgColorRangeLow={"#007AFF"}
+                // bgColorRangeHigh={"#FFF500"}
+                bgColorRangeLow={"#91CF60"}
+                bgColorRangeHigh={"#FFFFBF"}
             />
         );
     }

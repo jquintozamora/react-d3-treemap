@@ -1,5 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from 'react-dom';
+import { Motion, spring } from 'react-motion';
+
 import { Utils } from "../../utils/Utils";
 
 import { select } from "d3-selection";
@@ -20,25 +22,54 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         this.state = {
             bgOpacity: "1",
             borderColorHover: "transparent",
+            translate: "translate(0,0)"
         };
     }
 
-    public componentDidUpdate() { this._doTranslateAnimated(); }
-    public componentDidMount() { this._doTranslateAnimated(); }
 
-    private _doTranslateAnimated = () => {
-        if (this.props.zoomEnabled === true) {
-            let node = findDOMNode(this.refs[this.props.id]);
-            // debugger;
-            //.select(node).call(this.axis);
-            select(node)
-                .transition()
-                .duration(1750)
-                .attr("transform", (d: any) => {
-                    return "translate(" + this.props.xScaleFunction(d.x) + "," + this.props.yScaleFunction(d.y) + ")";
-                });
-        }
-    }
+    //     let node = d3.select(findDOMNode(this));
+
+    //     this.setState({ className: 'exit' });
+
+    //     node.transition(this.transition)
+    //         .attr('y', 60)
+    //         .style('fill-opacity', 1e-6)
+    //         .on('end', () => {
+    //             this.setState({ y: 60, fillOpacity: 1e-6 });
+    //             callback()
+    //         });
+    // }
+
+    //     public componentDidUpdate() { this._doTranslateAnimated(); }
+    //     public componentDidMount() { this._doTranslateAnimated(); }
+
+    //     private _doTranslateAnimated = () => {
+    //         const { zoomEnabled, xScaleFunction, yScaleFunction, x0, y0 } = this.props;
+    //         const translate = zoomEnabled === true
+    //             ?
+    //             `translate(${xScaleFunction(x0)},${yScaleFunction(y0)})`
+    //             : `translate(${x0},${y0})`;
+
+
+    //         let node = findDOMNode(this.refs[this.props.id]);
+
+
+    //         var t = transition("one")
+    //             .duration(750);
+
+    //         const selection = select(node);
+    // debugger;
+    //         const t1 = selection
+    //             .transition(t)
+    //             .attr("transform", function (d: any) {
+    //                 debugger;
+    //                 const translate = zoomEnabled === true
+    //                     ?
+    //                     `translate(${xScaleFunction(d.x)},${yScaleFunction(d.y)})`
+    //                     : `translate(${d.x},${d.y})`;
+    //                 return translate;
+    //             });
+    //     }
 
     /*public render() {
         const { hoverAnimation, onClick } = this.props;
@@ -84,40 +115,53 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         const borderColorHover = this.state.borderColorHover;
         const onMouseOver = this.props.hoverAnimation ? this._animateCell : null;
         const onMouseOut = this.props.hoverAnimation ? this._restoreCell : null;
-        const translate = zoomEnabled === true
-            ?
-            `translate(${xScaleFunction(x0)},${yScaleFunction(y0)})`
-            : `translate(${x0},${y0})`;
+
         return (
-            <g
-                transform={translate}
-                ref={id}
-                className="node"
-                id={id}
-                onMouseOver={onMouseOver}
-                onMouseOut={onMouseOut}
-                onClick={onClick}
+            <Motion
+                style={
+                    {
+                        xTranslated: spring(zoomEnabled === true ? xScaleFunction(x0) : x0),
+                        yTranslated: spring(zoomEnabled === true ? yScaleFunction(y0) : y0),
+                        width: spring(xScaleFactor * (x1 - x0)),
+                        height: spring(yScaleFactor * (y1 - y0))
+                    }
+                }
             >
-                <rect
-                    id={"rect-" + name}
-                    width={xScaleFactor * (x1 - x0)}
-                    height={yScaleFactor * (y1 - y0)}
-                    fill={bgColor}
-                    fillOpacity={bgOpacity}
-                    stroke={borderColorHover}
-                />
-                <clipPath
-                    id={"clip-" + name}
-                >
-                    <use xlinkHref={"#rect-" + name + ""} />
-                </clipPath>
-                <text
-                    clipPath={"url(#clip-" + name + ")"}
-                >
-                    {this._getLabelNewLine(label, valueWithFormat, hasChildren)}
-                </text>
-                <title>{label + "\n" + valueWithFormat}</title>
-            </g>
+                {
+                    (value: any) =>
+                        (
+                            <g
+                                transform={`translate(${value.xTranslated},${value.yTranslated})`}
+                                ref={id}
+                                className="node"
+                                id={id}
+                                onMouseOver={onMouseOver}
+                                onMouseOut={onMouseOut}
+                                onClick={onClick}
+                            >
+                                <rect
+                                    id={"rect-" + name}
+                                    width={value.width}
+                                    height={value.height}
+                                    fill={bgColor}
+                                    fillOpacity={bgOpacity}
+                                    stroke={borderColorHover}
+                                />
+                                <clipPath
+                                    id={"clip-" + name}
+                                >
+                                    <use xlinkHref={"#rect-" + name + ""} />
+                                </clipPath>
+                                <text
+                                    clipPath={"url(#clip-" + name + ")"}
+                                >
+                                    {this._getLabelNewLine(label, valueWithFormat, hasChildren)}
+                                </text>
+                                <title>{label + "\n" + valueWithFormat}</title>
+                            </g>
+                        )
+                }
+            </Motion>
         );
     }
 

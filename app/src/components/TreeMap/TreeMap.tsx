@@ -17,7 +17,7 @@ import {
 import { interpolateHcl } from "d3-interpolate";
 import {
     Breadcrumb, IBreadcrumbItem
-} from 'office-ui-fabric-react/lib/Breadcrumb';
+} from "office-ui-fabric-react/lib/Breadcrumb";
 
 /* tslint:disable:no-var-requires */
 const styles: any = require("./TreeMap.module.css");
@@ -107,7 +107,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         // 3. Get array of nodes
         this._nodes = this._treemap(this._rootData)
-            .descendants()
+            .descendants();
 
         let breadCrumbItems;
         const reactNodes = this._nodes.map((node, idx) => {
