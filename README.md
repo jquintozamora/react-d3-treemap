@@ -9,6 +9,7 @@ TreeMap component based on d3.treemap
 - Delayed animation> https://github.com/chenglou/react-motion/issues/271
 - Sample: https://github.com/dantrain/react-stonecutter/blob/master/src/components/SpringGrid.jsx
 
+- check this out: https://bost.ocks.org/mike/treemap/
 
 Perfect combination:
 - d3, React, React-Motion
