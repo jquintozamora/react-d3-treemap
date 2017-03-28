@@ -1,6 +1,8 @@
 import * as React from "react";
 
-import NodeContainer from "../NodeContainer/NodeContainer";
+// import NodeContainer from "../NodeContainer/NodeContainer";
+import NodeContainer from "../NodeContainer/NodeContainer.Animated";
+
 import { Utils } from "../../utils/Utils";
 import { format } from "d3-format";
 import {
@@ -88,7 +90,9 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             // TODO: Replace data.name by id
             breadCrumbItems: [{ text: '[Root]', 'key': this.props.data.name, onClick: this._onBreadcrumbItemClicked }],
             selectedId: this.props.data.name,
-            scopedNodes: this._nodes
+            scopedNodes: this._nodes,
+            selectedNode: this._treemap(this._rootData),
+            totalNodes: this._nodes.length
         };
 
         // Format function
@@ -114,24 +118,27 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         const { width, height } = this.state;
 
         // 1. Create treemap structure
-        this._treemap = d3treemap()
-            .size([width, height])
-            .paddingOuter(3)
-            .paddingTop(19)
-            .paddingInner(1)
-            .round(true);
+        // this._treemap = d3treemap()
+        //     .size([width, height])
+        //     .paddingOuter(3)
+        //     .paddingTop(19)
+        //     .paddingInner(1)
+        //     .round(true);
 
-        // 2. Before compute a hierarchical layout, we need a root node
-        //    If the data is in JSON we use d3.hierarchy
-        this._rootData = d3hierarchy(this.props.data)
-            .sum((d: any) => d.value)
-            .sort((a, b) => b.height - a.height || b.value - a.value);
+        // // 2. Before compute a hierarchical layout, we need a root node
+        // //    If the data is in JSON we use d3.hierarchy
+        // this._rootData = d3hierarchy(this.props.data)
+        //     // this._rootData = d3hierarchy(this.state.selectedNode.data)
+        //     .sum((d: any) => d.value)
+        //     .sort((a, b) => b.height - a.height || b.value - a.value);
 
 
-        const mainNode = this._treemap(this._rootData);
+        // const mainNode = this._treemap(this._rootData);
+        const mainNode = this.state.selectedNode;
+
 
         let reactNodes: any = [];
-        const maxLevel = 2;
+        const maxLevel = 1;
         const iterateAllChildren = (mainNode: HierarchyRectangularNode<{}>, level: number): any => {
             reactNodes = reactNodes.concat(this._getNode(mainNode));
             if (level < maxLevel) {
@@ -226,6 +233,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 >
                     {reactNodes}
                 </svg>
+                <div>Total items: {this.state.totalNodes}</div>
             </div>
 
         );
@@ -242,7 +250,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         const { width, height } = this.state;
         return (
             <NodeContainer
-                {...node }
+                {...node}
                 id={id}
                 xScaleFactor={this.state.xScaleFactor}
                 yScaleFactor={this.state.yScaleFactor}
@@ -298,7 +306,9 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 yScaleFunction: this.state.yScaleFunction.domain([y, y + dy]),
                 zoomEnabled: currentNode.parent === null ? false : true,
                 selectedId: nodeId,
-                scopedNodes
+                selectedNode: currentNode,
+                scopedNodes,
+                totalNodes: scopedNodes.length
 
             });
         } else {

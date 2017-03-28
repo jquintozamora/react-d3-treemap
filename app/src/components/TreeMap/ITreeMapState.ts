@@ -10,4 +10,6 @@ export interface ITreeMapState {
     zoomEnabled: boolean;
     breadCrumbItems: any;
     selectedId: any;
+    selectedNode: HierarchyRectangularNode<{}>;
+    totalNodes: number;
 };

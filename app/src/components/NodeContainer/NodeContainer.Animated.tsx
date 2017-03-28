@@ -40,18 +40,18 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         if (nextProps.y0 < 0) {
             return false;
         }
-        if (nextProps.xScaleFunction(nextProps.x0) > nextProps.globalWidth) {
-            return false;
-        }
-        if (nextProps.xScaleFunction(nextProps.x0) < 0) {
-            return false;
-        }
-        if (nextProps.yScaleFunction(nextProps.y0) > nextProps.globalHeight) {
-            return false;
-        }
-        if (nextProps.yScaleFunction(nextProps.y0) < 0) {
-            return false;
-        }
+        // if (nextProps.xScaleFunction(nextProps.x0) > nextProps.globalWidth) {
+        //     return false;
+        // }
+        // if (nextProps.xScaleFunction(nextProps.x0) < 0) {
+        //     return false;
+        // }
+        // if (nextProps.yScaleFunction(nextProps.y0) > nextProps.globalHeight) {
+        //     return false;
+        // }
+        // if (nextProps.yScaleFunction(nextProps.y0) < 0) {
+        //     return false;
+        // }
 
         return true;
     }
@@ -154,43 +154,67 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         const borderColorHover = this.state.borderColorHover;
         const onMouseOver = this.props.hoverAnimation ? this._animateCell : null;
         const onMouseOut = this.props.hoverAnimation ? this._restoreCell : null;
+         console.log("motion. Render");
         // if (id === "util") {debugger;}
         const xTranslated = zoomEnabled === true ? xScaleFunction(x0) : x0;
         const yTranslated = zoomEnabled === true ? yScaleFunction(y0) : y0;
         const width = xScaleFactor * (x1 - x0);
         const height = yScaleFactor * (y1 - y0);
         return (
-            <g
-                transform={`translate(${xTranslated},${yTranslated})`}
-                ref={id}
-                className={"node " + (isSelectedNode === true ? "selectedNode" : null)}
-                id={id}
-                onMouseOver={onMouseOver}
-                onMouseOut={onMouseOut}
-                onClick={hasChildren ? onClick : null}
-                style={{ cursor: hasChildren ? "pointer" : "auto" }}
+            <Motion
+                defaultStyle={
+                    {
+                        xTranslated: x0,
+                        yTranslated: y0,
+                        width: x1 - x0,
+                        height: y1 - y0
+                    }
+                }
+                style={
+                    {
+                        xTranslated: spring(xTranslated),
+                        yTranslated: spring(yTranslated),
+                        width: spring(width),
+                        height: spring(height)
+                    }
+                }
             >
-                <rect
-                    id={"rect-" + name}
-                    width={width}
-                    height={height}
-                    fill={bgColor}
-                    fillOpacity={bgOpacity}
-                    stroke={borderColorHover}
-                />
-                <clipPath
-                    id={"clip-" + name}
-                >
-                    <use xlinkHref={"#rect-" + name + ""} />
-                </clipPath>
-                <text
-                    clipPath={"url(#clip-" + name + ")"}
-                >
-                    {this._getLabelNewLine(label, valueWithFormat, hasChildren)}
-                </text>
-                <title>{label + "\n" + valueWithFormat}</title>
-            </g>
-
+                {
+                    (value: any) =>
+                        (
+                            <g
+                                transform={`translate(${value.xTranslated},${value.yTranslated})`}
+                                ref={id}
+                                className={"node " + (isSelectedNode === true ? "selectedNode" : null)}
+                                id={id}
+                                onMouseOver={onMouseOver}
+                                onMouseOut={onMouseOut}
+                                onClick={hasChildren ? onClick : null}
+                                style={{ cursor: hasChildren ? "pointer" : "auto" }}
+                            >
+                                <rect
+                                    id={"rect-" + name}
+                                    width={value.width}
+                                    height={value.height}
+                                    fill={bgColor}
+                                    fillOpacity={bgOpacity}
+                                    stroke={borderColorHover}
+                                />
+                                <clipPath
+                                    id={"clip-" + name}
+                                >
+                                    <use xlinkHref={"#rect-" + name + ""} />
+                                </clipPath>
+                                <text
+                                    clipPath={"url(#clip-" + name + ")"}
+                                >
+                                    {this._getLabelNewLine(label, valueWithFormat, hasChildren)}
+                                </text>
+                                <title>{label + "\n" + valueWithFormat}</title>
+                            </g>
+                        )
+                }
+            </Motion>
         );
     }
 
