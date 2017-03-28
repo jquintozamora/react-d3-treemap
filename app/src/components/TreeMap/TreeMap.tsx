@@ -48,14 +48,22 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         borderColorHover: "#000"
     };
 
+
+    // Note. This treemap element initially was using treemap and hierarchy directly on the render.
+    //       I noticed a performance problem when the original data "this.props.data" has more than 1500 elements.
+    //       Now, the component is designed to show only the first level of nodes and when click on one expand the rest.
+    private _treemap: TreemapLayout<{}>;
+    private _rootData: any;
+    private _nodes: HierarchyRectangularNode<{}>[];
+
+
+
     // Numeric value format function
     private _valueFormatFunction: (n: number) => string;
     // Background Color function
     private _nodesbgColorFunction: (t: number) => string;
 
-    private _treemap: TreemapLayout<{}>;
-    private _rootData: any;
-    private _nodes: HierarchyRectangularNode<{}>[];
+
 
     constructor(props: ITreeMapProps, context: any) {
         super(props, context);
@@ -116,22 +124,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     public render() {
         const { valueFormat, colorText, borderColorHover } = this.props;
         const { width, height } = this.state;
-
-        // 1. Create treemap structure
-        // this._treemap = d3treemap()
-        //     .size([width, height])
-        //     .paddingOuter(3)
-        //     .paddingTop(19)
-        //     .paddingInner(1)
-        //     .round(true);
-
-        // // 2. Before compute a hierarchical layout, we need a root node
-        // //    If the data is in JSON we use d3.hierarchy
-        // this._rootData = d3hierarchy(this.props.data)
-        //     // this._rootData = d3hierarchy(this.state.selectedNode.data)
-        //     .sum((d: any) => d.value)
-        //     .sort((a, b) => b.height - a.height || b.value - a.value);
-
 
         // const mainNode = this._treemap(this._rootData);
         const mainNode = this.state.selectedNode;

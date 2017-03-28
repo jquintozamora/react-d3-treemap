@@ -11,8 +11,8 @@ export default class App extends React.Component<{}, {}> {
                 data={data}
                 // bgColorRangeLow={"#007AFF"}
                 // bgColorRangeHigh={"#FFF500"}
-                bgColorRangeLow={"#91CF60"}
-                bgColorRangeHigh={"#FFFFBF"}
+                // bgColorRangeLow={"#91CF60"}
+                // bgColorRangeHigh={"#FFFFBF"}
             />
         );
     }
