@@ -45,14 +45,14 @@
 .breadcrumb a:hover,
 .breadcrumb a:hover::after {
   background: rgb(206, 230, 140);
-  color: white;
+  color: ffffff;
 }
 
 /* Last child is the active one */
 .breadcrumb a:last-child {
   padding-right: 20px;
   background: rgb(206, 230, 140);
-  color: white;
+  color: ffffff;
   cursor: auto;
 }
 
