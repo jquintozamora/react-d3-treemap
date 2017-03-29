@@ -64,7 +64,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     private _nodesbgColorFunction: (t: number) => string;
 
 
-
     constructor(props: ITreeMapProps, context: any) {
         super(props, context);
 
@@ -100,7 +99,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             selectedId: this.props.data.name,
             scopedNodes: this._nodes,
             selectedNode: this._treemap(this._rootData),
-            totalNodes: this._nodes.length
+            totalNodes: this._nodes.length,
+            selectedNodeTotalNodes: this._nodes.length
         };
 
         // Format function
@@ -225,7 +225,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 >
                     {reactNodes}
                 </svg>
-                <div>Total items: {this.state.totalNodes}</div>
+                <div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>
             </div>
 
         );
@@ -238,6 +238,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         const hasChildren = node.children && node.children.length > 0 ? true : false;
         const backgroundColor = this._nodesbgColorFunction(node.depth);
         const valueWithFormat = this._valueFormatFunction(node.value);
+        const nodeTotalNodes = node.descendants().length;
         const { valueFormat, colorText, borderColorHover } = this.props;
         const { width, height } = this.state;
         return (
@@ -264,6 +265,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 valueWithFormat={valueWithFormat}
                 globalHeight={height}
                 globalWidth={width}
+                nodeTotalNodes={nodeTotalNodes}
                 isSelectedNode={id === this.state.selectedId}
             />
         );
@@ -300,8 +302,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 selectedId: nodeId,
                 selectedNode: currentNode,
                 scopedNodes,
-                totalNodes: scopedNodes.length
-
+                selectedNodeTotalNodes: scopedNodes.length
             });
         } else {
             console.warn("No node found for " + nodeId);

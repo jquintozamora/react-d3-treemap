@@ -148,7 +148,8 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
             yScaleFunction,
             zoomEnabled,
             onClick,
-            isSelectedNode
+            isSelectedNode,
+            nodeTotalNodes
         } = this.props;
         const bgOpacity = this.state.bgOpacity;
         const borderColorHover = this.state.borderColorHover;
@@ -186,7 +187,15 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
                 <text
                     clipPath={"url(#clip-" + name + ")"}
                 >
-                    {this._getLabelNewLine(label, valueWithFormat, hasChildren)}
+                    {this._getLabelNewLine()}
+                    <tspan
+                        fill={"black"}
+                        color={"white"}
+                        // stroke={"black"}
+                        x={width-15}
+                        y={13} >
+                        {/*nodeTotalNodes*/}
+                    </tspan>
                 </text>
                 <title>{label + "\n" + valueWithFormat}</title>
             </g>
@@ -194,17 +203,18 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         );
     }
 
-    private _getLabelNewLine(label: string, value: string, hasChildren: boolean) {
-        const { textColor } = this.props;
+    private _getLabelNewLine() {
+        const { label, textColor, valueWithFormat, hasChildren } = this.props;
+
         if (hasChildren === true) {
             return (
                 <tspan fill={textColor} x={4} y={13} >
-                    {label + "\xa0" + value}
+                    {label + "\xa0" + valueWithFormat}
                 </tspan>
             );
         } else {
             if (label) {
-                return label.split(/(?=[A-Z][^A-Z])/g).concat(value).map((item, index) => {
+                return label.split(/(?=[A-Z][^A-Z])/g).concat(valueWithFormat).map((item, index) => {
                     return (
                         <tspan fill={textColor} key={index} x={4} y={13 + index * 10} >
                             {item}

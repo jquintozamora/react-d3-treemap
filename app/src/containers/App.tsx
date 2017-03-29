@@ -6,13 +6,13 @@ export default class App extends React.Component<{}, {}> {
     public render() {
         return (
             <TreeMap
-                height={400}
-                width={900}
+                height={200}
+                width={600}
                 data={data}
                 // bgColorRangeLow={"#007AFF"}
                 // bgColorRangeHigh={"#FFF500"}
-                // bgColorRangeLow={"#91CF60"}
-                // bgColorRangeHigh={"#FFFFBF"}
+                bgColorRangeLow={"#91CF60"}
+                bgColorRangeHigh={"#FFFFBF"}
             />
         );
     }

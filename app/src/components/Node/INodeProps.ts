@@ -38,6 +38,7 @@ export interface INodeProps {
     globalHeight: number;
     globalWidth: number;
     isSelectedNode: boolean;
+    nodeTotalNodes: number;
 
     // Label and name props.
     name: string;

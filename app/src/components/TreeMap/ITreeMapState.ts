@@ -12,4 +12,5 @@ export interface ITreeMapState {
     selectedId: any;
     selectedNode: HierarchyRectangularNode<{}>;
     totalNodes: number;
+    selectedNodeTotalNodes: number;
 };
