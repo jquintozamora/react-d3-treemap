@@ -1,5 +1,10 @@
 import * as React from "react";
 
+/* tslint:disable:no-var-requires */
+const styles: any = require("./Node.module.css");
+/* tslint:enable:no-var-requires */
+
+
 import { INodeProps } from "./INodeProps";
 
 class Node extends React.Component<INodeProps, {}> {
@@ -10,52 +15,37 @@ class Node extends React.Component<INodeProps, {}> {
 
     private _getNestedFolderTypeNode() {
         const {
-            x0,
-            x1,
-            y0,
-            y1,
             bgColor,
-            bgOpacity,
-            borderColorHover,
             onMouseOut,
             onMouseOver,
             onClick,
             name,
             id,
             label,
-            textColor,
             valueWithFormat,
-            className,
-            fontSize,
             hasChildren,
-            xScaleFactor,
-            yScaleFactor,
-            xScaleFunction,
-            yScaleFunction,
-            zoomEnabled
+            xTranslated,
+            yTranslated,
+            isSelectedNode,
+            width,
+            height
         } = this.props;
-        const translate = zoomEnabled === true
-        ?
-        `translate(${xScaleFunction(x0)},${yScaleFunction(y0)})`
-        :
-        `translate(${x0},${y0})`;
         return (
             <g
-                transform={translate}
-                ref={id}
-                className="node"
+                transform={`translate(${xTranslated},${yTranslated})`}
+                // ref={id}
+                className={styles.node + " " + (isSelectedNode === true ? "selectedNode" : null)}
                 id={id}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
-                onClick={onClick}
+                onClick={hasChildren ? onClick : null}
+                style={{ cursor: hasChildren ? "pointer" : "auto" }}
             >
                 <rect
                     id={"rect-" + name}
-                    width={xScaleFactor * (x1 - x0)}
-                    height={yScaleFactor * (y1 - y0)}
+                    width={width}
+                    height={height}
                     fill={bgColor}
-                    fillOpacity={bgOpacity}
-                    stroke={borderColorHover}
                 />
                 <clipPath
                     id={"clip-" + name}
@@ -65,26 +55,26 @@ class Node extends React.Component<INodeProps, {}> {
                 <text
                     clipPath={"url(#clip-" + name + ")"}
                 >
-                    {this._getLabelNewLine(label, valueWithFormat, hasChildren)}
+                    {this._getLabelNewLine()}
                 </text>
                 <title>{label + "\n" + valueWithFormat}</title>
             </g>
         );
     }
 
-    private _getLabelNewLine(label: string, value: string, hasChildren: boolean) {
-        const { textColor } = this.props;
+    private _getLabelNewLine() {
+        const { label, textColor, fontSize, valueWithFormat, hasChildren } = this.props;
         if (hasChildren === true) {
             return (
-                <tspan fill={textColor} x={4} y={13} >
-                    {label + "\xa0" + value}
+                <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize + 3} >
+                    {label + "\xa0" + valueWithFormat}
                 </tspan>
             );
         } else {
             if (label) {
-                return label.split(/(?=[A-Z][^A-Z])/g).concat(value).map((item, index) => {
+                return label.split(/(?=[A-Z][^A-Z])/g).concat(valueWithFormat).map((item, index) => {
                     return (
-                        <tspan fill={textColor} key={index} x={4} y={13 + index * 10} >
+                        <tspan fontSize={fontSize} fill={textColor} key={index} x={4} dy={fontSize + 3} >
                             {item}
                         </tspan>
                     );
@@ -92,7 +82,7 @@ class Node extends React.Component<INodeProps, {}> {
             }
 
         }
-
     }
+
 }
 export default Node;

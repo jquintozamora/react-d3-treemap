@@ -154,7 +154,7 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         const borderColorHover = this.state.borderColorHover;
         const onMouseOver = this.props.hoverAnimation ? this._animateCell : null;
         const onMouseOut = this.props.hoverAnimation ? this._restoreCell : null;
-         console.log("motion. Render");
+        console.log("motion. Render");
         // if (id === "util") {debugger;}
         const xTranslated = zoomEnabled === true ? xScaleFunction(x0) : x0;
         const yTranslated = zoomEnabled === true ? yScaleFunction(y0) : y0;
@@ -182,55 +182,34 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
                 {
                     (value: any) =>
                         (
-                            <g
-                                transform={`translate(${value.xTranslated},${value.yTranslated})`}
-                                ref={id}
-                                className={"node " + (isSelectedNode === true ? "selectedNode" : null)}
-                                id={id}
-                                onMouseOver={onMouseOver}
-                                onMouseOut={onMouseOut}
-                                onClick={hasChildren ? onClick : null}
-                                style={{ cursor: hasChildren ? "pointer" : "auto" }}
-                            >
-                                <rect
-                                    id={"rect-" + name}
-                                    width={value.width}
-                                    height={value.height}
-                                    fill={bgColor}
-                                    fillOpacity={bgOpacity}
-                                    stroke={borderColorHover}
-                                />
-                                <clipPath
-                                    id={"clip-" + name}
-                                >
-                                    <use xlinkHref={"#rect-" + name + ""} />
-                                </clipPath>
-                                <text
-                                    clipPath={"url(#clip-" + name + ")"}
-                                >
-                                    {this._getLabelNewLine(label, valueWithFormat, hasChildren)}
-                                </text>
-                                <title>{label + "\n" + valueWithFormat}</title>
-                            </g>
+                            <Node
+                                {...this.props}
+                                xTranslated={value.xTranslated}
+                                yTranslated={value.yTranslated}
+                                height={value.height}
+                                width={value.width}
+
+                            />
                         )
                 }
             </Motion>
         );
     }
 
-    private _getLabelNewLine(label: string, value: string, hasChildren: boolean) {
-        const { textColor } = this.props;
+    private _getLabelNewLine() {
+        const { label, textColor, fontSize, valueWithFormat, hasChildren } = this.props;
+
         if (hasChildren === true) {
             return (
-                <tspan fill={textColor} x={4} y={13} >
-                    {label + "\xa0" + value}
+                <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize + 3} >
+                    {label + "\xa0" + valueWithFormat}
                 </tspan>
             );
         } else {
             if (label) {
-                return label.split(/(?=[A-Z][^A-Z])/g).concat(value).map((item, index) => {
+                return label.split(/(?=[A-Z][^A-Z])/g).concat(valueWithFormat).map((item, index) => {
                     return (
-                        <tspan fill={textColor} key={index} x={4} y={13 + index * 10} >
+                        <tspan fontSize={fontSize} fill={textColor} key={index} x={4} dy={fontSize + 3} >
                             {item}
                         </tspan>
                     );

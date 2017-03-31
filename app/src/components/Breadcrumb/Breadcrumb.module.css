@@ -8,6 +8,7 @@
   overflow: hidden;
   margin-top: 5px;
   margin-bottom: 5px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
 }
 
 .breadcrumb > a {

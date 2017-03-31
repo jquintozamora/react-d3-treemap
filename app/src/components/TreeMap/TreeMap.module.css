@@ -1,28 +1,5 @@
-:global .node {
-  cursor: pointer;
-}
-
-:global .selectedNode {
-  z-index: 10;
-}
-
-:global text {
-  font: 10px sans-serif;
-}
-
-:global tspan:last-child {
-  font-size: 9px;
-  fill-opacity: 0.8;
-}
-
-:global .node rect {
-  shape-rendering: crispEdges;
-}
-
-:global .node--hover rect {
-  stroke: #000;
-}
 
 .mainSvg {
   overflow: hidden;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
 }

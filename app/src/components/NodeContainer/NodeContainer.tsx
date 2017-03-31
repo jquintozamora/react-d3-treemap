@@ -204,11 +204,11 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
     }
 
     private _getLabelNewLine() {
-        const { label, textColor, valueWithFormat, hasChildren } = this.props;
+        const { label, textColor, fontSize, valueWithFormat, hasChildren } = this.props;
 
         if (hasChildren === true) {
             return (
-                <tspan fill={textColor} x={4} y={13} >
+                <tspan fontSize={fontSize} fill={textColor} x={4} y={13} >
                     {label + "\xa0" + valueWithFormat}
                 </tspan>
             );
@@ -216,7 +216,7 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
             if (label) {
                 return label.split(/(?=[A-Z][^A-Z])/g).concat(valueWithFormat).map((item, index) => {
                     return (
-                        <tspan fill={textColor} key={index} x={4} y={13 + index * 10} >
+                        <tspan fontSize={fontSize} fill={textColor} key={index} x={4} y={13 + index * 10} >
                             {item}
                         </tspan>
                     );

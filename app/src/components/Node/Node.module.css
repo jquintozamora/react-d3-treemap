@@ -1,0 +1,9 @@
+
+.node {
+  cursor: pointer;
+}
+.node rect:hover {
+  stroke: #000;
+}
+
+

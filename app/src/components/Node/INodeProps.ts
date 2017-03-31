@@ -10,7 +10,7 @@ export interface INodeProps {
     y1: number;
     data: any;
     readonly depth: number;
-    readonly height: number;
+    // readonly height: number;
     parent: HierarchyRectangularNode<any> | null;
     children?: Array<HierarchyRectangularNode<any>>;
     /**
@@ -40,6 +40,14 @@ export interface INodeProps {
     isSelectedNode: boolean;
     nodeTotalNodes: number;
 
+    xTranslated?: number;
+    yTranslated?: number;
+    width?: number;
+    height?: number;
+
+    // optional style to apply to the control
+    style?: object;
+
     // Label and name props.
     name: string;
     label: string;
@@ -47,10 +55,8 @@ export interface INodeProps {
     // Style props
     className: string;
     bgColor: string; // fill
-    bgOpacity: string;
     textColor: string;
-    fontSize: string;
-    borderColorHover: string;
+    fontSize: number;
     valueWithFormat: string;
 
     // Events props

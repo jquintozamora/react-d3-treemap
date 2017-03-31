@@ -239,7 +239,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         const backgroundColor = this._nodesbgColorFunction(node.depth);
         const valueWithFormat = this._valueFormatFunction(node.value);
         const nodeTotalNodes = node.descendants().length;
-        const { valueFormat, colorText, borderColorHover } = this.props;
+        const { valueFormat, colorText } = this.props;
         const { width, height } = this.state;
         return (
             <NodeContainer
@@ -252,11 +252,9 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 zoomEnabled={this.state.zoomEnabled}
                 // key={id}
                 bgColor={backgroundColor}
-                bgOpacity="1"
-                borderColorHover={borderColorHover}
                 label={name}
                 name={name}
-                fontSize={"14px"}
+                fontSize={14}
                 textColor={colorText}
                 className="node"
                 hasChildren={hasChildren}
