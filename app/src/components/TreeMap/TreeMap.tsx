@@ -19,13 +19,13 @@ import {
     schemeCategory20c,
     interpolateViridis
 } from "d3-scale";
+import {
+    extent
+} from "d3-array";
 import * as chromatic from "d3-scale-chromatic";
 import { interpolateHcl } from "d3-interpolate";
-// import {
-//     Breadcrumb, IBreadcrumbItem
-// } from "office-ui-fabric-react/lib/Breadcrumb";
 import {
-    Breadcrumb, IBreadcrumbItem, BreadcrumbStyled
+    IBreadcrumbItem, BreadcrumbStyled
 } from "../Breadcrumb/Breadcrumb";
 
 
@@ -45,9 +45,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         height: 600,
         width: 600,
         valueFormat: ",d",
-        // These props will be passed from outer component if needed
-        // bgColorRangeLow: "#007AFF",
-        // bgColorRangeHigh: "#FFF500",
     };
 
 
@@ -108,16 +105,36 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         // Format function
         this._valueFormatFunction = format(this.props.valueFormat);
 
+        // Color domain = depth
+        // const d = [Utils.getDepth(this.props.data) - 1, 0];
+
+        // Color domain = number of children
+        const d = extent(this._nodes, (n) => n.parent !== null ? n.descendants().length : 1);
+
+        // Color domain = size (value)
+        // const d = extent(this._nodes, (n) => {
+        //     if (n.parent !== null) {
+        //         return n.value;
+        //     }
+        // });
+
         // Create bgColorFunction
         if (props.hasOwnProperty("bgColorRangeLow")
             && props.hasOwnProperty("bgColorRangeHigh")) {
             this._nodesbgColorFunction = scaleLinear<any>()
-                .domain([0, Utils.getDepth(this.props.data) - 1])
+                .domain(d)
                 .interpolate(interpolateHcl)
                 .range([props.bgColorRangeLow, props.bgColorRangeHigh]);
         } else {
-            this._nodesbgColorFunction = scaleSequential(chromatic.interpolateYlOrRd)
-                .domain([Utils.getDepth(this.props.data) - 1, 0]);
+            // Red, yellow, green: interpolateYlOrRd
+            this._nodesbgColorFunction =
+                scaleSequential(chromatic.interpolateGreens)
+                    .domain(d);
+            console.log(this._nodesbgColorFunction(0));
+            console.log(this._nodesbgColorFunction(20));
+            console.log(this._nodesbgColorFunction(40));
+            console.log(this._nodesbgColorFunction(84));
+            console.log(this._nodesbgColorFunction(1340));
         }
 
     }
@@ -170,12 +187,18 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         // TODO: Change this Id value by the right id
         const id = (node as any).data.name;
         const hasChildren = node.children && node.children.length > 0 ? true : false;
-        const backgroundColor = this._nodesbgColorFunction(node.depth);
-        const colorText = Utils.getHighContrastColorFromString(backgroundColor);
         const valueWithFormat = this._valueFormatFunction(node.value);
         const nodeTotalNodes = node.descendants().length;
+        // Color domain = depth
+        // const backgroundColor = this._nodesbgColorFunction(node.depth);
+        // Color domain = size (value)
+        // const backgroundColor = this._nodesbgColorFunction(node.value);
+        // Color domain = number of children
+        const backgroundColor = this._nodesbgColorFunction(nodeTotalNodes);
+        const colorText = Utils.getHighContrastColorFromString(backgroundColor);
+
         const { valueFormat } = this.props;
-        const { width, height } = this.state;
+        const { width, height, totalNodes } = this.state;
         return (
             <NodeContainer
                 {...node}
@@ -198,6 +221,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 globalHeight={height}
                 globalWidth={width}
                 nodeTotalNodes={nodeTotalNodes}
+                globalTotalNodes={totalNodes}
                 isSelectedNode={id === this.state.selectedId}
             />
         );

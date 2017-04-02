@@ -39,6 +39,7 @@ export interface INodeProps {
     globalWidth: number;
     isSelectedNode: boolean;
     nodeTotalNodes: number;
+    globalTotalNodes: number;
 
     xTranslated?: number;
     yTranslated?: number;

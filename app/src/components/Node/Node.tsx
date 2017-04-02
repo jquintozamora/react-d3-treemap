@@ -26,7 +26,11 @@ class Node extends React.Component<INodeProps, {}> {
             yTranslated,
             isSelectedNode,
             width,
-            height
+            height,
+            fontSize,
+            textColor,
+            nodeTotalNodes,
+            globalTotalNodes
         } = this.props;
         const cursor = hasChildren === true && isSelectedNode === false ? "pointer" : "auto";
         return (
@@ -53,6 +57,9 @@ class Node extends React.Component<INodeProps, {}> {
                     clipPath={"url(#clip-" + name + ")"}
                 >
                     {this._getLabelNewLine()}
+                    <tspan fontSize={fontSize} fill={textColor} x={4} dy={fontSize + 3} >
+                        {nodeTotalNodes + "/" + globalTotalNodes}
+                    </tspan>
                 </text>
                 <title>{label + "\n" + valueWithFormat}</title>
             </g>
