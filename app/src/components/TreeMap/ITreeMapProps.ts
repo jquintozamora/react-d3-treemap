@@ -15,7 +15,8 @@ export interface ITreeMapProps {
     bgColorRangeLow?: string;
     bgColorRangeHigh?: string;
 
-    colorText?: string;
-
-    borderColorHover?: string;
+    /*
+     * We do not need colorText anymore as it will be calculated as a high contrast color depending on background
+     */
+    // colorText?: string;
 };

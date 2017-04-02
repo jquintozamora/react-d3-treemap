@@ -5,6 +5,12 @@ export interface IBreadcrumbProps {
    */
   items: IBreadcrumbItem[];
 
+  bgColor: string;
+  hoverBgColor: string;
+  currentBgColor: string;
+
+  className?: string;
+
 }
 
 export interface IBreadcrumbItem {

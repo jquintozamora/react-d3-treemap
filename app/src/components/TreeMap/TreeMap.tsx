@@ -14,14 +14,18 @@ import {
 import {
     scaleLinear,
     scaleSequential,
+    scaleOrdinal,
+    schemeCategory10,
+    schemeCategory20c,
     interpolateViridis
 } from "d3-scale";
+import * as chromatic from "d3-scale-chromatic";
 import { interpolateHcl } from "d3-interpolate";
 // import {
 //     Breadcrumb, IBreadcrumbItem
 // } from "office-ui-fabric-react/lib/Breadcrumb";
 import {
-    Breadcrumb, IBreadcrumbItem
+    Breadcrumb, IBreadcrumbItem, BreadcrumbStyled
 } from "../Breadcrumb/Breadcrumb";
 
 
@@ -44,8 +48,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         // These props will be passed from outer component if needed
         // bgColorRangeLow: "#007AFF",
         // bgColorRangeHigh: "#FFF500",
-        colorText: "#000",
-        borderColorHover: "#000"
     };
 
 
@@ -95,7 +97,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             yScaleFunction: scaleLinear().range([0, this.props.height]),
             zoomEnabled: false,
             // TODO: Replace data.name by id
-            breadCrumbItems: [{ text: '[Root]', 'key': this.props.data.name, onClick: this._onBreadcrumbItemClicked }],
+            breadCrumbItems: [{ text: this.props.data.name, 'key': this.props.data.name, onClick: this._onBreadcrumbItemClicked }],
             selectedId: this.props.data.name,
             scopedNodes: this._nodes,
             selectedNode: this._treemap(this._rootData),
@@ -114,16 +116,15 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 .interpolate(interpolateHcl)
                 .range([props.bgColorRangeLow, props.bgColorRangeHigh]);
         } else {
-            this._nodesbgColorFunction = scaleSequential(interpolateViridis)
-                .domain([-4, 4]);
+            this._nodesbgColorFunction = scaleSequential(chromatic.interpolateYlOrRd)
+                .domain([Utils.getDepth(this.props.data) - 1, 0]);
         }
 
     }
 
 
     public render() {
-        const { valueFormat, colorText, borderColorHover } = this.props;
-        const { width, height, breadCrumbItems, selectedNode: mainNode } = this.state;
+        const { width, height, breadCrumbItems, selectedNode } = this.state;
 
         let reactNodes: any = [];
         const maxLevel = 1;
@@ -138,11 +139,17 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 }
             }
         };
-        iterateAllChildren(mainNode, 0);
+        iterateAllChildren(selectedNode, 0);
 
+        const highestBgColor = this._nodesbgColorFunction(0);
         return (
             <div>
-                <Breadcrumb items={breadCrumbItems} />
+                <BreadcrumbStyled
+                    bgColor={"white"}
+                    hoverBgColor={highestBgColor}
+                    currentBgColor={highestBgColor}
+                    items={breadCrumbItems}
+                />
                 <svg
                     className={styles.mainSvg}
                     height={height}
@@ -156,15 +163,18 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         );
     }
 
+
+
     private _getNode(node: HierarchyRectangularNode<{}>) {
         const name = (node as any).data.name;
         // TODO: Change this Id value by the right id
         const id = (node as any).data.name;
         const hasChildren = node.children && node.children.length > 0 ? true : false;
         const backgroundColor = this._nodesbgColorFunction(node.depth);
+        const colorText = Utils.getHighContrastColorFromString(backgroundColor);
         const valueWithFormat = this._valueFormatFunction(node.value);
         const nodeTotalNodes = node.descendants().length;
-        const { valueFormat, colorText } = this.props;
+        const { valueFormat } = this.props;
         const { width, height } = this.state;
         return (
             <NodeContainer
@@ -202,38 +212,43 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     }
 
     private _zoomTo(nodeId: string) {
-        const currentNodeArray = this._nodes.filter((item: any) => {
-            return item.data.name === nodeId;
-        });
-        if (currentNodeArray.length > 0) {
-            const currentNode = currentNodeArray[0];
-            const scopedNodes = currentNode.descendants();
-            const x = currentNode.x0;
-            const y = currentNode.y0;
-            const dx = currentNode.x1 - currentNode.x0;
-            const dy = currentNode.y1 - currentNode.y0;
-            const xScaleFactor = this.state.width / dx;
-            const yScaleFactor = this.state.height / dy;
-            const breadCrumbItems = this._treemap(this._rootData)
-                        .path(currentNode)
-                        .map((n: any) => {
-                            return { text: n.data.name, key: n.data.name, onClick: this._onBreadcrumbItemClicked };
-                        });
-            this.setState({
-                xScaleFactor,
-                yScaleFactor,
-                xScaleFunction: this.state.xScaleFunction.domain([x, x + dx]),
-                yScaleFunction: this.state.yScaleFunction.domain([y, y + dy]),
-                zoomEnabled: currentNode.parent === null ? false : true,
-                selectedId: nodeId,
-                selectedNode: currentNode,
-                scopedNodes,
-                selectedNodeTotalNodes: scopedNodes.length,
-                breadCrumbItems
+        const { selectedId, xScaleFunction, yScaleFunction, width, height } = this.state;
+
+        if (selectedId !== nodeId) {
+            const currentNodeArray = this._nodes.filter((item: any) => {
+                return item.data.name === nodeId;
             });
-        } else {
-            console.warn("No node found for " + nodeId);
+            if (currentNodeArray.length > 0) {
+                const currentNode = currentNodeArray[0];
+                const scopedNodes = currentNode.descendants();
+                const x = currentNode.x0;
+                const y = currentNode.y0;
+                const dx = currentNode.x1 - currentNode.x0;
+                const dy = currentNode.y1 - currentNode.y0;
+                const xScaleFactor = width / dx;
+                const yScaleFactor = height / dy;
+                const breadCrumbItems = this._treemap(this._rootData)
+                    .path(currentNode)
+                    .map((n: any) => {
+                        return { text: n.data.name, key: n.data.name, onClick: this._onBreadcrumbItemClicked };
+                    });
+                this.setState({
+                    xScaleFactor,
+                    yScaleFactor,
+                    xScaleFunction: xScaleFunction.domain([x, x + dx]),
+                    yScaleFunction: yScaleFunction.domain([y, y + dy]),
+                    zoomEnabled: currentNode.parent === null ? false : true,
+                    selectedId: nodeId,
+                    selectedNode: currentNode,
+                    scopedNodes,
+                    selectedNodeTotalNodes: scopedNodes.length,
+                    breadCrumbItems
+                });
+            } else {
+                console.warn("No node found for " + nodeId);
+            }
         }
+
     }
 
 }

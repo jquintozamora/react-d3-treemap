@@ -20,33 +20,31 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         this.state = {};
     }
 
-    public shouldComponentUpdate(nextProps: INodeContainerProps, nextState: INodeContainerState) {
-        if (nextProps.x0 < 0) {
-            return false;
-        }
-        if (nextProps.y0 < 0) {
-            return false;
-        }
-        if (nextProps.xScaleFunction(nextProps.x0) > nextProps.globalWidth) {
-            return false;
-        }
-        if (nextProps.xScaleFunction(nextProps.x0) < 0) {
-            return false;
-        }
-        if (nextProps.yScaleFunction(nextProps.y0) > nextProps.globalHeight) {
-            return false;
-        }
-        if (nextProps.yScaleFunction(nextProps.y0) < 0) {
-            return false;
-        }
-        return true;
-    }
+    // public shouldComponentUpdate(nextProps: INodeContainerProps, nextState: INodeContainerState) {
+    //     if (nextProps.x0 < 0) {
+    //         return false;
+    //     }
+    //     if (nextProps.y0 < 0) {
+    //         return false;
+    //     }
+    //     if (nextProps.xScaleFunction(nextProps.x0) > nextProps.globalWidth) {
+    //         return false;
+    //     }
+    //     if (nextProps.xScaleFunction(nextProps.x0) < 0) {
+    //         return false;
+    //     }
+    //     if (nextProps.yScaleFunction(nextProps.y0) > nextProps.globalHeight) {
+    //         return false;
+    //     }
+    //     if (nextProps.yScaleFunction(nextProps.y0) < 0) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     public render() {
         return this._getNestedFolderTypeNode();
     }
-
-
 
     private _getNestedFolderTypeNode() {
         const {
@@ -54,22 +52,11 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
             x1,
             y0,
             y1,
-            bgColor,
-            name,
-            id,
-            label,
-            textColor,
-            valueWithFormat,
-            className,
-            fontSize,
-            hasChildren,
             xScaleFactor,
             yScaleFactor,
             xScaleFunction,
             yScaleFunction,
-            zoomEnabled,
-            onClick,
-            isSelectedNode
+            zoomEnabled
         } = this.props;
         console.log("motion. Render");
         const xTranslated = zoomEnabled === true ? xScaleFunction(x0) : x0;

@@ -28,6 +28,7 @@ class Node extends React.Component<INodeProps, {}> {
             width,
             height
         } = this.props;
+        const cursor = hasChildren === true && isSelectedNode === false ? "pointer" : "auto";
         return (
             <g
                 transform={`translate(${xTranslated},${yTranslated})`}
@@ -35,7 +36,7 @@ class Node extends React.Component<INodeProps, {}> {
                 className={styles.node + " " + (isSelectedNode === true ? "selectedNode" : null)}
                 id={id}
                 onClick={hasChildren ? onClick : null}
-                style={{ cursor: hasChildren ? "pointer" : "auto" }}
+                style={{ cursor }}
             >
                 <rect
                     id={"rect-" + name}
