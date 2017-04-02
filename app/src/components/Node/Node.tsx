@@ -16,8 +16,6 @@ class Node extends React.Component<INodeProps, {}> {
     private _getNestedFolderTypeNode() {
         const {
             bgColor,
-            onMouseOut,
-            onMouseOver,
             onClick,
             name,
             id,
@@ -36,8 +34,6 @@ class Node extends React.Component<INodeProps, {}> {
                 // ref={id}
                 className={styles.node + " " + (isSelectedNode === true ? "selectedNode" : null)}
                 id={id}
-                onMouseOver={onMouseOver}
-                onMouseOut={onMouseOut}
                 onClick={hasChildren ? onClick : null}
                 style={{ cursor: hasChildren ? "pointer" : "auto" }}
             >

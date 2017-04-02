@@ -123,11 +123,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
     public render() {
         const { valueFormat, colorText, borderColorHover } = this.props;
-        const { width, height } = this.state;
-
-        // const mainNode = this._treemap(this._rootData);
-        const mainNode = this.state.selectedNode;
-
+        const { width, height, breadCrumbItems, selectedNode: mainNode } = this.state;
 
         let reactNodes: any = [];
         const maxLevel = 1;
@@ -141,79 +137,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                     });
                 }
             }
-
         };
         iterateAllChildren(mainNode, 0);
-
-        // Todo . Remove this function and add breadcrum onclick function
-        let breadCrumbItems;
-        this._treemap(this._rootData)
-            .descendants()
-            .forEach((node, idx) => {
-                const id = (node as any).data.name;
-                // Get breadcrumb nodes using path function.
-                if (id === this.state.selectedId) {
-                    breadCrumbItems = this._treemap(this._rootData)
-                        .path(node)
-                        .map((n: any) => {
-                            return { text: n.data.name, 'key': n.data.name, onClick: this._onBreadcrumbItemClicked };
-                        });
-                }
-            });
-
-        // 3. Get array of nodes
-        /*this._nodes = this._treemap(this._rootData)
-            .descendants();
-
-        let breadCrumbItems;
-        const reactNodes = this._nodes
-            .map((node, idx) => {
-                const name = (node as any).data.name;
-                // TODO: Change this Id value by the right id
-                const id = (node as any).data.name;
-                const hasChildren = node.children && node.children.length > 0 ? true : false;
-                const backgroundColor = this._nodesbgColorFunction(node.depth);
-                const valueWithFormat = this._valueFormatFunction(node.value);
-
-                // Get breadcrumb nodes using path function.
-                if (id === this.state.selectedId) {
-                    breadCrumbItems = this._treemap(this._rootData)
-                        .path(node)
-                        .map((n: any) => {
-                            return { text: n.data.name, 'key': n.data.name, onClick: this._onBreadcrumbItemClicked };
-                        });
-                }
-
-                return (
-                    <NodeContainer
-                        {...node}
-                        id={id}
-                        xScaleFactor={this.state.xScaleFactor}
-                        yScaleFactor={this.state.yScaleFactor}
-                        xScaleFunction={this.state.xScaleFunction}
-                        yScaleFunction={this.state.yScaleFunction}
-                        zoomEnabled={this.state.zoomEnabled}
-                        key={idx}
-                        bgColor={backgroundColor}
-                        bgOpacity="1"
-                        borderColorHover={borderColorHover}
-                        label={name}
-                        name={name}
-                        fontSize={"14px"}
-                        textColor={colorText}
-                        className="node"
-                        hasChildren={hasChildren}
-                        hoverAnimation={true}
-                        onClick={this._onNodeClick}
-                        valueWithFormat={valueWithFormat}
-                        globalHeight={this.state.height}
-                        globalWidth={this.state.width}
-                        isSelectedNode={id === this.state.selectedId}
-                    />
-                );
-            });*/
-
-
 
         return (
             <div>
@@ -258,7 +183,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 textColor={colorText}
                 className="node"
                 hasChildren={hasChildren}
-                hoverAnimation={true}
                 onClick={this._onNodeClick}
                 valueWithFormat={valueWithFormat}
                 globalHeight={height}
@@ -284,13 +208,17 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         if (currentNodeArray.length > 0) {
             const currentNode = currentNodeArray[0];
             const scopedNodes = currentNode.descendants();
-            var x = currentNode.x0;
-            var y = currentNode.y0;
-            var dx = currentNode.x1 - currentNode.x0;
-            var dy = currentNode.y1 - currentNode.y0;
+            const x = currentNode.x0;
+            const y = currentNode.y0;
+            const dx = currentNode.x1 - currentNode.x0;
+            const dy = currentNode.y1 - currentNode.y0;
             const xScaleFactor = this.state.width / dx;
             const yScaleFactor = this.state.height / dy;
-            // if (currentNode.parent === null) {debugger;}
+            const breadCrumbItems = this._treemap(this._rootData)
+                        .path(currentNode)
+                        .map((n: any) => {
+                            return { text: n.data.name, key: n.data.name, onClick: this._onBreadcrumbItemClicked };
+                        });
             this.setState({
                 xScaleFactor,
                 yScaleFactor,
@@ -300,7 +228,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 selectedId: nodeId,
                 selectedNode: currentNode,
                 scopedNodes,
-                selectedNodeTotalNodes: scopedNodes.length
+                selectedNodeTotalNodes: scopedNodes.length,
+                breadCrumbItems
             });
         } else {
             console.warn("No node found for " + nodeId);

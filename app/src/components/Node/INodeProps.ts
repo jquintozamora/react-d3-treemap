@@ -60,8 +60,6 @@ export interface INodeProps {
     valueWithFormat: string;
 
     // Events props
-    onMouseOver?: any;
-    onMouseOut?: any;
     onClick?: any;
 
     // Others

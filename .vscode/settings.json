@@ -1,5 +1,6 @@
 {
   "vsicons.presets.angular": false,
+  "files.eol": "\n",
   "search.exclude": {
     "**/node_modules": true,
     "**/lib": true
