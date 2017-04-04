@@ -110,6 +110,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         // Color domain = number of children
         const d = extent(this._nodes, (n) => n.parent !== null ? n.descendants().length : 1);
+        // const d = extent(this._nodes, (n) => n.descendants().length );
 
         // Color domain = size (value)
         // const d = extent(this._nodes, (n) => {
@@ -136,7 +137,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
 
     public render() {
-        const { width, height, breadCrumbItems, selectedNode } = this.state;
+        const { width, height, breadCrumbItems, selectedNode, totalNodes } = this.state;
 
         let reactNodes: any = [];
         const maxLevel = 1;
@@ -153,11 +154,12 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         };
         iterateAllChildren(selectedNode, 0);
 
-        const highestBgColor = this._nodesbgColorFunction(0);
+        const highestBgColor = this._nodesbgColorFunction(totalNodes);
+        const lowestBgColor = this._nodesbgColorFunction(1);
         return (
             <div>
                 <BreadcrumbStyled
-                    bgColor={"white"}
+                    bgColor={lowestBgColor}
                     hoverBgColor={highestBgColor}
                     currentBgColor={highestBgColor}
                     items={breadCrumbItems}
@@ -178,6 +180,9 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
 
     private _getNode(node: HierarchyRectangularNode<{}>) {
+        const { valueFormat } = this.props;
+        const { width, height, totalNodes } = this.state;
+
         const name = (node as any).data.name;
         // TODO: Change this Id value by the right id
         const id = (node as any).data.name;
@@ -189,11 +194,12 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         // Color domain = size (value)
         // const backgroundColor = this._nodesbgColorFunction(node.value);
         // Color domain = number of children
-        const backgroundColor = this._nodesbgColorFunction(nodeTotalNodes);
+        let backgroundColor = this._nodesbgColorFunction(nodeTotalNodes);
+        if (node.parent === null) {
+            backgroundColor = this._nodesbgColorFunction(1);
+        }
         const colorText = Utils.getHighContrastColorFromString(backgroundColor);
 
-        const { valueFormat } = this.props;
-        const { width, height, totalNodes } = this.state;
         return (
             <NodeContainer
                 {...node}

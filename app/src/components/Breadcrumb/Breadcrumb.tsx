@@ -62,6 +62,8 @@ export const BreadcrumbStyled = styled(Breadcrumb) `
         padding: 0 10px 0 30px;
         position: relative;
         cursor: pointer;
+        background-color: #ffffff;
+        background-color: ${props => props.bgColor};
     }
 
     a:first-child {
@@ -78,7 +80,7 @@ export const BreadcrumbStyled = styled(Breadcrumb) `
         transform: scale(.707) rotate(45deg);
         z-index: 1;
         box-shadow: 2px -2px 0 2px rgb(206, 230, 140);
-        box-shadow: 2px -2px 0 2px ${props => props.currentBgColor};
+        box-shadow: 1px -1px 0 0px ${props => props.currentBgColor};
         border-radius: 0 5px 0 50px;
         background-color: #ffffff;
         background-color: ${props => props.bgColor};

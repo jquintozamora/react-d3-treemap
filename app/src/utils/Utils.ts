@@ -14,7 +14,7 @@ export class Utils {
     }
 
     public static getRGBColor(color: string) {
-        if (color === "white") {
+        if (color === "white" || color === "papayawhip") {
             return {
                 r: 255,
                 g: 255,

@@ -37,7 +37,7 @@ class Node extends React.Component<INodeProps, {}> {
             <g
                 transform={`translate(${xTranslated},${yTranslated})`}
                 // ref={id}
-                className={styles.node + " " + (isSelectedNode === true ? "selectedNode" : null)}
+                className={styles.node + " " + (nodeTotalNodes === globalTotalNodes ? styles.rootNode : null)}
                 id={id}
                 onClick={hasChildren ? onClick : null}
                 style={{ cursor }}
