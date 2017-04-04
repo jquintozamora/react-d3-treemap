@@ -130,11 +130,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             this._nodesbgColorFunction =
                 scaleSequential(chromatic.interpolateGreens)
                     .domain(d);
-            console.log(this._nodesbgColorFunction(0));
-            console.log(this._nodesbgColorFunction(20));
-            console.log(this._nodesbgColorFunction(40));
-            console.log(this._nodesbgColorFunction(84));
-            console.log(this._nodesbgColorFunction(1340));
         }
 
     }
