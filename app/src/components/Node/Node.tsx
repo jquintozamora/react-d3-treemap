@@ -61,17 +61,30 @@ class Node extends React.Component<INodeProps, {}> {
                         {nodeTotalNodes + "/" + globalTotalNodes}
                     </tspan>
                 </text>
+                <text
+                    clipPath={"url(#clip-" + name + ")"}
+                    x={20}
+                    y={20}
+                >
+                    test
+                </text>
                 <title>{label + "\n" + valueWithFormat}</title>
             </g>
         );
     }
 
     private _getLabelNewLine() {
-        const { label, textColor, fontSize, valueWithFormat, hasChildren } = this.props;
+        const { label,
+            textColor,
+            fontSize,
+            valueWithFormat,
+            hasChildren,
+            nodeTotalNodes,
+            globalTotalNodes } = this.props;
         if (hasChildren === true) {
             return (
                 <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize + 3} >
-                    {label + "\xa0" + valueWithFormat}
+                    {label + "\xa0" + valueWithFormat + "\xa0" + nodeTotalNodes + "/" + globalTotalNodes}
                 </tspan>
             );
         } else {
