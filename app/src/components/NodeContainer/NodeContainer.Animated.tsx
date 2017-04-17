@@ -1,11 +1,6 @@
 import * as React from "react";
 import { Motion, spring } from 'react-motion';
-
 import { Utils } from "../../utils/Utils";
-
-import { select } from "d3-selection";
-import { transition } from "d3-transition";
-
 import Node from "../Node/Node";
 
 import { INodeContainerProps } from "./INodeContainerProps";
@@ -19,28 +14,6 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
         // Default State values
         this.state = {};
     }
-
-    // public shouldComponentUpdate(nextProps: INodeContainerProps, nextState: INodeContainerState) {
-    //     if (nextProps.x0 < 0) {
-    //         return false;
-    //     }
-    //     if (nextProps.y0 < 0) {
-    //         return false;
-    //     }
-    //     if (nextProps.xScaleFunction(nextProps.x0) > nextProps.globalWidth) {
-    //         return false;
-    //     }
-    //     if (nextProps.xScaleFunction(nextProps.x0) < 0) {
-    //         return false;
-    //     }
-    //     if (nextProps.yScaleFunction(nextProps.y0) > nextProps.globalHeight) {
-    //         return false;
-    //     }
-    //     if (nextProps.yScaleFunction(nextProps.y0) < 0) {
-    //         return false;
-    //     }
-    //     return true;
-    // }
 
     public render() {
         return this._getNestedFolderTypeNode();
@@ -58,7 +31,7 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
             yScaleFunction,
             zoomEnabled
         } = this.props;
-        console.log("motion. Render");
+        // console.log("motion. Render");
         const xTranslated = zoomEnabled === true ? xScaleFunction(x0) : x0;
         const yTranslated = zoomEnabled === true ? yScaleFunction(y0) : y0;
         const width = xScaleFactor * (x1 - x0);

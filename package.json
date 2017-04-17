@@ -1,52 +1,52 @@
 {
-  "name": "react-d3-hierarchy",
+  "name": "react-d3-treemap",
   "version": "1.0.0",
-  "description": "Integrating D3 Hierarchy with React",
-  "main": "dist/React.D3.Hierarchy.js",
-  "types": "dist/index.d.ts",
+  "description": "Integrating D3 Treemap with React",
+  "main": "dist/react.d3.treemap.js",
+  "types": "dist/indexPackage.d.ts",
+  "style": "dist/react.d3.treemap.css",
   "scripts": {
     "start": "set NODE_ENV=development && webpack-dev-server --open --config ./webpack/webpack.config.dev.js",
     "prebuild": "npm install",
     "build": "set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.prod.js",
-    "stats": "set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.stats.js --profile --json > ./webpack/stats/stats.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "stats": "set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.stats.js --profile --json > ./webpack/stats/stats.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jquintozamora/react-d3-hierarchy.git"
+    "url": "git+https://github.com/jquintozamora/react-d3-treemap.git"
   },
   "keywords": [
     "React",
     "D3",
-    "Hierarchy"
+    "Treemap",
+    "motion",
+    "animation",
+    "zoomable",
+    "zoom",
+    "clickable"
   ],
   "author": "Jose Quinto <quintorel@hotmail.com>",
-  "license": "MIT",
+  "license": "BSD 3-Clause License",
   "bugs": {
-    "url": "https://github.com/jquintozamora/react-d3-hierarchy/issues"
+    "url": "https://github.com/jquintozamora/react-d3-treemap/issues"
   },
-  "homepage": "https://github.com/jquintozamora/react-d3-hierarchy#readme",
+  "homepage": "https://github.com/jquintozamora/react-d3-treemap#readme",
   "dependencies": {
-    "@types/d3-array": "^1.1.2",
-    "@types/d3-format": "^1.1.0",
-    "@types/d3-hierarchy": "^1.1.0",
-    "@types/d3-interpolate": "^1.1.5",
-    "@types/d3-scale": "^1.0.7",
-    "@types/d3-scale-chromatic": "^1.0.1",
-    "@types/d3-selection": "^1.0.12",
-    "@types/d3-transition": "^1.0.8",
+    "@types/d3-array": "1.1.2",
+    "@types/d3-format": "1.1.0",
+    "@types/d3-hierarchy": "1.1.0",
+    "@types/d3-interpolate": "1.1.5",
+    "@types/d3-scale": "1.0.7",
+    "@types/d3-scale-chromatic": "1.0.1",
     "@types/react-motion": "0.0.21",
-    "d3-array": "^1.1.1",
-    "d3-format": "^1.1.1",
-    "d3-hierarchy": "^1.1.4",
-    "d3-interpolate": "^1.1.4",
-    "d3-scale": "^1.0.5",
-    "d3-scale-chromatic": "^1.1.1",
-    "d3-selection": "^1.0.5",
-    "d3-transition": "^1.0.4",
-    "office-ui-fabric-react": "^2.7.1",
-    "react-motion": "^0.4.7",
-    "styled-components": "^1.4.4"
+    "d3-array": "1.1.1",
+    "d3-format": "1.1.1",
+    "d3-hierarchy": "1.1.4",
+    "d3-interpolate": "1.1.4",
+    "d3-scale": "1.0.5",
+    "d3-scale-chromatic": "1.1.1",
+    "react-motion": "0.4.7",
+    "styled-components": "1.4.4"
   },
   "peerDependencies": {
     "react": ">=15.0.0",

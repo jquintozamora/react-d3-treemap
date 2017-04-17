@@ -12,7 +12,7 @@ module.exports = {
     devtool: 'inline-source-map',
     target: 'web',
     entry: {
-        'bundle': [
+        'react.d3.treemap': [
             // activate HMR for React
             'react-hot-loader/patch',
             // bundle the client for webpack-dev-server

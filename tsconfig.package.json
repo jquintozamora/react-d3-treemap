@@ -2,7 +2,8 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "declaration": false,
+        "declaration": true,
+        "outDir": "./",
         "noImplicitAny": false,
         "suppressImplicitAnyIndexErrors": true,
         "removeComments": true,
@@ -18,5 +19,19 @@
             "react",
             "react-dom"
         ]
-    }
+    },
+    "filesGlob": [
+        "./**/*.ts",
+        "!./node_modules/**/*.ts"
+    ],
+    "files": [
+        "./app/src/indexPackage.ts"
+    ],
+    "include": [
+        "app/src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
 }

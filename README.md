@@ -4,6 +4,8 @@ TreeMap component based on d3.treemap
 It´s based on [Mike Bostock´s Treemap](https://bl.ocks.org/mbostock/911ad09bdead40ec0061) design.
 ![React-d3-treemap-gif](./assets/react-d3-treemap.gif)
 
+## DEMO
+[React D3 Treemap demo](http://josequinto.com/reactd3treemap/index.html)
 
 ## Features
 - React for painting SVG

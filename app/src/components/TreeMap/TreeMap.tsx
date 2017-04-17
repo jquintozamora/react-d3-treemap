@@ -176,7 +176,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 >
                     {reactNodes}
                 </svg>
-                <div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>
+                {/*<div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>*/}
             </div>
 
         );

@@ -8,7 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
     devtool: 'source-map',
     entry: {
-        'react.d3.treemap': './app/src/index.tsx'
+        'react.d3.treemap': './app/src/indexPackage.ts'
     },
     context: resolve(__dirname, '../'),
     output: {
@@ -17,7 +17,7 @@ module.exports = {
         // Possible value - amd, commonjs, commonjs2, commonjs-module, this, var
         libraryTarget: 'umd',
         // library bundle to be available as a global variable when imported
-        library: 'TaxonomyPicker'
+        library: 'ReactD3Treemap'
     },
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
@@ -52,7 +52,6 @@ module.exports = {
             filename: '../dist/[name].css',
             allChunks: true
         }),
-        new webpack.NormalModuleReplacementPlugin(/..\/..\/utils\/MockAPI\/SP.Taxonomy$/, "../../utils/API/SP.Taxonomy"),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false,
@@ -99,6 +98,7 @@ module.exports = {
                         {
                             loader: 'ts-loader',
                             options: {
+                                configFileName: "tsconfig.package.json"
                                 // transpileOnly: true,
                                 // logInfoToStdOut: true
                             }

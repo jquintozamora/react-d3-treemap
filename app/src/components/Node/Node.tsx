@@ -108,9 +108,9 @@ class Node extends React.Component<INodeProps, {}> {
                         fontSize={fontSize}
                         fill={textColor}
                         x={width - itemsWidth}
-                        y={2}
-                        alignmentBaseline="hanging"
-                        textAnchor="start"
+                        y={fontSize}
+                        // alignmentBaseline="hanging"
+                        // textAnchor="start"
                     >
                         {nodeTotalNodes}
                     </text>

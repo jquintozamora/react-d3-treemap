@@ -6,7 +6,7 @@
   stroke: #000000;
 }
 
-.node rect:hover {
+.node > rect:hover {
   stroke: #000000;
 }
 
