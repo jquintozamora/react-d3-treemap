@@ -9,7 +9,8 @@ import {
     TreemapLayout,
     HierarchyRectangularNode,
     treemap as d3treemap,
-    hierarchy as d3hierarchy
+    hierarchy as d3hierarchy,
+    stratify as d3stratify
 } from "d3-hierarchy";
 import {
     scaleLinear,
@@ -45,6 +46,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         height: 600,
         width: 600,
         valueFormat: ",d",
+        valueUnit: "MB"
     };
 
 
@@ -54,7 +56,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     private _treemap: TreemapLayout<{}>;
     private _rootData: any;
     private _nodes: HierarchyRectangularNode<{}>[];
-
 
 
     // Numeric value format function
@@ -81,8 +82,12 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             .sort((a, b) => b.height - a.height || b.value - a.value);
 
         // 3. Get array of nodes
+        let numberItemId = 0;
         this._nodes = this._treemap(this._rootData)
-            .descendants();
+                        .each((item: any) => {
+                            item.customId = numberItemId++;
+                        })
+                        .descendants();
 
         // Default State values
         this.state = {
@@ -94,8 +99,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             yScaleFunction: scaleLinear().range([0, this.props.height]),
             zoomEnabled: false,
             // TODO: Replace data.name by id
-            breadCrumbItems: [{ text: this.props.data.name, 'key': this.props.data.name, onClick: this._onBreadcrumbItemClicked }],
-            selectedId: this.props.data.name,
+            breadCrumbItems: [{ text: this.props.data.name, 'key': 0, onClick: this._onBreadcrumbItemClicked }],
+            selectedId: 0,
             scopedNodes: this._nodes,
             selectedNode: this._treemap(this._rootData),
             totalNodes: this._nodes.length,
@@ -184,8 +189,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         const { width, height, totalNodes } = this.state;
 
         const name = (node as any).data.name;
-        // TODO: Change this Id value by the right id
-        const id = (node as any).data.name;
+        const id = (node as any).customId;
         const hasChildren = node.children && node.children.length > 0 ? true : false;
         const valueWithFormat = this._valueFormatFunction(node.value);
         const nodeTotalNodes = node.descendants().length;
@@ -209,7 +213,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 xScaleFunction={this.state.xScaleFunction}
                 yScaleFunction={this.state.yScaleFunction}
                 zoomEnabled={this.state.zoomEnabled}
-                // key={id}
+                key={id}
                 bgColor={backgroundColor}
                 label={name}
                 name={name}
@@ -224,6 +228,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 nodeTotalNodes={nodeTotalNodes}
                 globalTotalNodes={totalNodes}
                 isSelectedNode={id === this.state.selectedId}
+                valueUnit={this.props.valueUnit}
             />
         );
     }
@@ -241,7 +246,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         if (selectedId !== nodeId) {
             const currentNodeArray = this._nodes.filter((item: any) => {
-                return item.data.name === nodeId;
+                return item.customId.toString() === nodeId.toString();
             });
             if (currentNodeArray.length > 0) {
                 const currentNode = currentNodeArray[0];
@@ -255,7 +260,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 const breadCrumbItems = this._treemap(this._rootData)
                     .path(currentNode)
                     .map((n: any) => {
-                        return { text: n.data.name, key: n.data.name, onClick: this._onBreadcrumbItemClicked };
+                        return { text: n.data.name, key: n.customId, onClick: this._onBreadcrumbItemClicked };
                     });
                 this.setState({
                     xScaleFactor,

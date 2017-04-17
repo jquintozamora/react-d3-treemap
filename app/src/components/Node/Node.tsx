@@ -21,6 +21,7 @@ class Node extends React.Component<INodeProps, {}> {
             id,
             label,
             valueWithFormat,
+            valueUnit,
             hasChildren,
             xTranslated,
             yTranslated,
@@ -40,31 +41,31 @@ class Node extends React.Component<INodeProps, {}> {
                 transform={`translate(${xTranslated},${yTranslated})`}
                 // ref={id}
                 className={styles.node + " " + (nodeTotalNodes === globalTotalNodes ? styles.rootNode : null)}
-                id={id}
+                id={id.toString()}
                 onClick={hasChildren ? onClick : null}
                 style={{ cursor }}
             >
                 <rect
-                    id={"rect-" + name}
+                    id={"rect-" + id}
                     width={width}
                     height={height}
                     fill={bgColor}
                 />
                 <clipPath
-                    id={"clip-" + name}
+                    id={"clip-" + id}
                 >
                     <rect
-                        width={clipWidth - 5}
+                        width={Math.max(0, clipWidth - 5)}
                         height={height}
                     />
                 </clipPath>
                 <text
-                    clipPath={"url(#clip-" + name + ")"}
+                    clipPath={"url(#clip-" + id + ")"}
                 >
                     {this._getLabelNewLine()}
                 </text>
                 {this._getNumberOfItemsRect()}
-                <title>{label + "\n" + valueWithFormat + "\n" + nodeTotalNodes + "/" + globalTotalNodes}</title>
+                <title>{label + "\n" + valueWithFormat + " " + valueUnit + "\n" + nodeTotalNodes + "/" + globalTotalNodes}</title>
             </g>
         );
     }
@@ -124,18 +125,19 @@ class Node extends React.Component<INodeProps, {}> {
             textColor,
             fontSize,
             valueWithFormat,
+            valueUnit,
             hasChildren,
             nodeTotalNodes,
             globalTotalNodes } = this.props;
         if (hasChildren === true) {
             return (
                 <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize} >
-                    {label + "\xa0(" + valueWithFormat + ")"}
+                    {label + "\xa0(" + valueWithFormat + " " + valueUnit + ")"}
                 </tspan>
             );
         } else {
             if (label) {
-                return label.split(/(?=[A-Z][^A-Z])/g).concat(valueWithFormat).map((item, index) => {
+                return label.split(/(?=[A-Z][^A-Z])/g).concat("(" + valueWithFormat + " " + valueUnit + ")").map((item, index) => {
                     return (
                         <tspan fontSize={fontSize} fill={textColor} key={index} x={4} dy={fontSize} >
                             {item}

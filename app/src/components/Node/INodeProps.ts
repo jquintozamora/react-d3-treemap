@@ -22,7 +22,8 @@ export interface INodeProps {
      * Optional Node Id string set by StratifyOperator, if
      * hierarchical data was created from tabular data using stratify()
      */
-    readonly id?: string;
+    // readonly id?: string;
+    id: number;
 
     // Position props
     // x0: number;
@@ -65,5 +66,7 @@ export interface INodeProps {
 
     // Others
     hasChildren: boolean;
+
+    valueUnit: string;
 
 };

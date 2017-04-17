@@ -6,9 +6,10 @@ export default class App extends React.Component<{}, {}> {
     public render() {
         return (
             <TreeMap
-                height={300}
-                width={400}
+                height={500}
+                width={800}
                 data={data}
+                valueUnit={"MB"}
                 // bgColorRangeLow={"#007AFF"}
                 // bgColorRangeHigh={"#FFF500"}
                 // bgColorRangeLow={"#FFFFBF"}

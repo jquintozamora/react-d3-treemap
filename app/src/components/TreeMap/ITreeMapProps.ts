@@ -4,6 +4,11 @@ export interface ITreeMapProps {
     data: any;
 
     /*
+        Unit for values. For example MB
+    */
+    valueUnit?: string;
+
+    /*
      * Format for the values
      * https://github.com/d3/d3-format#format
      */
