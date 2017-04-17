@@ -54,6 +54,7 @@ I created a [TypeScript consume sample for React D3 Treemap](https://github.com/
 
 ## TODOs
 - Make it [responsive](https://truongtx.me/2016/08/20/moving-away-from-d3js-im-using-reactjs-for-dom-manipulation-now)
+- Add @types
 
 
 ## License
