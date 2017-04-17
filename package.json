@@ -25,7 +25,11 @@
     "zoom",
     "clickable"
   ],
-  "author": "Jose Quinto <quintorel@hotmail.com>",
+  "author": {
+    "name": "Jose Quinto Zamora",
+    "email": "quintorel@hotmail.com",
+    "url": "https://blog.josequinto.com"
+  },
   "license": "BSD 3-Clause License",
   "bugs": {
     "url": "https://github.com/jquintozamora/react-d3-treemap/issues"
