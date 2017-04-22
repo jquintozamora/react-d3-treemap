@@ -141,7 +141,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     }
 
     public componentWillReceiveProps(nextProps: ITreeMapProps) {
-        console.log("componentWillReceiveProps");
         if (nextProps.height !== this.props.height
             || nextProps.width !== this.props.width) {
 
