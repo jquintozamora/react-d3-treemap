@@ -31,8 +31,8 @@ npm install --save react-d3-treemap
 ```
 
 ### 2. Import and use in your application
-```
-import TaxonomyPicker from "react-d3-treemap";
+```js
+import TreeMap from "react-d3-treemap";
 // Include its styles in you build process as well
 import "react-d3-treemap/dist/react-d3-treemap.css";
 ```
