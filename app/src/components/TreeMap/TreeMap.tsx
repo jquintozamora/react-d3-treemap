@@ -84,10 +84,10 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         // 3. Get array of nodes
         let numberItemId = 0;
         this._nodes = this._treemap(this._rootData)
-                        .each((item: any) => {
-                            item.customId = numberItemId++;
-                        })
-                        .descendants();
+            .each((item: any) => {
+                item.customId = numberItemId++;
+            })
+            .descendants();
 
         // Default State values
         this.state = {
@@ -140,9 +140,76 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
     }
 
+    public componentWillReceiveProps(nextProps: ITreeMapProps) {
+        console.log("componentWillReceiveProps");
+        if (nextProps.height !== this.props.height
+            || nextProps.width !== this.props.width) {
+
+            this.setState({
+                width: nextProps.width,
+                height: nextProps.height,
+                xScaleFunction: scaleLinear().range([0, nextProps.width]),
+                yScaleFunction: scaleLinear().range([0, nextProps.height])
+            });
+        }
+    }
 
     public render() {
         const { width, height, breadCrumbItems, selectedNode, totalNodes } = this.state;
+
+        // 1. Create treemap structure
+        this._treemap = d3treemap()
+            .size([width, height])
+            .paddingOuter(3)
+            .paddingTop(19)
+            .paddingInner(1)
+            .round(true);
+
+        // 2. Before compute a hierarchical layout, we need a root node
+        //    If the data is in JSON we use d3.hierarchy
+        this._rootData = d3hierarchy(this.props.data)
+            .sum((d: any) => d.value)
+            .sort((a, b) => b.height - a.height || b.value - a.value);
+
+        // 3. Get array of nodes
+        let numberItemId = 0;
+        this._nodes = this._treemap(this._rootData)
+            .each((item: any) => {
+                item.customId = numberItemId++;
+            })
+            .descendants();
+
+        // Format function
+        this._valueFormatFunction = format(this.props.valueFormat);
+
+        // Color domain = depth
+        // const d = [Utils.getDepth(this.props.data) - 1, 0];
+
+        // Color domain = number of children
+        const d = extent(this._nodes, (n) => n.parent !== null ? n.descendants().length : 1);
+        // const d = extent(this._nodes, (n) => n.descendants().length );
+
+        // Color domain = size (value)
+        // const d = extent(this._nodes, (n) => {
+        //     if (n.parent !== null) {
+        //         return n.value;
+        //     }
+        // });
+
+        // Create bgColorFunction
+        if (this.props.hasOwnProperty("bgColorRangeLow")
+            && this.props.hasOwnProperty("bgColorRangeHigh")) {
+            this._nodesbgColorFunction = scaleLinear<any>()
+                .domain(d)
+                .interpolate(interpolateHcl)
+                .range([this.props.bgColorRangeLow, this.props.bgColorRangeHigh]);
+        } else {
+            // Red, yellow, green: interpolateYlOrRd
+            this._nodesbgColorFunction =
+                scaleSequential(chromatic.interpolateGreens)
+                    .domain(d);
+        }
+
 
         let reactNodes: any = [];
         const maxLevel = 1;
