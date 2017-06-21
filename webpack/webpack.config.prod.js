@@ -51,32 +51,32 @@ module.exports = {
         new ExtractTextPlugin({
             filename: '../dist/[name].css',
             allChunks: true
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false,
-                screw_ie8: true,
-                conditionals: true,
-                unused: true,
-                comparisons: true,
-                sequences: true,
-                dead_code: true,
-                evaluate: true,
-                if_return: true,
-                join_vars: true,
-                drop_console: true,
-                drop_debugger: true,
-                global_defs: {
-                    __REACT_HOT_LOADER__: undefined // eslint-disable-line no-undefined
-                }
-            },
-            minimize: true,
-            debug: false,
-            sourceMap: true,
-            output: {
-                comments: false
-            },
         })
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: {
+        //         warnings: false,
+        //         screw_ie8: true,
+        //         conditionals: true,
+        //         unused: true,
+        //         comparisons: true,
+        //         sequences: true,
+        //         dead_code: true,
+        //         evaluate: true,
+        //         if_return: true,
+        //         join_vars: true,
+        //         drop_console: true,
+        //         drop_debugger: true,
+        //         global_defs: {
+        //             __REACT_HOT_LOADER__: undefined // eslint-disable-line no-undefined
+        //         }
+        //     },
+        //     minimize: false,
+        //     debug: true,
+        //     sourceMap: true,
+        //     output: {
+        //         comments: false
+        //     },
+        //})
     ],
     module: {
         // loaders -> rules in webpack 2

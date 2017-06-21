@@ -122,18 +122,48 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         };
         iterateAllChildren(selectedNode, 0);
 
-        debugger;
+        //remove first element from the array as we do not need it
+        reactNodes.shift();
+
+        const styling = {
+            padding: 10
+        };
+
+        const moveRight = (arr, value) => arr.map( obj => {
+            const { props: { x0, x1 }} = obj;
+            return Object.assign({}, obj, {
+                props: Object.assign({}, obj.props, {
+                    x0: x0 + value,
+                    x1: x1 + value
+                })
+            });   
+        });
+
+        const reactNodesMovedRight = moveRight(reactNodes, 10);
+
+        const { padding } = styling;
+
+        const heightPlusPadding = height + padding;
+        const widthPlusPadding = width + 2 * padding;
 
         const highestBgColor = this._nodesbgColorFunction(totalNodes);
         const lowestBgColor = this._nodesbgColorFunction(1);
         return (
             <div>
+                {/* <BreadcrumbStyled
+                    bgColor={lowestBgColor}
+                    hoverBgColor={highestBgColor}
+                    currentBgColor={highestBgColor}
+                    items={breadCrumbItems}
+                /> */}
                 <svg
                     className={styles.mainSvg}
-                    height={height}
-                    width={width}
+                    height={heightPlusPadding}
+                    width={widthPlusPadding}
                 >
-                    {reactNodes}
+                    <rect className="svg-group-wrapper"  height={heightPlusPadding} width={widthPlusPadding} y={padding/2}>
+                    </rect>
+                        {reactNodesMovedRight}
                 </svg>
                 {/*<div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>*/}
             </div>
