@@ -4109,35 +4109,18 @@ var TreeMap = (function (_super) {
         };
         iterateAllChildren(selectedNode, 0);
         reactNodes.shift();
-        var styling = {
-            padding: 10
-        };
-        var moveRight = function (arr, value) { return arr.map(function (obj) {
-            var _a = obj.props, x0 = _a.x0, x1 = _a.x1;
-            return Object.assign({}, obj, {
-                props: Object.assign({}, obj.props, {
-                    x0: x0 + value,
-                    x1: x1 + value
-                })
-            });
-        }); };
-        var reactNodesMovedRight = moveRight(reactNodes, 10);
-        var padding = styling.padding;
-        var heightPlusPadding = height + padding;
-        var widthPlusPadding = width + 2 * padding;
         var highestBgColor = this._nodesbgColorFunction(totalNodes);
         var lowestBgColor = this._nodesbgColorFunction(1);
         return (React.createElement("div", null,
-            React.createElement("svg", { className: styles.mainSvg, height: heightPlusPadding, width: widthPlusPadding },
-                React.createElement("rect", { className: "svg-group-wrapper", height: heightPlusPadding, width: widthPlusPadding, y: padding / 2 }),
-                reactNodesMovedRight)));
+            React.createElement("svg", { className: styles.mainSvg, height: height, width: width },
+                React.createElement("rect", { className: "svg-group-wrapper", height: height, width: width }),
+                reactNodes)));
     };
     TreeMap.prototype._createD3TreeMap = function (width, height) {
         this._treemap = d3_hierarchy_1.treemap()
             .size([width, height])
-            .paddingOuter(3)
-            .paddingTop(19)
-            .paddingInner(1)
+            .paddingOuter(10)
+            .paddingInner(0)
             .round(true);
         this._rootData = d3_hierarchy_1.hierarchy(this.props.data)
             .sum(function (d) { return d.value; })

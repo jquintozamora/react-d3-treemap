@@ -125,27 +125,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         //remove first element from the array as we do not need it
         reactNodes.shift();
 
-        const styling = {
-            padding: 10
-        };
-
-        const moveRight = (arr, value) => arr.map( obj => {
-            const { props: { x0, x1 }} = obj;
-            return Object.assign({}, obj, {
-                props: Object.assign({}, obj.props, {
-                    x0: x0 + value,
-                    x1: x1 + value
-                })
-            });   
-        });
-
-        const reactNodesMovedRight = moveRight(reactNodes, 10);
-
-        const { padding } = styling;
-
-        const heightPlusPadding = height + padding;
-        const widthPlusPadding = width + 2 * padding;
-
         const highestBgColor = this._nodesbgColorFunction(totalNodes);
         const lowestBgColor = this._nodesbgColorFunction(1);
         return (
@@ -158,12 +137,12 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 /> */}
                 <svg
                     className={styles.mainSvg}
-                    height={heightPlusPadding}
-                    width={widthPlusPadding}
+                    height={height}
+                    width={width}
                 >
-                    <rect className="svg-group-wrapper"  height={heightPlusPadding} width={widthPlusPadding} y={padding/2}>
+                    <rect className="svg-group-wrapper"  height={height} width={width}>
                     </rect>
-                        {reactNodesMovedRight}
+                    {reactNodes}
                 </svg>
                 {/*<div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>*/}
             </div>
@@ -176,9 +155,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         // 1. Create treemap structure
         this._treemap = d3treemap()
             .size([width, height])
-            .paddingOuter(3)
-            .paddingTop(19)
-            .paddingInner(1)
+            .paddingOuter(10)
+            .paddingInner(0)
             .round(true);
 
         // 2. Before compute a hierarchical layout, we need a root node
