@@ -9,6 +9,7 @@
     "start": "set NODE_ENV=development && webpack-dev-server --open --config ./webpack/webpack.config.dev.js",
     "prebuild": "npm install",
     "build": "set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.prod.js",
+    "build-debug": "set NODE_ENV=development && webpack --progress --config ./webpack/webpack.config.dev.js",
     "stats": "set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.stats.js --profile --json > ./webpack/stats/stats.json"
   },
   "repository": {

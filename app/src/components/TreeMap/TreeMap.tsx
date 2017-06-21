@@ -122,16 +122,12 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         };
         iterateAllChildren(selectedNode, 0);
 
+        debugger;
+
         const highestBgColor = this._nodesbgColorFunction(totalNodes);
         const lowestBgColor = this._nodesbgColorFunction(1);
         return (
             <div>
-                <BreadcrumbStyled
-                    bgColor={lowestBgColor}
-                    hoverBgColor={highestBgColor}
-                    currentBgColor={highestBgColor}
-                    items={breadCrumbItems}
-                />
                 <svg
                     className={styles.mainSvg}
                     height={height}

@@ -132,12 +132,12 @@ class Node extends React.Component<INodeProps, {}> {
         if (hasChildren === true) {
             return (
                 <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize} >
-                    {label + "\xa0(" + valueWithFormat + " " + valueUnit + ")"}
+                    {label + valueWithFormat + " " + valueUnit}
                 </tspan>
             );
         } else {
             if (label) {
-                return label.split(/(?=[A-Z][^A-Z])/g).concat("(" + valueWithFormat + " " + valueUnit + ")").map((item, index) => {
+                return label.split(/(?=[A-Z][^A-Z])/g).concat(valueWithFormat + " " + valueUnit).map((item, index) => {
                     return (
                         <tspan fontSize={fontSize} fill={textColor} key={index} x={4} dy={fontSize} >
                             {item}
