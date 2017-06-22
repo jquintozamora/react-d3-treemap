@@ -109,13 +109,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         let reactNodes: any = [];
         const maxLevel = 1;
-
         const iterateAllChildren = (mainNode: HierarchyRectangularNode<{}>, level: number): any => {
-            const aggregatedSmall = this._aggregateSmall(mainNode, 10000);
-
-            debugger;
-     
-            reactNodes = reactNodes.concat(this._getNode(aggregatedSmall));
+            reactNodes = reactNodes.concat(this._getNode(mainNode));
             if (level < maxLevel) {
                 if (mainNode.hasOwnProperty("children")
                     && mainNode.children.length > 0) {
@@ -125,22 +120,17 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 }
             }
         };
-
         iterateAllChildren(selectedNode, 0);
 
         //remove first element from the array as we do not need it
-        //reactNodes.shift();
+        reactNodes.shift();
 
-        //const aggregationParams = this._aggregateSmall(reactNodes, 10000);
-
-        const bla = reactNodes;
-        debugger;
+        const reactNodesAggregated = this._aggregateSmall(reactNodes, 10000);
 
 
 
         const highestBgColor = this._nodesbgColorFunction(totalNodes);
         const lowestBgColor = this._nodesbgColorFunction(1);
-
         return (
             <div>
                 {/* <BreadcrumbStyled
@@ -156,7 +146,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 >
                     <rect className="svg-group-wrapper"  height={height} width={width}>
                     </rect>
-                    {reactNodes}
+                    {reactNodesAggregated}
                 </svg>
                 {/*<div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>*/}
             </div>
@@ -165,16 +155,14 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     }
 
 
-    private _aggregateSmall( obj, threshold: number) {
-        const { children } = obj;
+    private _aggregateSmall( arr: Array<any>, threshold: number) {
         const aggegated = {};
         const xArr = [];
         const yArr = [];
-        //const aggrStartIndex;
         let aggrValue = 0;
 
-        const filtered = children.filter( (obj, idx) => {
-            const { x0, x1, y0, y1, value} = obj;
+        const filtered = arr.filter( obj => {
+            const { x0, x1, y0, y1, value} = obj.props;
 
             const tooSmall = (x0 - x1) * (y0 - y1) < threshold;
 
@@ -185,33 +173,12 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 yArr.push(y1);
                 aggrValue += value;
             }
-
             return tooSmall ? false : true;
         });
 
-        // filtered.push({
-        //     customId: filtered.length + 1,
-        //     depth: 1,
-        //     height: 0,
-        //     parent: filtered[0].parent,
-        //     data: {
-        //         name: 'Others',
-        //         value: aggrValue
-        //     },
-        //     value: aggrValue,
-        //     x0: xArr.unshift(),
-        //     x1: xArr.pop(),
-        //     y0: yArr.unshift(),
-        //     y1: yArr.pop()
-        // });
+        debugger;
 
-
-
-        const result = Object.assign({}, obj, {
-            children: filtered
-        })
-
-        return result;
+        return filtered;
     }
 
 
