@@ -29,11 +29,9 @@ import {
     IBreadcrumbItem, BreadcrumbStyled
 } from "../Breadcrumb/Breadcrumb";
 
-
 /* tslint:disable:no-var-requires */
 const styles: any = require("./TreeMap.module.css");
 /* tslint:enable:no-var-requires */
-
 
 import { ITreeMapProps } from "./ITreeMapProps";
 import { ITreeMapState } from "./ITreeMapState";
@@ -71,6 +69,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         // Default State values
         this.state = {
+            fontSize: 15,
             height: this.props.height,
             width: this.props.width,
             xScaleFactor: 1,
@@ -109,6 +108,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         let reactNodes: any = [];
         const maxLevel = 1;
+
         const iterateAllChildren = (mainNode: HierarchyRectangularNode<{}>, level: number): any => {
             reactNodes = reactNodes.concat(this._getNode(mainNode));
             if (level < maxLevel) {
@@ -122,12 +122,10 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         };
         iterateAllChildren(selectedNode, 0);
 
-        //remove first element from the array as we do not need it
+        //remove first element from the array as this is some kind of header and we do not need it
         reactNodes.shift();
 
         const reactNodesAggregated = this._aggregateSmall(reactNodes, 10000);
-
-
 
         const highestBgColor = this._nodesbgColorFunction(totalNodes);
         const lowestBgColor = this._nodesbgColorFunction(1);
@@ -156,6 +154,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
 
     private _aggregateSmall( arr: Array<any>, threshold: number) {
+        const { fontSize } = this.state;
+
         const aggegated = {};
         const xArr = [];
         const yArr = [];
@@ -176,11 +176,51 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             return tooSmall ? false : true;
         });
 
-        debugger;
+        const xSorted = xArr.sort((a, b) => a > b);
+        const ySorted = yArr.sort((a, b) => a > b);
+
+        const x0 = xSorted[0];
+        const x1 = xSorted[xSorted.length - 1];
+        const y0 = ySorted[0];
+        const y1 = ySorted[ySorted.length - 1];
+
+        const translate = `translate(${x0}, ${y0})`;
+        const id = filtered.length + 1;
+        const width = x1 - x0;
+        const height = y1 - y0;
+
+        const aggrNode =
+            <g
+                key="aggrNode"
+                transform={translate}>
+                <rect
+                    id={"rect-" + id}
+                    width={width}
+                    height={height}
+                />
+                 <text y="10">
+                    <tspan
+                        className='segment-name'
+                        fontSize={fontSize}
+                        x="10"
+                        dy={fontSize}
+                        >
+                       Others
+                    </tspan>
+                    <tspan
+                        className='segment-value'
+                        fontSize={fontSize + 2}
+                        x={10}
+                        dy={fontSize + 5}>
+                       {aggrValue}
+                    </tspan>
+                </text>
+            </g>;
+
+        filtered.push(aggrNode);
 
         return filtered;
     }
-
 
     private _createD3TreeMap(width: number, height: number) {
         // 1. Create treemap structure
@@ -238,7 +278,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
     private _getNode(node: HierarchyRectangularNode<{}>) {
         const { valueFormat } = this.props;
-        const { width, height, totalNodes } = this.state;
+        const { width, height, totalNodes, fontSize } = this.state;
+
 
         const name = (node as any).data.name;
         const id = (node as any).customId;
@@ -269,7 +310,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 bgColor={backgroundColor}
                 label={name}
                 name={name}
-                fontSize={15}
+                fontSize={fontSize}
                 textColor={colorText}
                 className="node"
                 hasChildren={hasChildren}

@@ -142,7 +142,7 @@ class Node extends React.Component<INodeProps, {}> {
                     const last = index === arr.length - 1;
 
                     return (
-                        <tspan 
+                        <tspan
                             className={last ? 'segment-value' : 'segment-name'}
                             fontSize={last ? fontSize + 2 : fontSize }
                             fill={textColor}
