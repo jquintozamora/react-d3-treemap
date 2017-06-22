@@ -12,6 +12,7 @@ declare class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     constructor(props: ITreeMapProps, context: any);
     componentWillReceiveProps(nextProps: ITreeMapProps): void;
     render(): JSX.Element;
+    private _aggregateSmall(obj, threshold);
     private _createD3TreeMap(width, height);
     private _getNode(node);
     private _onBreadcrumbItemClicked;

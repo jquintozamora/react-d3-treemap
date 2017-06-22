@@ -1,0 +1,50 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'run', 'build' ]
+2 info using npm@3.10.10
+3 info using node@v6.11.0
+4 verbose run-script [ 'prebuild', 'build', 'postbuild' ]
+5 info lifecycle react-d3-treemap@1.0.4~prebuild: react-d3-treemap@1.0.4
+6 verbose lifecycle react-d3-treemap@1.0.4~prebuild: unsafe-perm in lifecycle true
+7 verbose lifecycle react-d3-treemap@1.0.4~prebuild: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/jsimutis/Documents/projects/react-d3-treemap/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+8 verbose lifecycle react-d3-treemap@1.0.4~prebuild: CWD: /Users/jsimutis/Documents/projects/react-d3-treemap
+9 silly lifecycle react-d3-treemap@1.0.4~prebuild: Args: [ '-c', 'npm install' ]
+10 silly lifecycle react-d3-treemap@1.0.4~prebuild: Returned: code: 0  signal: null
+11 info lifecycle react-d3-treemap@1.0.4~build: react-d3-treemap@1.0.4
+12 verbose lifecycle react-d3-treemap@1.0.4~build: unsafe-perm in lifecycle true
+13 verbose lifecycle react-d3-treemap@1.0.4~build: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/jsimutis/Documents/projects/react-d3-treemap/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+14 verbose lifecycle react-d3-treemap@1.0.4~build: CWD: /Users/jsimutis/Documents/projects/react-d3-treemap
+15 silly lifecycle react-d3-treemap@1.0.4~build: Args: [ '-c',
+15 silly lifecycle   'set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.prod.js' ]
+16 silly lifecycle react-d3-treemap@1.0.4~build: Returned: code: 2  signal: null
+17 info lifecycle react-d3-treemap@1.0.4~build: Failed to exec build script
+18 verbose stack Error: react-d3-treemap@1.0.4 build: `set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.prod.js`
+18 verbose stack Exit status 2
+18 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:255:16)
+18 verbose stack     at emitTwo (events.js:106:13)
+18 verbose stack     at EventEmitter.emit (events.js:191:7)
+18 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:40:14)
+18 verbose stack     at emitTwo (events.js:106:13)
+18 verbose stack     at ChildProcess.emit (events.js:191:7)
+18 verbose stack     at maybeClose (internal/child_process.js:891:16)
+18 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
+19 verbose pkgid react-d3-treemap@1.0.4
+20 verbose cwd /Users/jsimutis/Documents/projects/react-d3-treemap
+21 error Darwin 14.5.0
+22 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "run" "build"
+23 error node v6.11.0
+24 error npm  v3.10.10
+25 error code ELIFECYCLE
+26 error react-d3-treemap@1.0.4 build: `set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.prod.js`
+26 error Exit status 2
+27 error Failed at the react-d3-treemap@1.0.4 build script 'set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.prod.js'.
+27 error Make sure you have the latest version of node.js and npm installed.
+27 error If you do, this is most likely a problem with the react-d3-treemap package,
+27 error not with npm itself.
+27 error Tell the author that this fails on your system:
+27 error     set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.prod.js
+27 error You can get information on how to open an issue for this project with:
+27 error     npm bugs react-d3-treemap
+27 error Or if that isn't available, you can get their info via:
+27 error     npm owner ls react-d3-treemap
+27 error There is likely additional logging output above.
+28 verbose exit [ 1, true ]

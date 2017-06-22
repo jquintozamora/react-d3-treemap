@@ -109,8 +109,13 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         let reactNodes: any = [];
         const maxLevel = 1;
+
         const iterateAllChildren = (mainNode: HierarchyRectangularNode<{}>, level: number): any => {
-            reactNodes = reactNodes.concat(this._getNode(mainNode));
+            const aggregatedSmall = this._aggregateSmall(mainNode, 10000);
+
+            debugger;
+     
+            reactNodes = reactNodes.concat(this._getNode(aggregatedSmall));
             if (level < maxLevel) {
                 if (mainNode.hasOwnProperty("children")
                     && mainNode.children.length > 0) {
@@ -120,13 +125,22 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 }
             }
         };
+
         iterateAllChildren(selectedNode, 0);
 
         //remove first element from the array as we do not need it
-        reactNodes.shift();
+        //reactNodes.shift();
+
+        //const aggregationParams = this._aggregateSmall(reactNodes, 10000);
+
+        const bla = reactNodes;
+        debugger;
+
+
 
         const highestBgColor = this._nodesbgColorFunction(totalNodes);
         const lowestBgColor = this._nodesbgColorFunction(1);
+
         return (
             <div>
                 {/* <BreadcrumbStyled
@@ -148,6 +162,56 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             </div>
 
         );
+    }
+
+
+    private _aggregateSmall( obj, threshold: number) {
+        const { children } = obj;
+        const aggegated = {};
+        const xArr = [];
+        const yArr = [];
+        //const aggrStartIndex;
+        let aggrValue = 0;
+
+        const filtered = children.filter( (obj, idx) => {
+            const { x0, x1, y0, y1, value} = obj;
+
+            const tooSmall = (x0 - x1) * (y0 - y1) < threshold;
+
+            if (tooSmall) {
+                xArr.push(x0);
+                xArr.push(x1);
+                yArr.push(y0);
+                yArr.push(y1);
+                aggrValue += value;
+            }
+
+            return tooSmall ? false : true;
+        });
+
+        // filtered.push({
+        //     customId: filtered.length + 1,
+        //     depth: 1,
+        //     height: 0,
+        //     parent: filtered[0].parent,
+        //     data: {
+        //         name: 'Others',
+        //         value: aggrValue
+        //     },
+        //     value: aggrValue,
+        //     x0: xArr.unshift(),
+        //     x1: xArr.pop(),
+        //     y0: yArr.unshift(),
+        //     y1: yArr.pop()
+        // });
+
+
+
+        const result = Object.assign({}, obj, {
+            children: filtered
+        })
+
+        return result;
     }
 
 
@@ -238,7 +302,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 bgColor={backgroundColor}
                 label={name}
                 name={name}
-                fontSize={14}
+                fontSize={15}
                 textColor={colorText}
                 className="node"
                 hasChildren={hasChildren}

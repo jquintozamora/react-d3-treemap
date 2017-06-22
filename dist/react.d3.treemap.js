@@ -4097,7 +4097,9 @@ var TreeMap = (function (_super) {
         var reactNodes = [];
         var maxLevel = 1;
         var iterateAllChildren = function (mainNode, level) {
-            reactNodes = reactNodes.concat(_this._getNode(mainNode));
+            var aggregatedSmall = _this._aggregateSmall(mainNode, 10000);
+            debugger;
+            reactNodes = reactNodes.concat(_this._getNode(aggregatedSmall));
             if (level < maxLevel) {
                 if (mainNode.hasOwnProperty("children")
                     && mainNode.children.length > 0) {
@@ -4108,13 +4110,37 @@ var TreeMap = (function (_super) {
             }
         };
         iterateAllChildren(selectedNode, 0);
-        reactNodes.shift();
+        var bla = reactNodes;
+        debugger;
         var highestBgColor = this._nodesbgColorFunction(totalNodes);
         var lowestBgColor = this._nodesbgColorFunction(1);
         return (React.createElement("div", null,
             React.createElement("svg", { className: styles.mainSvg, height: height, width: width },
                 React.createElement("rect", { className: "svg-group-wrapper", height: height, width: width }),
                 reactNodes)));
+    };
+    TreeMap.prototype._aggregateSmall = function (obj, threshold) {
+        var children = obj.children;
+        var aggegated = {};
+        var xArr = [];
+        var yArr = [];
+        var aggrValue = 0;
+        var filtered = children.filter(function (obj, idx) {
+            var x0 = obj.x0, x1 = obj.x1, y0 = obj.y0, y1 = obj.y1, value = obj.value;
+            var tooSmall = (x0 - x1) * (y0 - y1) < threshold;
+            if (tooSmall) {
+                xArr.push(x0);
+                xArr.push(x1);
+                yArr.push(y0);
+                yArr.push(y1);
+                aggrValue += value;
+            }
+            return tooSmall ? false : true;
+        });
+        var result = Object.assign({}, obj, {
+            children: filtered
+        });
+        return result;
     };
     TreeMap.prototype._createD3TreeMap = function (width, height) {
         this._treemap = d3_hierarchy_1.treemap()
@@ -4159,7 +4185,7 @@ var TreeMap = (function (_super) {
             backgroundColor = this._nodesbgColorFunction(1);
         }
         var colorText = Utils_1.Utils.getHighContrastColorFromString(backgroundColor);
-        return (React.createElement(NodeContainer_Animated_1.default, __assign({}, node, { id: id, xScaleFactor: this.state.xScaleFactor, yScaleFactor: this.state.yScaleFactor, xScaleFunction: this.state.xScaleFunction, yScaleFunction: this.state.yScaleFunction, zoomEnabled: this.state.zoomEnabled, key: id, bgColor: backgroundColor, label: name, name: name, fontSize: 14, textColor: colorText, className: "node", hasChildren: hasChildren, onClick: this._onNodeClick, valueWithFormat: valueWithFormat, globalHeight: height, globalWidth: width, nodeTotalNodes: nodeTotalNodes, globalTotalNodes: totalNodes, isSelectedNode: id === this.state.selectedId, valueUnit: this.props.valueUnit })));
+        return (React.createElement(NodeContainer_Animated_1.default, __assign({}, node, { id: id, xScaleFactor: this.state.xScaleFactor, yScaleFactor: this.state.yScaleFactor, xScaleFunction: this.state.xScaleFunction, yScaleFunction: this.state.yScaleFunction, zoomEnabled: this.state.zoomEnabled, key: id, bgColor: backgroundColor, label: name, name: name, fontSize: 15, textColor: colorText, className: "node", hasChildren: hasChildren, onClick: this._onNodeClick, valueWithFormat: valueWithFormat, globalHeight: height, globalWidth: width, nodeTotalNodes: nodeTotalNodes, globalTotalNodes: totalNodes, isSelectedNode: id === this.state.selectedId, valueUnit: this.props.valueUnit })));
     };
     TreeMap.prototype._zoomTo = function (nodeId) {
         var _this = this;
@@ -10038,7 +10064,7 @@ var Node = (function (_super) {
             React.createElement("rect", { id: "rect-" + id, width: width, height: height, fill: bgColor }),
             React.createElement("clipPath", { id: "clip-" + id },
                 React.createElement("rect", { width: Math.max(0, clipWidth - 5), height: height })),
-            React.createElement("text", { clipPath: "url(#clip-" + id + ")" }, this._getLabelNewLine()),
+            React.createElement("text", { clipPath: "url(#clip-" + id + ")", y: "10" }, this._getLabelNewLine()),
             this._getNumberOfItemsRect(),
             React.createElement("title", null, label + "\n" + valueWithFormat + " " + valueUnit + "\n" + nodeTotalNodes + "/" + globalTotalNodes)));
     };
@@ -10062,12 +10088,13 @@ var Node = (function (_super) {
     Node.prototype._getLabelNewLine = function () {
         var _a = this.props, label = _a.label, textColor = _a.textColor, fontSize = _a.fontSize, valueWithFormat = _a.valueWithFormat, valueUnit = _a.valueUnit, hasChildren = _a.hasChildren, nodeTotalNodes = _a.nodeTotalNodes, globalTotalNodes = _a.globalTotalNodes;
         if (hasChildren === true) {
-            return (React.createElement("tspan", { fontSize: fontSize, fill: textColor, dx: 4, dy: fontSize }, label + valueWithFormat + " " + valueUnit));
+            return (React.createElement("tspan", { fontSize: fontSize + 2, fill: textColor, dx: 4, dy: fontSize }, label + valueWithFormat + " " + valueUnit));
         }
         else {
             if (label) {
-                return label.split(/(?=[A-Z][^A-Z])/g).concat(valueWithFormat + " " + valueUnit).map(function (item, index) {
-                    return (React.createElement("tspan", { fontSize: fontSize, fill: textColor, key: index, x: 4, dy: fontSize }, item));
+                return label.split(/(?=[A-Z][^A-Z])/g).concat(valueWithFormat + " " + valueUnit).map(function (item, index, arr) {
+                    var last = index === arr.length - 1;
+                    return (React.createElement("tspan", { className: last ? 'segment-value' : 'segment-name', fontSize: last ? fontSize + 2 : fontSize, fill: textColor, key: index, x: 10, dy: last ? fontSize + 5 : fontSize }, item));
                 });
             }
         }
