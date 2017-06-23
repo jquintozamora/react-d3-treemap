@@ -61,6 +61,7 @@ class Node extends React.Component<INodeProps, {}> {
                 </clipPath>
                 <text
                     clipPath={"url(#clip-" + id + ")"}
+                    y="10"
                 >
                     {this._getLabelNewLine()}
                 </text>
@@ -131,15 +132,24 @@ class Node extends React.Component<INodeProps, {}> {
             globalTotalNodes } = this.props;
         if (hasChildren === true) {
             return (
-                <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize} >
-                    {label + "\xa0(" + valueWithFormat + " " + valueUnit + ")"}
+                <tspan fontSize={fontSize + 2} fill={textColor} dx={4} dy={fontSize} >
+                    {label + valueWithFormat + " " + valueUnit}
                 </tspan>
             );
         } else {
             if (label) {
-                return label.split(/(?=[A-Z][^A-Z])/g).concat("(" + valueWithFormat + " " + valueUnit + ")").map((item, index) => {
+                return label.split(/(?=[A-Z][^A-Z])/g).concat(valueWithFormat + " " + valueUnit).map((item, index, arr) => {
+                    const last = index === arr.length - 1;
+
                     return (
-                        <tspan fontSize={fontSize} fill={textColor} key={index} x={4} dy={fontSize} >
+                        <tspan
+                            className={last ? 'segment-value' : 'segment-name'}
+                            fontSize={last ? fontSize + 2 : fontSize }
+                            fill={textColor}
+                            key={index}
+                            x={10}
+                            dy={last ? fontSize + 5 : fontSize}
+                        >
                             {item}
                         </tspan>
                     );
