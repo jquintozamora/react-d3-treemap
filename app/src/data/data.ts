@@ -4,7 +4,6 @@
 // value: number of bytes of the doc (calculated at folder level by d3)
 // children: sub files or sub folders
 
-
 export const data = {
     "name": "flare",
     "children": [
