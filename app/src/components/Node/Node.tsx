@@ -122,13 +122,13 @@ class Node extends React.Component<INodeProps, {}> {
 
     private _getLabelNewLine() {
         const { label,
-            textColor,
-            fontSize,
-            valueWithFormat,
-            valueUnit,
-            hasChildren,
-            nodeTotalNodes,
-            globalTotalNodes } = this.props;
+                textColor,
+                fontSize,
+                valueWithFormat,
+                valueUnit,
+                hasChildren,
+                nodeTotalNodes,
+                globalTotalNodes } = this.props;
         if (hasChildren === true) {
             return (
                 <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize} >

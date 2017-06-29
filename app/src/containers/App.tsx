@@ -1,7 +1,7 @@
 import * as React from "react";
 import TreeMap from "../components/TreeMap/TreeMap";
 import { data } from "../data/data";
-import ContainerDimensions from 'react-container-dimensions';
+import ContainerDimensions from "react-container-dimensions";
 
 export default class App extends React.Component<{}, {}> {
     public render() {

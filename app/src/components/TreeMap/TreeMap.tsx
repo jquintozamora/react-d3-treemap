@@ -29,11 +29,9 @@ import {
     IBreadcrumbItem, BreadcrumbStyled
 } from "../Breadcrumb/Breadcrumb";
 
-
 /* tslint:disable:no-var-requires */
 const styles: any = require("./TreeMap.module.css");
 /* tslint:enable:no-var-requires */
-
 
 import { ITreeMapProps } from "./ITreeMapProps";
 import { ITreeMapState } from "./ITreeMapState";
@@ -49,7 +47,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         valueUnit: "MB"
     };
 
-
     // Note. This treemap element initially was using treemap and hierarchy directly on the render.
     //       I noticed a performance problem when the original data "this.props.data" has more than 1500 elements.
     //       Now, the component is designed to show only the first level of nodes and when click on one expand the rest.
@@ -57,12 +54,10 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     private _rootData: any;
     private _nodes: HierarchyRectangularNode<{}>[];
 
-
     // Numeric value format function
     private _valueFormatFunction: (n: number) => string;
     // Background Color function
     private _nodesbgColorFunction: (t: number) => string;
-
 
     constructor(props: ITreeMapProps, context: any) {
         super(props, context);
@@ -144,7 +139,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         );
     }
-
 
     private _createD3TreeMap(width: number, height: number) {
         // 1. Create treemap structure

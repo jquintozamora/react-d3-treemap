@@ -1,12 +1,11 @@
 import * as React from "react";
 import { Utils } from "../../utils/Utils";
 
-import styled from "styled-components";
-
+import * as styled from "styled-components";
 
 import { IBreadcrumbProps, IBreadcrumbItem } from "./IBreadcrumbProps";
 
-export class Breadcrumb extends React.Component<IBreadcrumbProps, {}> {
+class Breadcrumb extends React.Component<IBreadcrumbProps, {}> {
 
     public render() {
         return (
@@ -43,7 +42,7 @@ export class Breadcrumb extends React.Component<IBreadcrumbProps, {}> {
     }
 }
 
-export const BreadcrumbStyled = styled(Breadcrumb) `
+export const BreadcrumbStyled = styled.default(Breadcrumb) `
     text-align: center;
     display: block;
     overflow: hidden;
@@ -112,5 +111,3 @@ export const BreadcrumbStyled = styled(Breadcrumb) `
 `;
 
 export { IBreadcrumbItem } from "./IBreadcrumbProps";
-
-
