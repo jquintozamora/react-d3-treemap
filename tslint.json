@@ -21,7 +21,8 @@
     "max-classes-per-file": [true, 4],
     "object-literal-sort-keys": false,
     "ordered-imports": [false],
-    "jsx-no-multiline-js": false
+    "jsx-no-multiline-js": false,
+    "jsx-wrap-multiline": false
   },
   "jsRules": {
     "object-literal-shorthand": true,

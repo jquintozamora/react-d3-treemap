@@ -6,4 +6,5 @@ export interface ITreeMapProps {
     valueFormat?: string;
     bgColorRangeLow?: string;
     bgColorRangeHigh?: string;
+    disableBreadcrumb?: boolean;
 }

@@ -24,4 +24,9 @@ export interface ITreeMapProps {
      * We do not need colorText anymore as it will be calculated as a high contrast color depending on background
      */
     // colorText?: string;
+
+    /**
+     * Hide breadcrumb
+     */
+    disableBreadcrumb?: boolean;
 };

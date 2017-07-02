@@ -42,7 +42,7 @@ class Breadcrumb extends React.Component<IBreadcrumbProps, {}> {
     }
 }
 
-export const BreadcrumbStyled = styled.default(Breadcrumb) `
+export const BreadcrumbStyled: any = styled.default(Breadcrumb) `
     text-align: center;
     display: block;
     overflow: hidden;
