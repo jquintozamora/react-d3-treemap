@@ -44,7 +44,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         height: 600,
         width: 600,
         valueFormat: ",d",
-        valueUnit: "MB"
+        valueUnit: "MB",
+        disableBreadcrumb: false
     };
 
     // Note. This treemap element initially was using treemap and hierarchy directly on the render.
@@ -121,12 +122,18 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         const lowestBgColor = this._nodesbgColorFunction(1);
         return (
             <div>
-                <BreadcrumbStyled
-                    bgColor={lowestBgColor}
-                    hoverBgColor={highestBgColor}
-                    currentBgColor={highestBgColor}
-                    items={breadCrumbItems}
-                />
+                {
+                    this.props.disableBreadcrumb === false
+                        ?
+                        <BreadcrumbStyled
+                            bgColor={lowestBgColor}
+                            hoverBgColor={highestBgColor}
+                            currentBgColor={highestBgColor}
+                            items={breadCrumbItems}
+                        />
+                        :
+                        null
+                }
                 <svg
                     className={styles.mainSvg}
                     height={height}

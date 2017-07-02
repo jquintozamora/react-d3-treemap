@@ -13,6 +13,7 @@ export default class App extends React.Component<{}, {}> {
                         height={400}
                         data={data}
                         valueUnit={"MB"}
+                        disableBreadcrumb={true}
                         // bgColorRangeLow={"#007AFF"}
                         // bgColorRangeHigh={"#FFF500"}
                         // bgColorRangeLow={"#FFFFBF"}
