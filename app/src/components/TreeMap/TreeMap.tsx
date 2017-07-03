@@ -24,7 +24,7 @@ import {
     extent
 } from "d3-array";
 import * as chromatic from "d3-scale-chromatic";
-import { interpolateHcl } from "d3-interpolate";
+import { interpolateHcl, interpolateHsl } from "d3-interpolate";
 import {
     IBreadcrumbItem, BreadcrumbStyled
 } from "../Breadcrumb/Breadcrumb";
@@ -33,7 +33,7 @@ import {
 const styles: any = require("./TreeMap.module.css");
 /* tslint:enable:no-var-requires */
 
-import { ITreeMapProps } from "./ITreeMapProps";
+import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
 import { ITreeMapState } from "./ITreeMapState";
 
 class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
@@ -45,7 +45,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         width: 600,
         valueFormat: ",d",
         valueUnit: "MB",
-        disableBreadcrumb: false
+        disableBreadcrumb: false,
+        colorModel: ColorModel.NumberOfChildren
     };
 
     // Note. This treemap element initially was using treemap and hierarchy directly on the render.
@@ -173,19 +174,27 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         // Format function
         this._valueFormatFunction = format(this.props.valueFormat);
 
-        // Color domain = depth
-        // const d = [Utils.getDepth(this.props.data) - 1, 0];
-
-        // Color domain = number of children
-        const d = extent(this._nodes, (n) => n.parent !== null ? n.descendants().length : 1);
-        // const d = extent(this._nodes, (n) => n.descendants().length );
-
-        // Color domain = size (value)
-        // const d = extent(this._nodes, (n) => {
-        //     if (n.parent !== null) {
-        //         return n.value;
-        //     }
-        // });
+        let d: any;
+        switch (this.props.colorModel) {
+            case ColorModel.Depth:
+                // Color domain = depth
+                d = [0, Utils.getDepth(this.props.data) - 1];
+                break;
+            case ColorModel.Value:
+                // Color domain = size (value)
+                d = extent(this._nodes, (n) => {
+                    if (n.parent !== null) {
+                        return n.value;
+                    }
+                });
+                break;
+            case ColorModel.NumberOfChildren:
+                // Color domain = number of children
+                d = extent(this._nodes, (n) => n.parent !== null ? n.descendants().length : 1);
+                break;
+            default:
+                break;
+        }
 
         // Create bgColorFunction
         if (this.props.hasOwnProperty("bgColorRangeLow")
@@ -211,15 +220,34 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         const hasChildren = node.children && node.children.length > 0 ? true : false;
         const valueWithFormat = this._valueFormatFunction(node.value);
         const nodeTotalNodes = node.descendants().length;
-        // Color domain = depth
-        // const backgroundColor = this._nodesbgColorFunction(node.depth);
-        // Color domain = size (value)
-        // const backgroundColor = this._nodesbgColorFunction(node.value);
-        // Color domain = number of children
-        let backgroundColor = this._nodesbgColorFunction(nodeTotalNodes);
-        if (node.parent === null) {
-            backgroundColor = this._nodesbgColorFunction(1);
+
+        let backgroundColor;
+        switch (this.props.colorModel) {
+            case ColorModel.Depth:
+                // Color domain = depth
+                backgroundColor = this._nodesbgColorFunction(node.depth);
+                if (node.parent === null) {
+                    backgroundColor = this._nodesbgColorFunction(0);
+                }
+                break;
+            case ColorModel.Value:
+                // Color domain = size (value)
+                backgroundColor = this._nodesbgColorFunction(node.value);
+                if (node.parent === null) {
+                    backgroundColor = this._nodesbgColorFunction(1);
+                }
+                break;
+            case ColorModel.NumberOfChildren:
+                // Color domain = number of children
+                backgroundColor = this._nodesbgColorFunction(nodeTotalNodes);
+                if (node.parent === null) {
+                    backgroundColor = this._nodesbgColorFunction(1);
+                }
+                break;
+            default:
+                break;
         }
+
         const colorText = Utils.getHighContrastColorFromString(backgroundColor);
 
         return (
