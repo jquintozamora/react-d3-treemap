@@ -29,4 +29,12 @@ export interface ITreeMapProps {
      * Hide breadcrumb
      */
     disableBreadcrumb?: boolean;
-};
+
+    colorModel: ColorModel;
+}
+
+export enum ColorModel {
+    Depth,
+    Value,
+    NumberOfChildren
+}
