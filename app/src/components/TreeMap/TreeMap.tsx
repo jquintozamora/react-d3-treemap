@@ -219,7 +219,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         const id = (node as any).customId;
         const hasChildren = node.children && node.children.length > 0 ? true : false;
         const valueWithFormat = this._valueFormatFunction(node.value);
-        const nodeTotalNodes = node.descendants().length;
+        const nodeTotalNodes = node.descendants().length - 1;
 
         let backgroundColor;
         switch (this.props.colorModel) {
