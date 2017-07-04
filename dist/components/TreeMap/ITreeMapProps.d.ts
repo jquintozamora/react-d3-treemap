@@ -7,7 +7,7 @@ export interface ITreeMapProps {
     bgColorRangeLow?: string;
     bgColorRangeHigh?: string;
     disableBreadcrumb?: boolean;
-    colorModel: ColorModel;
+    colorModel?: ColorModel;
 }
 export declare enum ColorModel {
     Depth = 0,

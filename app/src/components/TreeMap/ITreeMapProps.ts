@@ -30,7 +30,7 @@ export interface ITreeMapProps {
      */
     disableBreadcrumb?: boolean;
 
-    colorModel: ColorModel;
+    colorModel?: ColorModel;
 }
 
 export enum ColorModel {
