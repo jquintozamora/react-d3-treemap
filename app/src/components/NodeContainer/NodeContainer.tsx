@@ -56,6 +56,7 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
                 yTranslated={yTranslated}
                 height={height}
                 width={width}
+                url={url}
             />
 
         );
