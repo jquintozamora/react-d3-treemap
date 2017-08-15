@@ -69,4 +69,5 @@ export interface INodeProps {
 
     valueUnit: string;
 
-};
+    url: string;
+}
