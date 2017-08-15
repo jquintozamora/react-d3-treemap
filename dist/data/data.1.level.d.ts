@@ -1,7 +1,11 @@
 export declare const data: {
     "name": string;
-    "children": {
+    "children": ({
         "name": string;
         "value": number;
-    }[];
+        "link": string;
+    } | {
+        "name": string;
+        "value": number;
+    })[];
 };
