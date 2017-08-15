@@ -7,7 +7,6 @@ import { INodeContainerState } from "./INodeContainerState";
 
 class NodeContainer extends React.Component<INodeContainerProps, INodeContainerState> {
 
-
     constructor(props: any, context: any) {
         super(props, context);
 
@@ -42,7 +41,8 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
             zoomEnabled,
             onClick,
             isSelectedNode,
-            nodeTotalNodes
+            nodeTotalNodes,
+            url
         } = this.props;
         // if (id === "util") {debugger;}
         const xTranslated = zoomEnabled === true ? xScaleFunction(x0) : x0;

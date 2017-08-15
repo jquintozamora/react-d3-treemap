@@ -217,6 +217,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
         const name = (node as any).data.name;
         const id = (node as any).customId;
+        const url = (node as any).data.link;
         const hasChildren = node.children && node.children.length > 0 ? true : false;
         const valueWithFormat = this._valueFormatFunction(node.value);
         const nodeTotalNodes = node.descendants().length - 1;
@@ -260,6 +261,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 yScaleFunction={this.state.yScaleFunction}
                 zoomEnabled={this.state.zoomEnabled}
                 key={id}
+                url={url}
                 bgColor={backgroundColor}
                 label={name}
                 name={name}
