@@ -31,7 +31,8 @@ class Node extends React.Component<INodeProps, {}> {
             fontSize,
             textColor,
             nodeTotalNodes,
-            globalTotalNodes
+            globalTotalNodes,
+            url,
         } = this.props;
         const cursor = hasChildren === true && isSelectedNode === false ? "pointer" : "auto";
         const itemsWidth = this._getNumberItemsWidthByNumberOfChars(fontSize, nodeTotalNodes.toString().length);
@@ -59,11 +60,13 @@ class Node extends React.Component<INodeProps, {}> {
                         height={height}
                     />
                 </clipPath>
-                <text
-                    clipPath={"url(#clip-" + id + ")"}
-                >
-                    {this._getLabelNewLine()}
-                </text>
+                <a href={url} target="_blank">
+                    <text
+                        clipPath={"url(#clip-" + id + ")"}
+                    >
+                        {this._getLabelNewLine()}
+                    </text>
+                </a>
                 {this._getNumberOfItemsRect()}
                 <title>{label + "\n" + valueWithFormat + " " + valueUnit + "\n" + nodeTotalNodes + "/" + globalTotalNodes}</title>
             </g>
@@ -109,8 +112,8 @@ class Node extends React.Component<INodeProps, {}> {
                         fill={textColor}
                         x={width - itemsWidth}
                         y={fontSize}
-                        // alignmentBaseline="hanging"
-                        // textAnchor="start"
+                    // alignmentBaseline="hanging"
+                    // textAnchor="start"
                     >
                         {nodeTotalNodes}
                     </text>
@@ -122,13 +125,13 @@ class Node extends React.Component<INodeProps, {}> {
 
     private _getLabelNewLine() {
         const { label,
-                textColor,
-                fontSize,
-                valueWithFormat,
-                valueUnit,
-                hasChildren,
-                nodeTotalNodes,
-                globalTotalNodes } = this.props;
+            textColor,
+            fontSize,
+            valueWithFormat,
+            valueUnit,
+            hasChildren,
+            nodeTotalNodes,
+            globalTotalNodes } = this.props;
         if (hasChildren === true) {
             return (
                 <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize} >

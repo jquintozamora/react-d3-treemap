@@ -35,4 +35,5 @@ export interface INodeProps {
     onClick?: any;
     hasChildren: boolean;
     valueUnit: string;
+    url: string;
 }
