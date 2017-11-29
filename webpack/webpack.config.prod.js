@@ -25,20 +25,20 @@ module.exports = {
     },
     // Exclude React from the bundle, must be react and react-dom here otherwise will not be excluded
     externals: {
-      react: {
-        root: 'React',
-        commonjs2: 'react',
-        commonjs: 'react',
-        amd: 'react',
-        umd: 'react',
-      },
-      'react-dom': {
-        root: 'ReactDOM',
-        commonjs2: 'react-dom',
-        commonjs: 'react-dom',
-        amd: 'react-dom',
-        umd: 'react-dom',
-      },
+        react: {
+            root: 'React',
+            commonjs2: 'react',
+            commonjs: 'react',
+            amd: 'react',
+            umd: 'react',
+        },
+        'react-dom': {
+            root: 'ReactDOM',
+            commonjs2: 'react-dom',
+            commonjs: 'react-dom',
+            amd: 'react-dom',
+            umd: 'react-dom',
+        },
     },
     plugins: [
         new webpack.DefinePlugin({
@@ -95,15 +95,15 @@ module.exports = {
                 test: /\.ts(x?)$/,
                 exclude: /node_modules/,
                 use: [
-                        {
-                            loader: 'ts-loader',
-                            options: {
-                                configFileName: "tsconfig.package.json"
-                                // transpileOnly: true,
-                                // logInfoToStdOut: true
-                            }
+                    {
+                        loader: 'ts-loader',
+                        options: {
+                            configFile: "tsconfig.package.json"
+                            // transpileOnly: true,
+                            // logInfoToStdOut: true
                         }
-                    ]
+                    }
+                ]
             },
             {
                 test: /\.css$/i,
