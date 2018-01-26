@@ -33,6 +33,7 @@ class Node extends React.Component<INodeProps, {}> {
             nodeTotalNodes,
             globalTotalNodes,
             url,
+            hideNumberOfChildren
         } = this.props;
         const cursor = hasChildren === true && isSelectedNode === false ? "pointer" : "auto";
         const itemsWidth = this._getNumberItemsWidthByNumberOfChars(fontSize, nodeTotalNodes.toString().length);
@@ -67,7 +68,7 @@ class Node extends React.Component<INodeProps, {}> {
                         {this._getLabelNewLine()}
                     </text>
                 </a>
-                {this._getNumberOfItemsRect()}
+                {!hideNumberOfChildren && this._getNumberOfItemsRect()}
                 <title>{label + "\n" + valueWithFormat + " " + valueUnit + "\n" + nodeTotalNodes + "/" + globalTotalNodes}</title>
             </g>
         );
@@ -131,16 +132,21 @@ class Node extends React.Component<INodeProps, {}> {
             valueUnit,
             hasChildren,
             nodeTotalNodes,
-            globalTotalNodes } = this.props;
-        if (hasChildren === true) {
+            globalTotalNodes,
+            hideValue
+         } = this.props;
+
+         if (hasChildren === true) {
+            const fullLabel = hideValue ? label : label + "\xa0(" + valueWithFormat + " " + valueUnit + ")"
             return (
                 <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize} >
-                    {label + "\xa0(" + valueWithFormat + " " + valueUnit + ")"}
+                    {fullLabel}
                 </tspan>
             );
         } else {
             if (label) {
-                return label.split(/(?=[A-Z][^A-Z])/g).concat("(" + valueWithFormat + " " + valueUnit + ")").map((item, index) => {
+                const fullLabel = hideValue ? label.split(/(?=[A-Z][^A-Z])/g) : label.split(/(?=[A-Z][^A-Z])/g).concat("(" + valueWithFormat + " " + valueUnit + ")")
+                return fullLabel.map((item, index) => {
                     return (
                         <tspan fontSize={fontSize} fill={textColor} key={index} x={4} dy={fontSize} >
                             {item}

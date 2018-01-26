@@ -277,6 +277,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 globalTotalNodes={totalNodes}
                 isSelectedNode={id === this.state.selectedId}
                 valueUnit={this.props.valueUnit}
+                hideNumberOfChildren={this.props.hideNumberOfChildren}
+                hideValue={this.props.hideValue}
             />
         );
     }

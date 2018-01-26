@@ -70,4 +70,7 @@ export interface INodeProps {
     valueUnit: string;
 
     url: string;
+
+    hideNumberOfChildren?: boolean;
+    hideValue?: boolean;
 }

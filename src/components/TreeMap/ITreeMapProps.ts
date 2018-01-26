@@ -31,6 +31,9 @@ export interface ITreeMapProps {
     disableBreadcrumb?: boolean;
 
     colorModel?: ColorModel;
+
+    hideNumberOfChildren?: boolean;
+    hideValue?: boolean;
 }
 
 export enum ColorModel {

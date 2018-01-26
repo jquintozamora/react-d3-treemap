@@ -17,6 +17,8 @@ export default class App extends React.Component<{}, {}> {
                         valueUnit={"MB"}
                         disableBreadcrumb={true}
                         colorModel={ColorModel.Depth}
+                        // hideNumberOfChildren
+                        hideValue
                         // bgColorRangeLow={"#007AFF"}
                         // bgColorRangeHigh={"#FFF500"}
                         // bgColorRangeLow={"#FFFFBF"}
