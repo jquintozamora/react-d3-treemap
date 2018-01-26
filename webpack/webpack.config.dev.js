@@ -22,7 +22,7 @@ module.exports = {
             // only- means to only hot reload for successful updates
             'webpack/hot/only-dev-server',
             // Our app main entry
-            './app/src/index.tsx'
+            './src/index.tsx'
         ]
     },
     output: {
@@ -94,12 +94,12 @@ module.exports = {
                     { loader: 'react-hot-loader/webpack' },
                     { loader: 'ts-loader' }
                 ],
-                include: resolve(__dirname, './../app/src')
+                include: resolve(__dirname, './../src')
             },
             {
                 test: /\.css$/i,
                 exclude: [/node_modules/],
-                include: resolve(__dirname, './../app/src'),
+                include: resolve(__dirname, './../src'),
                 use: [
                     {
                         loader: 'style-loader'

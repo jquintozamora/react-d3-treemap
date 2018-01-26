@@ -2,3 +2,5 @@ lib/
 node_modules/
 *.tgz
 npm-debug.log
+.cache
+public/

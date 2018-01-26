@@ -1,5 +1,5 @@
 .vscode
-app/src
+src
 dist
 node_modules
 webpack

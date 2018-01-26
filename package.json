@@ -7,9 +7,10 @@
   "style": "dist/react.d3.treemap.css",
   "scripts": {
     "start": "set NODE_ENV=development && webpack-dev-server --open --config ./webpack/webpack.config.dev.js",
-    "prebuild": "npm install",
     "build": "set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.prod.js",
-    "stats": "set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.stats.js --profile --json > ./webpack/stats/stats.json"
+    "stats": "set NODE_ENV=production && webpack --progress --config ./webpack/webpack.config.stats.js --profile --json > ./webpack/stats/stats.json",
+    "gatsby:deploy": "gatsby build --prefix-paths && gh-pages -d public",
+    "gatsby:develop": "gatsby develop"
   },
   "repository": {
     "type": "git",
@@ -62,6 +63,10 @@
     "@types/react-dom": "16.0.3",
     "css-loader": "0.28.7",
     "extract-text-webpack-plugin": "3.0.2",
+    "gatsby": "1.9.169",
+    "gatsby-link": "1.6.34",
+    "gatsby-plugin-typescript": "1.4.15",
+    "gh-pages": "1.1.0",
     "path": "0.12.7",
     "prop-types": "15.6.0",
     "react": "15.x.x || 16.x.x",
@@ -75,8 +80,8 @@
     "tslint": "5.8.0",
     "tslint-react": "3.2.0",
     "typescript": "2.6.2",
-    "webpack": "3.8.1",
-    "webpack-dev-server": "2.9.5",
+    "webpack": "3.10.0",
+    "webpack-dev-server": "2.11.1",
     "webpack-visualizer-plugin": "0.1.11"
   }
 }

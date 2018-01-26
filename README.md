@@ -12,7 +12,7 @@ and [React](https://facebook.github.io/react) based on [Mike Bostock´s Treemap]
 ![React-d3-treemap-gif](./assets/react-d3-treemap.gif)
 
 ## DEMO
-[React D3 Treemap demo](http://josequinto.com/reactd3treemap/index.html)
+[React D3 Treemap demo](https://jquintozamora.github.io/react-d3-treemap)
 
 ## Features
 - React for painting SVG

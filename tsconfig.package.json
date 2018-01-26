@@ -25,10 +25,10 @@
         "!./node_modules/**/*.ts"
     ],
     "files": [
-        "./app/src/indexPackage.ts"
+        "./src/indexPackage.ts"
     ],
     "include": [
-        "app/src/**/*"
+        "src/**/*"
     ],
     "exclude": [
         "node_modules",

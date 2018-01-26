@@ -8,7 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
     devtool: 'source-map',
     entry: {
-        'react.d3.treemap': './app/src/indexPackage.ts'
+        'react.d3.treemap': './src/indexPackage.ts'
     },
     context: resolve(__dirname, '../'),
     output: {
@@ -107,7 +107,7 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                include: resolve(__dirname, './../app/src'),
+                include: resolve(__dirname, './../src'),
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
                     use: [
