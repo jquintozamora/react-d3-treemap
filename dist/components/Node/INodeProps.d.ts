@@ -36,4 +36,6 @@ export interface INodeProps {
     hasChildren: boolean;
     valueUnit: string;
     url: string;
+    hideNumberOfChildren?: boolean;
+    hideValue?: boolean;
 }
