@@ -47,7 +47,7 @@ import "react-d3-treemap/dist/react.d3.treemap.css";
   />
 ```
 ## Data sample
-You can see an example of data [here](https://github.com/jquintozamora/react-d3-treemap/blob/master/app/src/data/data.ts).
+You can see an example of data [here](https://github.com/jquintozamora/react-d3-treemap/blob/master/src/data/data.ts).
 
 ## TypeScript sample
 I created a [TypeScript consume sample for React D3 Treemap](https://github.com/jquintozamora/react-d3-treemap-consume-typescript).
@@ -60,7 +60,7 @@ I created a [TypeScript consume sample for React D3 Treemap](https://github.com/
 ## License
 BSD 3-Clause License
 
-Copyright (c) 2017, José Quinto (https://blog.josequinto.com)
+Copyright (c) 2017, [José Quinto](https://blog.josequinto.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
