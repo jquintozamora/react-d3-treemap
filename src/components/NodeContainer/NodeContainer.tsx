@@ -9,10 +9,6 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
 
     constructor(props: any, context: any) {
         super(props, context);
-
-        // Default State values
-        this.state = {
-        };
     }
 
     public render() {
@@ -44,7 +40,6 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
             nodeTotalNodes,
             url
         } = this.props;
-        // if (id === "util") {debugger;}
         const xTranslated = zoomEnabled === true ? xScaleFunction(x0) : x0;
         const yTranslated = zoomEnabled === true ? yScaleFunction(y0) : y0;
         const width = xScaleFactor * (x1 - x0);
@@ -58,9 +53,8 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
                 width={width}
                 url={url}
             />
-
         );
     }
-
 }
+
 export default NodeContainer;

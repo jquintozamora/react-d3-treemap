@@ -4,7 +4,6 @@ import * as React from "react";
 const styles: any = require("./Node.module.css");
 /* tslint:enable:no-var-requires */
 
-
 import { INodeProps } from "./INodeProps";
 
 class Node extends React.Component<INodeProps, {}> {
@@ -41,7 +40,6 @@ class Node extends React.Component<INodeProps, {}> {
         return (
             <g
                 transform={`translate(${xTranslated},${yTranslated})`}
-                // ref={id}
                 className={styles.node + " " + (nodeTotalNodes === globalTotalNodes ? styles.rootNode : null)}
                 id={id.toString()}
                 onClick={hasChildren ? onClick : null}
@@ -125,7 +123,8 @@ class Node extends React.Component<INodeProps, {}> {
     }
 
     private _getLabelNewLine() {
-        const { label,
+        const {
+            label,
             textColor,
             fontSize,
             valueWithFormat,
@@ -136,7 +135,7 @@ class Node extends React.Component<INodeProps, {}> {
             hideValue
          } = this.props;
 
-         if (hasChildren === true) {
+        if (hasChildren === true) {
             const fullLabel = hideValue ? label : label + "\xa0(" + valueWithFormat + " " + valueUnit + ")"
             return (
                 <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize} >
@@ -154,9 +153,8 @@ class Node extends React.Component<INodeProps, {}> {
                     );
                 });
             }
-
         }
     }
-
 }
+
 export default Node;

@@ -1,7 +1,7 @@
 import * as React from "react";
 
-// import NodeContainer from "../NodeContainer/NodeContainer";
-import NodeContainer from "../NodeContainer/NodeContainer.Animated";
+import NodeContainer from "../NodeContainer/NodeContainer";
+// import NodeContainer from "../NodeContainer/NodeContainer.Animated";
 
 import { Utils } from "../../utils/Utils";
 import { format } from "d3-format";
@@ -54,7 +54,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     //       Now, the component is designed to show only the first level of nodes and when click on one expand the rest.
     private _treemap: TreemapLayout<{}>;
     private _rootData: any;
-    private _nodes: HierarchyRectangularNode<{}>[];
+    private _nodes: Array<HierarchyRectangularNode<{}>>;
 
     // Numeric value format function
     private _valueFormatFunction: (n: number) => string;
@@ -76,14 +76,13 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             yScaleFunction: scaleLinear().range([0, this.props.height]),
             zoomEnabled: false,
             // TODO: Replace data.name by id
-            breadCrumbItems: [{ text: this.props.data.name, 'key': 0, onClick: this._onBreadcrumbItemClicked }],
+            breadCrumbItems: [{ text: this.props.data.name, key: 0, onClick: this._onBreadcrumbItemClicked }],
             selectedId: 0,
             scopedNodes: this._nodes,
             selectedNode: this._treemap(this._rootData),
             totalNodes: this._nodes.length,
             selectedNodeTotalNodes: this._nodes.length
         };
-
     }
 
     public componentWillReceiveProps(nextProps: ITreeMapProps) {
@@ -111,7 +110,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             if (level < maxLevel) {
                 if (mainNode.hasOwnProperty("children")
                     && mainNode.children.length > 0) {
-                    mainNode.children.forEach(element => {
+                    mainNode.children.forEach((element) => {
                         iterateAllChildren(element, level + 1);
                     });
                 }
@@ -125,15 +124,13 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             <div>
                 {
                     this.props.disableBreadcrumb === false
-                        ?
-                        <BreadcrumbStyled
+                        ? <BreadcrumbStyled
                             bgColor={lowestBgColor}
                             hoverBgColor={highestBgColor}
                             currentBgColor={highestBgColor}
                             items={breadCrumbItems}
                         />
-                        :
-                        null
+                        : null
                 }
                 <svg
                     className={styles.mainSvg}
@@ -142,7 +139,9 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 >
                     {reactNodes}
                 </svg>
-                {/*<div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>*/}
+                {
+                    /*<div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>*/
+                }
             </div>
 
         );
@@ -160,7 +159,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         // 2. Before compute a hierarchical layout, we need a root node
         //    If the data is in JSON we use d3.hierarchy
         this._rootData = d3hierarchy(this.props.data)
-            .sum((d: any) => d.value)
+            .sum((s) => s.value)
             .sort((a, b) => b.height - a.height || b.value - a.value);
 
         // 3. Get array of nodes
@@ -328,8 +327,6 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
                 console.warn("No node found for " + nodeId);
             }
         }
-
     }
-
 }
 export default TreeMap;
