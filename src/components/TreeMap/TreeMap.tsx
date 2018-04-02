@@ -15,10 +15,7 @@ import {
 import {
     scaleLinear,
     scaleSequential,
-    scaleOrdinal,
-    schemeCategory10,
-    schemeCategory20c,
-    interpolateViridis
+    scaleOrdinal
 } from "d3-scale";
 import {
     extent
@@ -40,6 +37,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
     // Default Props values
     public static defaultProps: ITreeMapProps = {
+        id: "myTreeMap",
         data: null,
         height: 600,
         width: 600,
@@ -211,7 +209,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     }
 
     private _getNode(node: HierarchyRectangularNode<{}>) {
-        const { valueFormat } = this.props;
+        const { valueFormat, id: treemapId } = this.props;
         const { width, height, totalNodes } = this.state;
 
         const name = (node as any).data.name;
@@ -254,6 +252,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             <NodeContainer
                 {...node}
                 id={id}
+                treemapId={treemapId}
                 xScaleFactor={this.state.xScaleFactor}
                 yScaleFactor={this.state.yScaleFactor}
                 xScaleFunction={this.state.xScaleFunction}

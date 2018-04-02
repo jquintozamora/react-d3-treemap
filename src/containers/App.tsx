@@ -11,6 +11,7 @@ export default class App extends React.Component<{}, {}> {
             <ContainerDimensions>
                 {({ width, height }) =>
                     <TreeMap
+                        id="myTreeMap"
                         width={width}
                         height={400}
                         data={data}

@@ -21,11 +21,11 @@ insert_final_newline = true
 
 # some files use 4 spaces for indentation
 [*.{js,jsx,ts,tsx,xml}]
-indent_size = 4
+indent_size = 2
 end_of_line = crlf
 
 [tsconfig.json]
-indent_size = 4
+indent_size = 2
 
 # Ignore paths
 [/node_modules/**]

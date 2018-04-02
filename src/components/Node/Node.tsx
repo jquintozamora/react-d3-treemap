@@ -32,7 +32,8 @@ class Node extends React.Component<INodeProps, {}> {
             nodeTotalNodes,
             globalTotalNodes,
             url,
-            hideNumberOfChildren
+            hideNumberOfChildren,
+            treemapId
         } = this.props;
         const cursor = hasChildren === true && isSelectedNode === false ? "pointer" : "auto";
         const itemsWidth = this._getNumberItemsWidthByNumberOfChars(fontSize, nodeTotalNodes.toString().length);
@@ -52,7 +53,7 @@ class Node extends React.Component<INodeProps, {}> {
                     fill={bgColor}
                 />
                 <clipPath
-                    id={"clip-" + id}
+                    id={"clip-".concat(treemapId, "-" , id.toString())}
                 >
                     <rect
                         width={Math.max(0, clipWidth - 5)}
@@ -61,7 +62,7 @@ class Node extends React.Component<INodeProps, {}> {
                 </clipPath>
                 <a href={url} target="_blank">
                     <text
-                        clipPath={"url(#clip-" + id + ")"}
+                        clipPath={"url(#clip-".concat(treemapId, "-" , id.toString(), ")")}
                     >
                         {this._getLabelNewLine()}
                     </text>
@@ -104,15 +105,15 @@ class Node extends React.Component<INodeProps, {}> {
                         fill={bgColor}
                         fillOpacity={0.9}
                         stroke={textColor}
-                    // strokeDasharray={"0, " + (itemsWidth + itemsHeight) + ", " + (itemsWidth + itemsHeight)}
+                        // strokeDasharray={"0, " + (itemsWidth + itemsHeight) + ", " + (itemsWidth + itemsHeight)}
                     />
                     <text
                         fontSize={fontSize}
                         fill={textColor}
                         x={width - itemsWidth}
                         y={fontSize}
-                    // alignmentBaseline="hanging"
-                    // textAnchor="start"
+                        // alignmentBaseline="hanging"
+                        // textAnchor="start"
                     >
                         {nodeTotalNodes}
                     </text>
@@ -136,7 +137,7 @@ class Node extends React.Component<INodeProps, {}> {
          } = this.props;
 
         if (hasChildren === true) {
-            const fullLabel = hideValue ? label : label + "\xa0(" + valueWithFormat + " " + valueUnit + ")"
+            const fullLabel = hideValue ? label : label + "\xa0(" + valueWithFormat + " " + valueUnit + ")";
             return (
                 <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize} >
                     {fullLabel}
@@ -144,7 +145,7 @@ class Node extends React.Component<INodeProps, {}> {
             );
         } else {
             if (label) {
-                const fullLabel = hideValue ? label.split(/(?=[A-Z][^A-Z])/g) : label.split(/(?=[A-Z][^A-Z])/g).concat("(" + valueWithFormat + " " + valueUnit + ")")
+                const fullLabel = hideValue ? label.split(/(?=[A-Z][^A-Z])/g) : label.split(/(?=[A-Z][^A-Z])/g).concat("(" + valueWithFormat + " " + valueUnit + ")");
                 return fullLabel.map((item, index) => {
                     return (
                         <tspan fontSize={fontSize} fill={textColor} key={index} x={4} dy={fontSize} >

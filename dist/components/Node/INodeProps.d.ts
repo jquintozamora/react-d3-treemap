@@ -38,4 +38,5 @@ export interface INodeProps {
     url: string;
     hideNumberOfChildren?: boolean;
     hideValue?: boolean;
+    treemapId?: string;
 }

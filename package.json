@@ -41,9 +41,9 @@
     "@types/d3-format": "1.2.1",
     "@types/d3-hierarchy": "1.1.0",
     "@types/d3-interpolate": "1.1.6",
-    "@types/d3-scale": "1.0.10",
-    "@types/d3-scale-chromatic": "1.1.0",
-    "@types/react-motion": "0.0.23",
+    "@types/d3-scale": "2.0.0",
+    "@types/d3-scale-chromatic": "1.2.0",
+    "@types/react-motion": "0.0.25",
     "d3-array": "1.2.1",
     "d3-format": "1.2.2",
     "d3-hierarchy": "1.1.5",
@@ -51,7 +51,7 @@
     "d3-scale": "2.0.0",
     "d3-scale-chromatic": "1.2.0",
     "react-motion": "0.5.2",
-    "styled-components": "3.1.5"
+    "styled-components": "3.2.5"
   },
   "peerDependencies": {
     "react": "15.x.x || 16.x.x",

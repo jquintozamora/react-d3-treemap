@@ -38,7 +38,8 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
             onClick,
             isSelectedNode,
             nodeTotalNodes,
-            url
+            url,
+            treemapId
         } = this.props;
         const xTranslated = zoomEnabled === true ? xScaleFunction(x0) : x0;
         const yTranslated = zoomEnabled === true ? yScaleFunction(y0) : y0;
@@ -52,6 +53,7 @@ class NodeContainer extends React.Component<INodeContainerProps, INodeContainerS
                 height={height}
                 width={width}
                 url={url}
+                treemapId={treemapId}
             />
         );
     }
