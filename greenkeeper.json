@@ -1,15 +1,7 @@
 {
   "groups": {
-<<<<<<< HEAD
     "build": {
       "packages": ["package.json"]
-=======
-    "default": {
-      "packages": [
-        "package.json",
-        "tsconfig.package.json"
-      ]
->>>>>>> refs/remotes/origin/master
     }
   }
 }
