@@ -7,7 +7,7 @@ and [React](https://facebook.github.io/react) based on [Mike Bostock´s Treemap]
 [![Code Climate](https://codeclimate.com/github/jquintozamora/react-d3-treemap/badges/gpa.svg)](https://codeclimate.com/github/jquintozamora/react-d3-treemap)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](Readme.md#want-to-contribute)
 
-[![NPM](https://nodei.co/npm/react-d3-treemap.png?downloads=true)](https://nodei.co/npm/react-d3-treemap/)
+[![NPM](https://nodei.co/npm/react-d3-treemap.png?downloads=true)](https://nodei.co/npm/react-d3-treemap/) [![Greenkeeper badge](https://badges.greenkeeper.io/jquintozamora/react-d3-treemap.svg)](https://greenkeeper.io/)
 
 ![React-d3-treemap-gif](./assets/react-d3-treemap.gif)
 
