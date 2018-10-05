@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import * as React from "react";
 import { ITreeMapProps } from "./ITreeMapProps";
 import { ITreeMapState } from "./ITreeMapState";
@@ -12,10 +11,10 @@ declare class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     constructor(props: ITreeMapProps, context: any);
     componentWillReceiveProps(nextProps: ITreeMapProps): void;
     render(): JSX.Element;
-    private _createD3TreeMap(width, height);
-    private _getNode(node);
+    private _createD3TreeMap;
+    private _getNode;
     private _onBreadcrumbItemClicked;
     private _onNodeClick;
-    private _zoomTo(nodeId);
+    private _zoomTo;
 }
 export default TreeMap;

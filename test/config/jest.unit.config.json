@@ -1,0 +1,18 @@
+{
+  "rootDir": "../../",
+  "roots": ["<rootDir>/src"],
+  "verbose": true,
+  "testPathIgnorePatterns": ["./dist/", "./assets/"],
+  "testEnvironment": "node",
+  "collectCoverage": true,
+  "moduleFileExtensions": ["ts", "tsx", "js"],
+  "transform": {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+  "globals": {
+    "ts-jest": {
+      "tsConfig": "tsconfig.json"
+    }
+  },
+  "testMatch": ["**/__tests__/*.+(ts|tsx|js)"]
+}

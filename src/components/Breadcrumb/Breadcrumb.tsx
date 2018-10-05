@@ -5,7 +5,7 @@ import * as styled from "styled-components";
 
 import { IBreadcrumbProps, IBreadcrumbItem } from "./IBreadcrumbProps";
 
-class Breadcrumb extends React.Component<IBreadcrumbProps, {}> {
+export class Breadcrumb extends React.Component<IBreadcrumbProps, {}> {
 
     public render() {
         return (

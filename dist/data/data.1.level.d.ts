@@ -7,5 +7,6 @@ export declare const data: {
     } | {
         "name": string;
         "value": number;
+        "link"?: undefined;
     })[];
 };

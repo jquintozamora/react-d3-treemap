@@ -3,7 +3,7 @@
         "target": "es5",
         "module": "commonjs",
         "declaration": true,
-        "outDir": "./",
+        "outDir": "./dist",
         "noImplicitAny": false,
         "suppressImplicitAnyIndexErrors": true,
         "removeComments": true,
@@ -15,6 +15,7 @@
             "./node_modules/@types"
         ],
         "types": [
+            "jest",
             "node",
             "react",
             "react-dom"
