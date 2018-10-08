@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@types/jest": "23.3.3",
-    "@types/node": "10.11.4",
+    "@types/node": "10.11.5",
     "@types/react": "16.4.15",
     "@types/react-dom": "16.0.8",
     "core-js": "2.5.7",
