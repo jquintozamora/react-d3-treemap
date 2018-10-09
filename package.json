@@ -65,7 +65,7 @@
     "@types/react-dom": "16.0.8",
     "core-js": "2.5.7",
     "css-loader": "1.0.0",
-    "gatsby": "2.0.19",
+    "gatsby": "2.0.20",
     "gatsby-link": "2.0.4",
     "gatsby-plugin-typescript": "2.0.0",
     "gh-pages": "2.0.1",
