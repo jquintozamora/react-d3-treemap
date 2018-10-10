@@ -70,7 +70,7 @@
     "gatsby-plugin-typescript": "2.0.0",
     "gh-pages": "2.0.1",
     "jest": "23.6.0",
-    "mini-css-extract-plugin": "0.4.3",
+    "mini-css-extract-plugin": "0.4.4",
     "prop-types": "15.6.2",
     "react": "16.5.2",
     "react-container-dimensions": "1.4.1",
