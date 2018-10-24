@@ -74,7 +74,7 @@
     "prop-types": "15.6.2",
     "react": "16.6.0",
     "react-container-dimensions": "1.4.1",
-    "react-dom": "16.5.2",
+    "react-dom": "16.6.0",
     "react-hot-loader": "4.3.11",
     "source-map-loader": "0.2.4",
     "style-loader": "0.23.0",
