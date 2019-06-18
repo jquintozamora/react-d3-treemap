@@ -5,28 +5,32 @@ import { data } from "../data/data";
 import ContainerDimensions from "react-container-dimensions";
 import { ColorModel } from "../components/TreeMap/ITreeMapProps";
 
-export default class App extends React.Component<{}, {}> {
-    public render() {
-        return (
-            <ContainerDimensions>
-                {({ width, height }) =>
-                    <TreeMap
-                        id="myTreeMap"
-                        width={width}
-                        height={400}
-                        data={data}
-                        valueUnit={"MB"}
-                        colorModel={ColorModel.Depth}
-                        // disableBreadcrumb
-                        // hideNumberOfChildren
-                        // hideValue
-                        // bgColorRangeLow={"#007AFF"}
-                        // bgColorRangeHigh={"#FFF500"}
-                        // bgColorRangeLow={"#FFFFBF"}
-                        // bgColorRangeHigh={"#91CF60"}
-                    />
-                }
-            </ContainerDimensions>
-        );
-    }
+import { hot } from "react-hot-loader";
+
+class App extends React.Component<{}, {}> {
+  public render() {
+    return (
+      <ContainerDimensions>
+        {({ width, height }) => (
+          <TreeMap
+            id="myTreeMap"
+            width={width}
+            height={400}
+            data={data}
+            valueUnit={"MB"}
+            colorModel={ColorModel.Depth}
+            // disableBreadcrumb
+            // hideNumberOfChildren
+            // hideValue
+            // bgColorRangeLow={"#007AFF"}
+            // bgColorRangeHigh={"#FFF500"}
+            // bgColorRangeLow={"#FFFFBF"}
+            // bgColorRangeHigh={"#91CF60"}
+          />
+        )}
+      </ContainerDimensions>
+    );
+  }
 }
+
+export default hot(module)(App);

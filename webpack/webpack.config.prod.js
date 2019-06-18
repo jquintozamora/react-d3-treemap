@@ -117,10 +117,10 @@ module.exports = {
             options: {
               sourceMap: true,
               importLoaders: 1,
-              modules: true,
-              camelCase: true,
-              localIdentName: "[name]_[local]_[hash:base64:5]",
-              minimize: true
+              localsConvention: "camelCase",
+              modules: {
+                localIdentName: "[name]_[local]_[hash:base64:5]"
+              }
             }
           }
         ]
