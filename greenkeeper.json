@@ -1,7 +1,0 @@
-{
-  "groups": {
-    "build": {
-      "packages": ["package.json"]
-    }
-  }
-}
