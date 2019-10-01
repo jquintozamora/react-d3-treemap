@@ -40,6 +40,7 @@ import "react-d3-treemap/dist/react.d3.treemap.css";
 ### 3. Usage
 ```js
   <TreeMap
+      id="myTreeMap"
       height={500}
       width={800}
       data={data}
