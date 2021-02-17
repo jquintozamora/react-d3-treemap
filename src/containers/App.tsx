@@ -26,6 +26,7 @@ class App extends React.Component<{}, { data: any }> {
               data={this.state.data}
               valueUnit={"MB"}
               colorModel={ColorModel.Depth}
+              animated={false}
               // disableBreadcrumb
               // hideNumberOfChildren
               // hideValue

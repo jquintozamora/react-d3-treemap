@@ -2,6 +2,7 @@ import { HierarchyRectangularNode } from "d3-hierarchy";
 export interface ITreeMapState {
     scopedNodes: HierarchyRectangularNode<{}>[];
     data: any;
+    // rootData: any;
     width: number;
     height: number;
     xScaleFactor: number;

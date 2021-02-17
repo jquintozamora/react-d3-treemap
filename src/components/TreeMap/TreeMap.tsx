@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import NodeContainer from "../NodeContainer/NodeContainer";
+import Node from "../Node";
 // import NodeContainer from "../NodeContainer/NodeContainer.Animated";
 
 import { Utils } from "../../utils/Utils";
@@ -24,6 +24,7 @@ const styles: any = require("./TreeMap.module.css");
 
 import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
 import { ITreeMapState } from "./ITreeMapState";
+import AnimatedNode from "../AnimatedNode";
 
 class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
   // Default Props values
@@ -35,7 +36,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     valueFormat: ",d",
     valueUnit: "MB",
     disableBreadcrumb: false,
-    colorModel: ColorModel.NumberOfChildren
+    colorModel: ColorModel.NumberOfChildren,
+    animated: false
   };
 
   // Note. This treemap element initially was using treemap and hierarchy directly on the render.
@@ -174,18 +176,22 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
   private _createD3TreeMap(width: number, height: number, data: any) {
     // 1. Create treemap structure
-    this._treemap = d3treemap()
-      .size([width, height])
-      .paddingOuter(3)
-      .paddingTop(19)
-      .paddingInner(1)
-      .round(true);
+    if (!this._treemap) {
+      this._treemap = d3treemap()
+        .size([width, height])
+        .paddingOuter(3)
+        .paddingTop(19)
+        .paddingInner(1)
+        .round(true);
+    }
 
     // 2. Before compute a hierarchical layout, we need a root node
     //    If the data is in JSON we use d3.hierarchy
-    this._rootData = d3hierarchy(data)
-      .sum(s => s.value)
-      .sort((a, b) => b.height - a.height || b.value - a.value);
+    if (!this._rootData) {
+      this._rootData = d3hierarchy(data)
+        .sum(s => s.value)
+        .sort((a, b) => b.height - a.height || b.value - a.value);
+    }
 
     // 3. Get array of nodes
     let numberItemId = 0;
@@ -240,8 +246,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
   }
 
   private _getNode(node: HierarchyRectangularNode<{}>) {
-    const { valueFormat, id: treemapId } = this.props;
-    const { width, height, totalNodes } = this.state;
+    const { id: treemapId, animated } = this.props;
+    const { totalNodes } = this.state;
 
     const name = (node as any).data.name;
     const id = (node as any).customId;
@@ -280,35 +286,38 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
 
     const colorText = Utils.getHighContrastColorFromString(backgroundColor);
 
+    const NodeComponent = animated ? AnimatedNode : Node;
+
     return (
-      <NodeContainer
-        {...node}
-        id={id}
-        treemapId={treemapId}
-        xScaleFactor={this.state.xScaleFactor}
-        yScaleFactor={this.state.yScaleFactor}
-        xScaleFunction={this.state.xScaleFunction}
-        yScaleFunction={this.state.yScaleFunction}
-        zoomEnabled={this.state.zoomEnabled}
-        key={id}
-        url={url}
+      <NodeComponent
         bgColor={backgroundColor}
-        label={name}
-        name={name}
-        fontSize={14}
-        textColor={colorText}
         className="node"
-        hasChildren={hasChildren}
-        onClick={this._onNodeClick}
-        valueWithFormat={valueWithFormat}
-        globalHeight={height}
-        globalWidth={width}
-        nodeTotalNodes={nodeTotalNodes}
+        fontSize={14}
         globalTotalNodes={totalNodes}
-        isSelectedNode={id === this.state.selectedId}
-        valueUnit={this.props.valueUnit}
+        hasChildren={hasChildren}
         hideNumberOfChildren={this.props.hideNumberOfChildren}
         hideValue={this.props.hideValue}
+        id={id}
+        isSelectedNode={id === this.state.selectedId}
+        key={id}
+        label={name}
+        name={name}
+        nodeTotalNodes={nodeTotalNodes}
+        onClick={this._onNodeClick}
+        textColor={colorText}
+        treemapId={treemapId}
+        url={url}
+        valueUnit={this.props.valueUnit}
+        valueWithFormat={valueWithFormat}
+        x0={node.x0}
+        x1={node.x1}
+        xScaleFactor={this.state.xScaleFactor}
+        xScaleFunction={this.state.xScaleFunction}
+        y0={node.y0}
+        y1={node.y1}
+        yScaleFactor={this.state.yScaleFactor}
+        yScaleFunction={this.state.yScaleFunction}
+        zoomEnabled={this.state.zoomEnabled}
       />
     );
   }
