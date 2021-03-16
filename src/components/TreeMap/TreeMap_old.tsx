@@ -3,9 +3,9 @@ import { format } from "d3-format";
 import {
   TreemapLayout,
   HierarchyRectangularNode,
-  treemap,
-  treemapBinary,
-  hierarchy
+  treemap as d3treemap,
+  hierarchy as d3hierarchy,
+  stratify as d3stratify
 } from "d3-hierarchy";
 import { scaleLinear, scaleSequential, scaleOrdinal } from "d3-scale";
 import { extent } from "d3-array";
@@ -22,134 +22,11 @@ import AnimatedNode from "../AnimatedNode";
 const styles: any = require("./TreeMap.module.css");
 /* tslint:enable:no-var-requires */
 
-const TreeMap: React.FunctionComponent<ITreeMapProps> = ({
-  treemapId = "myTreeMap",
-  data = null,
-  height = 600,
-  width = 600,
-  valueFormat = ",d",
-  valueUnit = "MB",
-  disableBreadcrumb = false,
-  colorModel = ColorModel.NumberOfChildren,
-  animated = false
-}) => {
-  console.log({
-    treemapId,
-    data,
-    height,
-    width,
-    valueFormat,
-    valueUnit,
-    disableBreadcrumb,
-    colorModel,
-    animated
-  });
-  // continue refactor from here https://observablehq.com/@d3/zoomable-treemap
-  
-  const [treeMap] = React.useState(() =>
-    treemap()
-      .size([width, height])
-      // .paddingOuter(3)
-      // .paddingTop(19)
-      // .paddingInner(1)
-      // .round(true)
-      .tile((node, x0, y0, x1, y1) => {
-        treemapBinary(node, 0, 0, width, height);
-        for (const child of node.children) {
-          child.x0 = x0 + (child.x0 / width) * (x1 - x0);
-          child.x1 = x0 + (child.x1 / width) * (x1 - x0);
-          child.y0 = y0 + (child.y0 / height) * (y1 - y0);
-          child.y1 = y0 + (child.y1 / height) * (y1 - y0);
-        }
-      })(
-      hierarchy(data)
-        .sum(s => s.value)
-        .sort((a, b) => b.height - a.height || b.value - a.value)
-    )
-  );
-  console.log(treeMap);
-
-  const xScaleFactor = 1;
-  const yScaleFactor = 1;
-  const xScaleFunction = scaleLinear().rangeRound([0, width]);
-  const yScaleFunction = scaleLinear().rangeRound([0, height]);
-
-  let reactNodes: any = [];
-  const maxLevel = 1;
-  const iterateAllChildren = (
-    node: HierarchyRectangularNode<{}>,
-    level: number
-  ): any => {
-    const totalNodes = 40;
-
-    const name = (node as any).data.name;
-    const id = (`${name}${node.height}${node.depth}`); // (node as any).customId;
-    const url = (node as any).data.link;
-    const hasChildren =
-      node.children && node.children.length > 0 ? true : false;
-    const valueWithFormat = format(valueFormat)(node.value);
-    const nodeTotalNodes = node.descendants().length - 1;
-
-    // const colorText = Utils.getHighContrastColorFromString(backgroundColor);
-
-    console.log("node: ", node);
-    reactNodes = reactNodes.concat(
-      <Node
-        bgColor="white"
-        className="node"
-        fontSize={14}
-        globalTotalNodes={totalNodes}
-        hasChildren={hasChildren}
-        hideNumberOfChildren={false}
-        hideValue={false}
-        id={id}
-        isSelectedNode={false} // {id === this.state.selectedId}
-        key={id}
-        label={name}
-        name={name}
-        nodeTotalNodes={nodeTotalNodes}
-        onClick={() => console.log("clicked")}
-        textColor="black"
-        treemapId={treemapId}
-        url={url}
-        valueUnit={valueUnit}
-        valueWithFormat={valueWithFormat}
-        x0={node.x0}
-        x1={node.x1}
-        xScaleFactor={xScaleFactor}
-        xScaleFunction={xScaleFunction}
-        y0={node.y0}
-        y1={node.y1}
-        yScaleFactor={yScaleFactor}
-        yScaleFunction={yScaleFunction}
-        zoomEnabled={false}
-      />
-    );
-    if (level < maxLevel) {
-      if (node.hasOwnProperty("children") && node.children.length > 0) {
-        node.children.forEach(element => {
-          iterateAllChildren(element, level + 1);
-        });
-      }
-    }
-  };
-  iterateAllChildren(treeMap, 0);
-
-  return (
-    <div>
-      <svg className={styles.mainSvg} height={height} width={width}>
-        {reactNodes}
-      </svg>
-      {/*<div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>*/}
-    </div>
-  );
-};
-
-class TreeMap2 extends React.Component<ITreeMapProps, ITreeMapState> {
+class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
   // Default Props values
   public static defaultProps: ITreeMapProps = {
     id: "myTreeMap",
-    treemapId: "myTreeMap",
+    treemapId: "",
     data: null,
     height: 600,
     width: 600,
@@ -296,22 +173,22 @@ class TreeMap2 extends React.Component<ITreeMapProps, ITreeMapState> {
 
   private _createD3TreeMap(width: number, height: number, data: any) {
     // 1. Create treemap structure
-    //if (!this._treemap) {
-    this._treemap = treemap()
-      .size([width, height])
-      .paddingOuter(3)
-      .paddingTop(19)
-      .paddingInner(1)
-      .round(true);
-    //}
+    if (!this._treemap) {
+      this._treemap = d3treemap()
+        .size([width, height])
+        .paddingOuter(3)
+        .paddingTop(19)
+        .paddingInner(1)
+        .round(true);
+    }
 
     // 2. Before compute a hierarchical layout, we need a root node
     //    If the data is in JSON we use d3.hierarchy
-    //if (!this._rootData) {
-    this._rootData = hierarchy(data)
-      .sum(s => s.value)
-      .sort((a, b) => b.height - a.height || b.value - a.value);
-    //}
+    if (!this._rootData) {
+      this._rootData = d3hierarchy(data)
+        .sum(s => s.value)
+        .sort((a, b) => b.height - a.height || b.value - a.value);
+    }
 
     // 3. Get array of nodes
     let numberItemId = 0;
@@ -473,6 +350,8 @@ class TreeMap2 extends React.Component<ITreeMapProps, ITreeMapState> {
         const y = currentNode.y0;
         const dx = currentNode.x1 - currentNode.x0;
         const dy = currentNode.y1 - currentNode.y0;
+        const xScaleFactor = width / dx;
+        const yScaleFactor = height / dy;
         const breadCrumbItems = this._treemap(this._rootData)
           .path(currentNode)
           .map((n: any) => {
@@ -483,8 +362,8 @@ class TreeMap2 extends React.Component<ITreeMapProps, ITreeMapState> {
             };
           });
         this.setState({
-          xScaleFactor: width / dx,
-          yScaleFactor: height / dy,
+          xScaleFactor,
+          yScaleFactor,
           xScaleFunction: xScaleFunction.domain([x, x + dx]),
           yScaleFunction: yScaleFunction.domain([y, y + dy]),
           zoomEnabled: currentNode.parent === null ? false : true,

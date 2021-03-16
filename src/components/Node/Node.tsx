@@ -28,7 +28,7 @@ export interface NodeProps {
    * hierarchical data was created from tabular data using stratify()
    */
   // readonly id?: string;
-  id: number;
+  id: string;
 
   // Position props
   // x0: number;

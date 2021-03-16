@@ -21,6 +21,7 @@ class App extends React.Component<{}, { data: any }> {
           {({ width, height }) => (
             <TreeMap
               id="myTreeMap"
+              treemapId="myTreeMap"
               width={width}
               height={400}
               data={this.state.data}

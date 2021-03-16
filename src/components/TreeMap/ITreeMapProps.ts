@@ -1,4 +1,5 @@
 export interface ITreeMapProps {
+  treemapId: string;
   id: string;
   width: number;
   height: number;
