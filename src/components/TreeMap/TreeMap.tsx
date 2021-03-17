@@ -1,8 +1,10 @@
 import * as React from "react";
+import classnames from "classnames";
 
 import Node from "../Node";
-// import NodeContainer from "../NodeContainer/NodeContainer.Animated";
-
+import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
+import { ITreeMapState } from "./ITreeMapState";
+import AnimatedNode from "../AnimatedNode";
 import { Utils } from "../../utils/Utils";
 import { format } from "d3-format";
 import {
@@ -21,10 +23,6 @@ import { IBreadcrumbItem, BreadcrumbStyled } from "../Breadcrumb/Breadcrumb";
 /* tslint:disable:no-var-requires */
 const styles: any = require("./TreeMap.module.css");
 /* tslint:enable:no-var-requires */
-
-import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
-import { ITreeMapState } from "./ITreeMapState";
-import AnimatedNode from "../AnimatedNode";
 
 class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
   // Default Props values
@@ -132,6 +130,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
       data
     } = this.state;
 
+    const { style, className } = this.props;
+
     this._createD3TreeMap(width, height, data);
 
     let reactNodes: any = [];
@@ -166,7 +166,12 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
             items={breadCrumbItems}
           />
         ) : null}
-        <svg className={styles.mainSvg} height={height} width={width}>
+        <svg
+          className={classnames(className, styles.mainSvg)}
+          style={{ ...style }}
+          height={height}
+          width={width}
+        >
           {reactNodes}
         </svg>
         {/*<div>Total items: {this.state.selectedNodeTotalNodes}  / {this.state.totalNodes}</div>*/}
@@ -246,15 +251,32 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
   }
 
   private _getNode(node: HierarchyRectangularNode<{}>) {
-    const { id: treemapId, animated } = this.props;
-    const { totalNodes } = this.state;
+    const {
+      id: treemapId,
+      animated,
+      valueUnit,
+      hideValue,
+      hideNumberOfChildren
+    } = this.props;
+
+    const {
+      totalNodes,
+      selectedId,
+      xScaleFactor,
+      xScaleFunction,
+      yScaleFactor,
+      yScaleFunction,
+      zoomEnabled
+    } = this.state;
 
     const name = (node as any).data.name;
     const id = (node as any).customId;
     const url = (node as any).data.link;
     const hasChildren =
       node.children && node.children.length > 0 ? true : false;
-    const valueWithFormat = this._valueFormatFunction(node.value);
+    const formattedValue = `(${this._valueFormatFunction(
+      node.value
+    )} ${valueUnit})`;
     const nodeTotalNodes = node.descendants().length - 1;
 
     let backgroundColor;
@@ -295,10 +317,9 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         fontSize={14}
         globalTotalNodes={totalNodes}
         hasChildren={hasChildren}
-        hideNumberOfChildren={this.props.hideNumberOfChildren}
-        hideValue={this.props.hideValue}
+        hideNumberOfChildren={hideNumberOfChildren}
         id={id}
-        isSelectedNode={id === this.state.selectedId}
+        isSelectedNode={id === selectedId}
         key={id}
         label={name}
         name={name}
@@ -307,17 +328,16 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
         textColor={colorText}
         treemapId={treemapId}
         url={url}
-        valueUnit={this.props.valueUnit}
-        valueWithFormat={valueWithFormat}
+        value={!hideValue && formattedValue}
         x0={node.x0}
         x1={node.x1}
-        xScaleFactor={this.state.xScaleFactor}
-        xScaleFunction={this.state.xScaleFunction}
+        xScaleFactor={xScaleFactor}
+        xScaleFunction={xScaleFunction}
         y0={node.y0}
         y1={node.y1}
-        yScaleFactor={this.state.yScaleFactor}
-        yScaleFunction={this.state.yScaleFunction}
-        zoomEnabled={this.state.zoomEnabled}
+        yScaleFactor={yScaleFactor}
+        yScaleFunction={yScaleFunction}
+        zoomEnabled={zoomEnabled}
       />
     );
   }

@@ -35,6 +35,9 @@ export interface ITreeMapProps {
   hideNumberOfChildren?: boolean;
   hideValue?: boolean;
   animated?: boolean;
+
+  className?: string
+  style?: React.CSSProperties
 }
 
 export enum ColorModel {

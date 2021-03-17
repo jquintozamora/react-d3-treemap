@@ -27,6 +27,8 @@ class App extends React.Component<{}, { data: any }> {
               valueUnit={"MB"}
               colorModel={ColorModel.Depth}
               animated={false}
+              className="AppTreeMap"
+              style={{backgroundColor: "red"}}
               // disableBreadcrumb
               // hideNumberOfChildren
               // hideValue
