@@ -1,18 +1,17 @@
-import { HierarchyRectangularNode } from "d3-hierarchy";
-export interface ITreeMapState {
-    scopedNodes: HierarchyRectangularNode<{}>[];
-    data: any;
-    // rootData: any;
-    width: number;
-    height: number;
-    xScaleFactor: number;
-    yScaleFactor: number;
-    xScaleFunction: any;
-    yScaleFunction: any;
-    zoomEnabled: boolean;
-    breadCrumbItems: any;
-    selectedId: any;
-    selectedNode: HierarchyRectangularNode<{}>;
-    totalNodes: number;
-    selectedNodeTotalNodes: number;
-};
+import { CustomHierarchyRectangularNode } from "./TreeMap";
+export interface ITreeMapState<TreeMapInputData> {
+  scopedNodes: Array<CustomHierarchyRectangularNode<TreeMapInputData>>;
+  data: TreeMapInputData;
+  width: number;
+  height: number;
+  xScaleFactor: number;
+  yScaleFactor: number;
+  xScaleFunction: any;
+  yScaleFunction: any;
+  zoomEnabled: boolean;
+  breadCrumbItems: any;
+  selectedId: number;
+  selectedNode: CustomHierarchyRectangularNode<TreeMapInputData>;
+  totalNodes: number;
+  selectedNodeTotalNodes: number;
+}

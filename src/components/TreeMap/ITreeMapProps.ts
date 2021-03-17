@@ -1,8 +1,8 @@
-export interface ITreeMapProps {
+export interface ITreeMapProps<TreeMapInputData> {
   id: string;
   width: number;
   height: number;
-  data: any;
+  data: TreeMapInputData;
   /*
         Unit for values. For example MB
     */
@@ -36,8 +36,8 @@ export interface ITreeMapProps {
   hideValue?: boolean;
   animated?: boolean;
 
-  className?: string
-  style?: React.CSSProperties
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export enum ColorModel {

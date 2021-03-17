@@ -1,4 +1,4 @@
-import "./App.css"
+import "./App.css";
 
 import * as React from "react";
 import TreeMap from "../components/TreeMap/TreeMap";
@@ -9,8 +9,15 @@ import { ColorModel } from "../components/TreeMap/ITreeMapProps";
 
 import { hot } from "react-hot-loader";
 
+interface TreeMapInPutData {
+  name: string;
+  value?: number;
+  children?: Array<TreeMapInPutData>;
+  className?: string;
+}
+
 class App extends React.Component<{}, { data: any }> {
-  private treeMapRef: React.RefObject<TreeMap>;
+  private treeMapRef: React.RefObject<TreeMap<TreeMapInPutData>>;
 
   constructor(props) {
     super(props);
@@ -18,15 +25,11 @@ class App extends React.Component<{}, { data: any }> {
       data: data1
     };
     this.treeMapRef = React.createRef();
-
   }
 
-  onResetZoomClick = () => {
-    this.treeMapRef.current._zoomTo("0");
-  };
+  onResetZoomClick = () => {};
 
   public render() {
-
     return (
       <React.Fragment>
         <ContainerDimensions>
@@ -56,10 +59,10 @@ class App extends React.Component<{}, { data: any }> {
           <a onClick={() => this.setState({ data: data2 })}>Change data</a>
         </div>
         <div>
-          <a onClick={() => this.onResetZoomClick()}>Zoom Reset</a>
+          <a onClick={() => this.treeMapRef.current.resetZoom()}>Zoom Reset</a>
         </div>
         <div>
-          <a onClick={() => console.log("zoom out")}>Zoom out</a>
+          <a onClick={() => this.treeMapRef.current.zoomOut()}>Zoom out</a>
         </div>
       </React.Fragment>
     );

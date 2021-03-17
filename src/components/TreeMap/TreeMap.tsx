@@ -1,4 +1,4 @@
-import "./TreeMap.css"
+import "./TreeMap.css";
 
 import * as React from "react";
 import classnames from "classnames";
@@ -22,9 +22,17 @@ import * as chromatic from "d3-scale-chromatic";
 import { interpolateHcl, interpolateHsl } from "d3-interpolate";
 import { IBreadcrumbItem, BreadcrumbStyled } from "../Breadcrumb/Breadcrumb";
 
-class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
+export interface CustomHierarchyRectangularNode<TreeMapInputData>
+  extends HierarchyRectangularNode<TreeMapInputData> {
+  customId: number;
+}
+
+class TreeMap<TreeMapInputData> extends React.Component<
+  ITreeMapProps<TreeMapInputData>,
+  ITreeMapState<TreeMapInputData>
+> {
   // Default Props values
-  public static defaultProps: ITreeMapProps = {
+  public static defaultProps: ITreeMapProps<{}> = {
     id: "myTreeMap",
     data: null,
     height: 600,
@@ -39,16 +47,16 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
   // Note. This treemap element initially was using treemap and hierarchy directly on the render.
   //       I noticed a performance problem when the original data "this.props.data" has more than 1500 elements.
   //       Now, the component is designed to show only the first level of nodes and when click on one expand the rest.
-  private _treemap: TreemapLayout<{}>;
-  private _rootData: any;
-  private _nodes: Array<HierarchyRectangularNode<{}>>;
+  private _treemap: TreemapLayout<TreeMapInputData>;
+  private _rootData: HierarchyRectangularNode<TreeMapInputData>;
+  private _nodes: Array<CustomHierarchyRectangularNode<TreeMapInputData>>;
 
   // Numeric value format function
   private _valueFormatFunction: (n: number) => string;
   // Background Color function
   private _nodesbgColorFunction: (t: number) => string;
 
-  constructor(props: ITreeMapProps, context: any) {
+  constructor(props: ITreeMapProps<TreeMapInputData>, context: any) {
     super(props, context);
 
     this._createD3TreeMap(this.props.width, this.props.height, this.props.data);
@@ -66,20 +74,22 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
       // TODO: Replace data.name by id
       breadCrumbItems: [
         {
-          text: this.props.data.name,
+          text: (this.props as any).data.name,
           key: 0,
           onClick: this._onBreadcrumbItemClicked
         }
       ],
       selectedId: 0,
       scopedNodes: this._nodes,
-      selectedNode: this._treemap(this._rootData),
+      selectedNode: this._treemap(
+        this._rootData
+      ) as CustomHierarchyRectangularNode<TreeMapInputData>,
       totalNodes: this._nodes.length,
       selectedNodeTotalNodes: this._nodes.length
     };
   }
 
-  public componentWillReceiveProps(nextProps: ITreeMapProps) {
+  public componentWillReceiveProps(nextProps: ITreeMapProps<TreeMapInputData>) {
     if (
       nextProps.height !== this.props.height ||
       nextProps.width !== this.props.width
@@ -105,14 +115,16 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
       // TODO: Replace data.name by id
       breadCrumbItems: [
         {
-          text: nextProps.data.name,
+          text: (nextProps as any).data.name,
           key: 0,
           onClick: this._onBreadcrumbItemClicked
         }
       ],
       selectedId: 0,
       scopedNodes: this._nodes,
-      selectedNode: this._treemap(this._rootData),
+      selectedNode: this._treemap(
+        this._rootData
+      ) as CustomHierarchyRectangularNode<TreeMapInputData>,
       totalNodes: this._nodes.length,
       selectedNodeTotalNodes: this._nodes.length
     });
@@ -135,7 +147,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     let reactNodes: any = [];
     const maxLevel = 1;
     const iterateAllChildren = (
-      mainNode: HierarchyRectangularNode<{}>,
+      mainNode: CustomHierarchyRectangularNode<TreeMapInputData>,
       level: number
     ): any => {
       reactNodes = reactNodes.concat(this._getNode(mainNode));
@@ -165,7 +177,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
           />
         ) : null}
         <svg
-          className={classnames("TreeMap__mainSvg" ,className)}
+          className={classnames("TreeMap__mainSvg", className)}
           style={{ ...style }}
           height={height}
           width={width}
@@ -177,10 +189,14 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     );
   }
 
-  private _createD3TreeMap(width: number, height: number, data: any) {
+  private _createD3TreeMap(
+    width: number,
+    height: number,
+    data: TreeMapInputData
+  ) {
     // 1. Create treemap structure
     if (!this._treemap) {
-      this._treemap = d3treemap()
+      this._treemap = d3treemap<TreeMapInputData>()
         .size([width, height])
         .paddingOuter(3)
         .paddingTop(19)
@@ -192,17 +208,19 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     //    If the data is in JSON we use d3.hierarchy
     if (!this._rootData) {
       this._rootData = d3hierarchy(data)
-        .sum(s => s.value)
-        .sort((a, b) => b.height - a.height || b.value - a.value);
+        .sum((s: any) => s.value)
+        .sort(
+          (a, b) => b.height - a.height || b.value - a.value
+        ) as HierarchyRectangularNode<TreeMapInputData>;
     }
 
     // 3. Get array of nodes
     let numberItemId = 0;
     this._nodes = this._treemap(this._rootData)
-      .each((item: any) => {
+      .each((item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
         item.customId = numberItemId++;
       })
-      .descendants();
+      .descendants() as Array<CustomHierarchyRectangularNode<TreeMapInputData>>;
 
     // Format function
     this._valueFormatFunction = format(this.props.valueFormat);
@@ -248,7 +266,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     }
   }
 
-  private _getNode(node: HierarchyRectangularNode<{}>) {
+  private _getNode(node: CustomHierarchyRectangularNode<TreeMapInputData>) {
     const {
       id: treemapId,
       animated,
@@ -268,7 +286,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     } = this.state;
 
     const name = (node as any).data.name;
-    const id = (node as any).customId;
+    const id = node.customId;
     const url = (node as any).data.link;
     const nodeClassName = (node as any).data.className;
 
@@ -346,14 +364,25 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     ev: React.MouseEvent<HTMLElement>,
     item: IBreadcrumbItem
   ) => {
-    this._zoomTo(item.key);
+    this._zoomTo(parseInt(item.key));
   };
 
   private _onNodeClick = (ev: React.MouseEvent<HTMLElement>) => {
-    this._zoomTo(ev.currentTarget.id);
+    this._zoomTo(parseInt(ev.currentTarget.id));
   };
 
-  public _zoomTo(nodeId: string) {
+  public resetZoom() {
+    this._zoomTo(0);
+  }
+
+  public zoomOut() {
+    // const currentNodeArray = this._nodes.filter(item => {
+    //   return item.customId.toString() === nodeId.toString();
+    // });
+    // console.log("zoom out to:", this.state.selectedId);
+  }
+
+  private _zoomTo(nodeId: number) {
     const {
       selectedId,
       xScaleFunction,
