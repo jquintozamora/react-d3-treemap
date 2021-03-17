@@ -376,10 +376,19 @@ class TreeMap<TreeMapInputData> extends React.Component<
   }
 
   public zoomOut() {
-    // const currentNodeArray = this._nodes.filter(item => {
-    //   return item.customId.toString() === nodeId.toString();
-    // });
-    // console.log("zoom out to:", this.state.selectedId);
+    const { selectedId } = this.state;
+    const selectedNode = this._nodes
+      .filter((item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
+        return item.customId === selectedId;
+      })
+      .pop();
+    if (
+      selectedNode &&
+      selectedNode.parent &&
+      selectedNode.parent.customId !== undefined
+    ) {
+      this._zoomTo(selectedNode.parent.customId);
+    }
   }
 
   private _zoomTo(nodeId: number) {
