@@ -1,5 +1,4 @@
 import * as React from "react";
-import { HierarchyRectangularNode } from "d3-hierarchy";
 
 /* tslint:disable:no-var-requires */
 const styles: any = require("./Node.module.css");
@@ -13,73 +12,33 @@ export interface NodeProps {
   y0?: number;
   x1?: number;
   y1?: number;
-  // data: any;
-  // readonly depth: number;
-  // readonly height: number;
-  // parent: HierarchyRectangularNode<any> | null;
-  // children?: Array<HierarchyRectangularNode<any>>;
-  /**
-   * Aggregated numeric value as calculated by sum(value) or count(),
-   * if previously invoked.
-   */
-  readonly value?: number;
-  /**
-   * Optional Node Id string set by StratifyOperator, if
-   * hierarchical data was created from tabular data using stratify()
-   */
-  // readonly id?: string;
-  id: number;
 
-  // Position props
-  // x0: number;
-  // y0: number;
-  // x1: number;
-  // y1: number;
-  // depth: number;
-  xScaleFactor?: number;
-  yScaleFactor?: number;
-  xScaleFunction?: any;
-  yScaleFunction?: any;
-  zoomEnabled?: boolean;
-  // globalHeight: number;
-  // globalWidth: number;
-  isSelectedNode: boolean;
-  nodeTotalNodes: number;
-  globalTotalNodes: number;
-
-  xTranslated?: number;
-  yTranslated?: number;
-  width?: number;
-  height?: number;
-
-  // optional style to apply to the control
-  style?: object;
-
-  // Label and name props.
-  name: string;
-  label: string;
-
-  // Style props
+  bgColor: string;
   className: string;
-  bgColor: string; // fill
-  textColor: string;
   fontSize: number;
-  valueWithFormat: string;
-
-  // Events props
-  onClick?: any;
-
-  // Others
+  globalTotalNodes: number;
   hasChildren: boolean;
-
-  valueUnit: string;
-
-  url: string;
-
+  height?: number;
   hideNumberOfChildren?: boolean;
-  hideValue?: boolean;
-
+  id: number;
+  isSelectedNode: boolean;
+  label: string;
+  name: string;
+  nodeTotalNodes: number;
+  onClick?: any;
+  style?: object;
+  textColor: string;
   treemapId?: string;
+  url: string;
+  value: string;
+  width?: number;
+  xScaleFactor?: number;
+  xScaleFunction?: any;
+  xTranslated?: number;
+  yScaleFactor?: number;
+  yScaleFunction?: any;
+  yTranslated?: number;
+  zoomEnabled?: boolean;
 }
 
 const getNumberItemsWidthByNumberOfChars = (
@@ -89,47 +48,35 @@ const getNumberItemsWidthByNumberOfChars = (
   return (fontSize / 2) * numberOfChars + 5;
 };
 
-const LabelNewLine = ({
-  label,
-  textColor,
-  fontSize,
-  valueWithFormat,
-  valueUnit,
-  hasChildren,
-  hideValue
-}) => {
+const LabelNewLine = ({ label, textColor, fontSize, value, hasChildren }) => {
+  if (!label) {
+    return null;
+  }
+
   if (hasChildren === true) {
-    const fullLabel = hideValue
-      ? label
-      : label + "\xa0(" + valueWithFormat + " " + valueUnit + ")";
+    const fullLabel = value ? `${label}\xa0${value}` : label;
     return (
       <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize}>
         {fullLabel}
       </tspan>
     );
   } else {
-    if (label) {
-      const fullLabel = hideValue
-        ? label.split(/(?=[A-Z][^A-Z])/g)
-        : label
-            .split(/(?=[A-Z][^A-Z])/g)
-            .concat("(" + valueWithFormat + " " + valueUnit + ")");
-      return fullLabel.map((item, index) => {
-        return (
-          <tspan
-            fontSize={fontSize}
-            fill={textColor}
-            key={index}
-            x={4}
-            dy={fontSize}
-          >
-            {item}
-          </tspan>
-        );
-      });
-    } else {
-      return null;
-    }
+    const fullLabel = value
+      ? label.split(/(?=[A-Z][^A-Z])/g).concat(value)
+      : label.split(/(?=[A-Z][^A-Z])/g);
+    return fullLabel.map((item, index) => {
+      return (
+        <tspan
+          fontSize={fontSize}
+          fill={textColor}
+          key={index}
+          x={4}
+          dy={fontSize}
+        >
+          {item}
+        </tspan>
+      );
+    });
   }
 };
 
@@ -184,7 +131,6 @@ const Node: React.FunctionComponent<NodeProps> = ({
   hasChildren,
   height,
   hideNumberOfChildren,
-  hideValue,
   id,
   isSelectedNode,
   label,
@@ -193,8 +139,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
   textColor,
   treemapId,
   url,
-  valueUnit,
-  valueWithFormat,
+  value,
   width,
   x0,
   x1,
@@ -261,10 +206,8 @@ const Node: React.FunctionComponent<NodeProps> = ({
             label={label}
             textColor={textColor}
             fontSize={fontSize}
-            valueWithFormat={valueWithFormat}
-            valueUnit={valueUnit}
+            value={value}
             hasChildren={hasChildren}
-            hideValue={hideValue}
           />
         </text>
       </a>
@@ -280,15 +223,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
         />
       )}
       <title>
-        {label +
-          "\n" +
-          valueWithFormat +
-          " " +
-          valueUnit +
-          "\n" +
-          nodeTotalNodes +
-          "/" +
-          globalTotalNodes}
+        {`${label}\n${value}\n${nodeTotalNodes}/${globalTotalNodes}`}
       </title>
     </g>
   );
