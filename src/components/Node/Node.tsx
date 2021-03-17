@@ -1,8 +1,7 @@
-import * as React from "react";
+import "./Node.css";
 
-/* tslint:disable:no-var-requires */
-const styles: any = require("./Node.module.css");
-/* tslint:enable:no-var-requires */
+import * as React from "react";
+import classnames from "classnames";
 
 export interface NodeProps {
   /*
@@ -14,7 +13,7 @@ export interface NodeProps {
   y1?: number;
 
   bgColor: string;
-  className: string;
+  className?: string;
   fontSize: number;
   globalTotalNodes: number;
   hasChildren: boolean;
@@ -126,6 +125,7 @@ const NumberOfItemsRect = ({
 
 const Node: React.FunctionComponent<NodeProps> = ({
   bgColor,
+  className,
   fontSize,
   globalTotalNodes,
   hasChildren,
@@ -180,11 +180,6 @@ const Node: React.FunctionComponent<NodeProps> = ({
   return (
     <g
       transform={`translate(${currentXTranslated},${currentYTranslated})`}
-      className={
-        styles.node +
-        " " +
-        (nodeTotalNodes === globalTotalNodes ? styles.rootNode : null)
-      }
       id={id.toString()}
       onClick={hasChildren ? onClick : null}
       style={{ cursor }}
@@ -194,6 +189,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
         width={currentWidth}
         height={currentHeight}
         fill={bgColor}
+        className={classnames("Node", className)}
       />
       <clipPath id={"clip-".concat(treemapId, "-", id.toString())}>
         <rect width={Math.max(0, clipWidth - 5)} height={currentHeight} />

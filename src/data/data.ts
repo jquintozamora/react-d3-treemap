@@ -9,6 +9,7 @@ export const data = {
   children: [
     {
       name: "analytics",
+      className: "AppTreeMap__analytics",
       link: "https://blog.josequinto.com",
       children: [
         {

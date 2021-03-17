@@ -1,3 +1,5 @@
+import "./App.css"
+
 import * as React from "react";
 import TreeMap from "../components/TreeMap/TreeMap";
 import { data as data1 } from "../data/data";
@@ -8,18 +10,29 @@ import { ColorModel } from "../components/TreeMap/ITreeMapProps";
 import { hot } from "react-hot-loader";
 
 class App extends React.Component<{}, { data: any }> {
+  private treeMapRef: React.RefObject<TreeMap>;
+
   constructor(props) {
     super(props);
     this.state = {
       data: data1
     };
+    this.treeMapRef = React.createRef();
+
   }
+
+  onResetZoomClick = () => {
+    this.treeMapRef.current._zoomTo("0");
+  };
+
   public render() {
+
     return (
       <React.Fragment>
         <ContainerDimensions>
           {({ width, height }) => (
             <TreeMap
+              ref={this.treeMapRef}
               id="myTreeMap"
               width={width}
               height={400}
@@ -28,7 +41,7 @@ class App extends React.Component<{}, { data: any }> {
               colorModel={ColorModel.Depth}
               animated={false}
               className="AppTreeMap"
-              style={{backgroundColor: "red"}}
+              style={{ backgroundColor: "red" }}
               // disableBreadcrumb
               // hideNumberOfChildren
               // hideValue
@@ -39,7 +52,15 @@ class App extends React.Component<{}, { data: any }> {
             />
           )}
         </ContainerDimensions>
-        <a onClick={() => this.setState({ data: data2 })}>Change data</a>
+        <div>
+          <a onClick={() => this.setState({ data: data2 })}>Change data</a>
+        </div>
+        <div>
+          <a onClick={() => this.onResetZoomClick()}>Zoom Reset</a>
+        </div>
+        <div>
+          <a onClick={() => console.log("zoom out")}>Zoom out</a>
+        </div>
       </React.Fragment>
     );
   }

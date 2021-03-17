@@ -1,3 +1,5 @@
+import "./TreeMap.css"
+
 import * as React from "react";
 import classnames from "classnames";
 
@@ -19,10 +21,6 @@ import { extent } from "d3-array";
 import * as chromatic from "d3-scale-chromatic";
 import { interpolateHcl, interpolateHsl } from "d3-interpolate";
 import { IBreadcrumbItem, BreadcrumbStyled } from "../Breadcrumb/Breadcrumb";
-
-/* tslint:disable:no-var-requires */
-const styles: any = require("./TreeMap.module.css");
-/* tslint:enable:no-var-requires */
 
 class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
   // Default Props values
@@ -167,7 +165,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
           />
         ) : null}
         <svg
-          className={classnames(className, styles.mainSvg)}
+          className={classnames("TreeMap__mainSvg" ,className)}
           style={{ ...style }}
           height={height}
           width={width}
@@ -272,6 +270,8 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     const name = (node as any).data.name;
     const id = (node as any).customId;
     const url = (node as any).data.link;
+    const nodeClassName = (node as any).data.className;
+
     const hasChildren =
       node.children && node.children.length > 0 ? true : false;
     const formattedValue = `(${this._valueFormatFunction(
@@ -313,7 +313,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     return (
       <NodeComponent
         bgColor={backgroundColor}
-        className="node"
+        className={nodeClassName}
         fontSize={14}
         globalTotalNodes={totalNodes}
         hasChildren={hasChildren}
@@ -353,7 +353,7 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     this._zoomTo(ev.currentTarget.id);
   };
 
-  private _zoomTo(nodeId: string) {
+  public _zoomTo(nodeId: string) {
     const {
       selectedId,
       xScaleFunction,
@@ -402,4 +402,5 @@ class TreeMap extends React.Component<ITreeMapProps, ITreeMapState> {
     }
   }
 }
+
 export default TreeMap;

@@ -79,14 +79,14 @@ module.exports = {
           },
           {
             loader: "css-loader",
-            options: {
-              sourceMap: true,
-              importLoaders: 1,
-              localsConvention: "camelCase",
-              modules: {
-                localIdentName: "[name]_[local]_[hash:base64:5]"
-              }
-            }
+            // options: {
+            //   sourceMap: true,
+            //   importLoaders: 1,
+            //   localsConvention: "camelCase",
+            //   modules: {
+            //     localIdentName: "[name]_[local]_[hash:base64:5]"
+            //   }
+            // }
           }
         ]
       }
