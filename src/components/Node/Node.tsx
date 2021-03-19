@@ -25,7 +25,7 @@ export interface NodeProps {
   name: string;
   nodeTotalNodes: number;
   onClick?: any;
-  style?: object;
+  style?: React.CSSProperties;
   textColor: string;
   treemapId?: string;
   url: string;
@@ -80,7 +80,6 @@ const LabelNewLine = ({ label, textColor, fontSize, value, hasChildren }) => {
 };
 
 const NumberOfItemsRect = ({
-  bgColor,
   name,
   width,
   height,
@@ -93,27 +92,26 @@ const NumberOfItemsRect = ({
     nodeTotalNodes.toString().length
   );
   const itemsHeight = fontSize;
+  const strokeDasharrayTotal = itemsWidth + itemsHeight;
   if (width > itemsWidth && height > itemsHeight) {
     return (
       <g>
         <rect
-          id={"rectNumberItems-" + name}
-          x={width - itemsWidth - 2}
-          y={2}
+          id={`rectNumberItems-${name}`}
+          x={width - itemsWidth}
+          y={0}
           width={itemsWidth}
-          height={itemsHeight}
-          fill={bgColor}
-          fillOpacity={0.9}
+          height={itemsHeight + 2}
+          fill="none"
           stroke={textColor}
-          // strokeDasharray={"0, " + (itemsWidth + itemsHeight) + ", " + (itemsWidth + itemsHeight)}
+          strokeDasharray={`0,${strokeDasharrayTotal},${strokeDasharrayTotal}`}
         />
         <text
           fontSize={fontSize}
           fill={textColor}
-          x={width - itemsWidth}
-          y={fontSize}
-          // alignmentBaseline="hanging"
-          // textAnchor="start"
+          x={width - itemsWidth + itemsWidth / 2}
+          y={itemsHeight}
+          textAnchor="middle"
         >
           {nodeTotalNodes}
         </text>
@@ -151,7 +149,8 @@ const Node: React.FunctionComponent<NodeProps> = ({
   yScaleFactor,
   yScaleFunction,
   yTranslated,
-  zoomEnabled
+  zoomEnabled,
+  style
 }) => {
   const currentXTranslated =
     xTranslated !== undefined
@@ -171,33 +170,37 @@ const Node: React.FunctionComponent<NodeProps> = ({
 
   const cursor =
     hasChildren === true && isSelectedNode === false ? "pointer" : "auto";
+
   const itemsWidth = getNumberItemsWidthByNumberOfChars(
     fontSize,
     nodeTotalNodes.toString().length
   );
   const clipWidth =
     currentWidth > itemsWidth ? currentWidth - itemsWidth : currentWidth;
+
   return (
     <g
       transform={`translate(${currentXTranslated},${currentYTranslated})`}
-      id={id.toString()}
+      id={`${id}`}
       onClick={hasChildren ? onClick : null}
       style={{ cursor }}
     >
       <rect
-        id={"rect-" + id}
+        id={`rect-${id}`}
         width={currentWidth}
         height={currentHeight}
-        fill={bgColor}
         className={classnames("Node", className)}
+        style={{
+          fill: bgColor,
+          stroke: textColor,
+          ...style
+        }}
       />
-      <clipPath id={"clip-".concat(treemapId, "-", id.toString())}>
+      <clipPath id={`clip-${treemapId}-${id}`}>
         <rect width={Math.max(0, clipWidth - 5)} height={currentHeight} />
       </clipPath>
       <a href={url} target="_blank">
-        <text
-          clipPath={"url(#clip-".concat(treemapId, "-", id.toString(), ")")}
-        >
+        <text clipPath={`url(#clip-${treemapId}-${id})`}>
           <LabelNewLine
             label={label}
             textColor={textColor}
@@ -207,9 +210,8 @@ const Node: React.FunctionComponent<NodeProps> = ({
           />
         </text>
       </a>
-      {!hideNumberOfChildren && (
+      {!hideNumberOfChildren && hasChildren && (
         <NumberOfItemsRect
-          bgColor={bgColor}
           name={name}
           width={currentWidth}
           height={currentHeight}

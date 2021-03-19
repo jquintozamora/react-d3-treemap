@@ -1,7 +1,15 @@
 .AppTreeMap {
-  background-color: red;
+  background-color: white;
 }
 
 .AppTreeMap__analytics {
   fill: violet;
+}
+
+.AppTreeMap__node {
+  rx: 5
+}
+
+.AppTreeMap__svg{
+  font-family: 'Courier New', Courier, monospace;
 }

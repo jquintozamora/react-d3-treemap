@@ -14,7 +14,8 @@ import {
   HierarchyRectangularNode,
   treemap as d3treemap,
   hierarchy as d3hierarchy,
-  stratify as d3stratify
+  stratify as d3stratify,
+  treemapSquarify as d3TreemapSquarify
 } from "d3-hierarchy";
 import { scaleLinear, scaleSequential, scaleOrdinal } from "d3-scale";
 import { extent } from "d3-array";
@@ -40,8 +41,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
     valueFormat: ",d",
     valueUnit: "MB",
     disableBreadcrumb: false,
-    colorModel: ColorModel.NumberOfChildren,
-    animated: false
+    colorModel: ColorModel.Depth,
+    animated: false,
+    paddingInner: 0
   };
 
   // Note. This treemap element initially was using treemap and hierarchy directly on the render.
@@ -140,7 +142,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
       data
     } = this.state;
 
-    const { style, className } = this.props;
+    const { svgClassName, svgStyle, className } = this.props;
 
     this._createD3TreeMap(width, height, data);
 
@@ -164,10 +166,21 @@ class TreeMap<TreeMapInputData> extends React.Component<
     };
     iterateAllChildren(selectedNode, 0);
 
-    const highestBgColor = this._nodesbgColorFunction(totalNodes);
-    const lowestBgColor = this._nodesbgColorFunction(1);
+    let highestBgColor = this._nodesbgColorFunction(totalNodes);
+    let lowestBgColor = this._nodesbgColorFunction(1);
+    switch (this.props.colorModel) {
+      case ColorModel.OneEachChildren:
+        highestBgColor = lowestBgColor = this._nodesbgColorFunction(0);
+        break;
+      case ColorModel.Depth:
+      case ColorModel.Value:
+      case ColorModel.NumberOfChildren:
+      default:
+        break;
+    }
+
     return (
-      <div>
+      <div className={className}>
         {this.props.disableBreadcrumb === false ? (
           <BreadcrumbStyled
             bgColor={lowestBgColor}
@@ -177,10 +190,10 @@ class TreeMap<TreeMapInputData> extends React.Component<
           />
         ) : null}
         <svg
-          className={classnames("TreeMap__mainSvg", className)}
-          style={{ ...style }}
+          className={classnames("TreeMap__mainSvg", svgClassName)}
           height={height}
           width={width}
+          style={{ ...svgStyle }}
         >
           {reactNodes}
         </svg>
@@ -198,9 +211,10 @@ class TreeMap<TreeMapInputData> extends React.Component<
     if (!this._treemap) {
       this._treemap = d3treemap<TreeMapInputData>()
         .size([width, height])
+        .tile(d3TreemapSquarify)
         .paddingOuter(3)
         .paddingTop(19)
-        .paddingInner(1)
+        .paddingInner(this.props.paddingInner)
         .round(true);
     }
 
@@ -228,11 +242,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
     let d: any;
     switch (this.props.colorModel) {
       case ColorModel.Depth:
-        // Color domain = depth
         d = [0, Utils.getDepth(data) - 1];
         break;
       case ColorModel.Value:
-        // Color domain = size (value)
         d = extent(this._nodes, n => {
           if (n.parent !== null) {
             return n.value;
@@ -240,10 +252,12 @@ class TreeMap<TreeMapInputData> extends React.Component<
         });
         break;
       case ColorModel.NumberOfChildren:
-        // Color domain = number of children
         d = extent(this._nodes, n =>
           n.parent !== null ? n.descendants().length : 1
         );
+        break;
+      case ColorModel.OneEachChildren:
+        d = [Utils.getTopChildren(data), 0];
         break;
       default:
         break;
@@ -261,7 +275,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     } else {
       // Red, yellow, green: interpolateYlOrRd
       this._nodesbgColorFunction = scaleSequential(
-        chromatic.interpolateGreens
+        chromatic.interpolateSpectral
       ).domain(d);
     }
   }
@@ -272,7 +286,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
       animated,
       valueUnit,
       hideValue,
-      hideNumberOfChildren
+      hideNumberOfChildren,
+      nodeStyle,
+      nodeClassName
     } = this.props;
 
     const {
@@ -288,7 +304,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     const name = (node as any).data.name;
     const id = node.customId;
     const url = (node as any).data.link;
-    const nodeClassName = (node as any).data.className;
+    const nodeClassNameFromData = (node as any).data.className;
 
     const hasChildren =
       node.children && node.children.length > 0 ? true : false;
@@ -320,6 +336,13 @@ class TreeMap<TreeMapInputData> extends React.Component<
           backgroundColor = this._nodesbgColorFunction(1);
         }
         break;
+      case ColorModel.OneEachChildren:
+        backgroundColor = this._nodesbgColorFunction(
+          Utils.getTopSubParent<TreeMapInputData>(node)
+        );
+        if (node.parent === null) {
+          backgroundColor = this._nodesbgColorFunction(0);
+        }
       default:
         break;
     }
@@ -331,7 +354,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
     return (
       <NodeComponent
         bgColor={backgroundColor}
-        className={nodeClassName}
+        className={classnames(nodeClassName, nodeClassNameFromData)}
+        style={nodeStyle}
         fontSize={14}
         globalTotalNodes={totalNodes}
         hasChildren={hasChildren}
@@ -389,6 +413,11 @@ class TreeMap<TreeMapInputData> extends React.Component<
     ) {
       this._zoomTo(selectedNode.parent.customId);
     }
+  }
+
+  public getZoomLevel() {
+    const { selectedNode } = this.state;
+    return selectedNode.depth;
   }
 
   private _zoomTo(nodeId: number) {

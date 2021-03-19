@@ -41,11 +41,15 @@ class App extends React.Component<{}, { data: any }> {
               height={400}
               data={this.state.data}
               valueUnit={"MB"}
-              colorModel={ColorModel.Depth}
+              colorModel={ColorModel.OneEachChildren}
               animated={false}
               className="AppTreeMap"
-              style={{ backgroundColor: "red" }}
-              // disableBreadcrumb
+              nodeClassName="AppTreeMap__node"
+              svgClassName="AppTreeMap__svg"
+              paddingInner={2}
+              // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
+              // nodeStyle={{fill: "black", stroke: "white"}}
+              // disableBreadcrumb={true}
               // hideNumberOfChildren
               // hideValue
               // bgColorRangeLow={"#007AFF"}
@@ -63,6 +67,13 @@ class App extends React.Component<{}, { data: any }> {
         </div>
         <div>
           <a onClick={() => this.treeMapRef.current.zoomOut()}>Zoom out</a>
+        </div>
+        <div>
+          <a
+            onClick={() => console.log(this.treeMapRef.current.getZoomLevel())}
+          >
+            Zoom level
+          </a>
         </div>
       </React.Fragment>
     );

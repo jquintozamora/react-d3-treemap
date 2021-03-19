@@ -37,11 +37,16 @@ export interface ITreeMapProps<TreeMapInputData> {
   animated?: boolean;
 
   className?: string;
-  style?: React.CSSProperties;
+  svgClassName?: string;
+  nodeClassName?: string;
+  svgStyle?: React.CSSProperties;
+  nodeStyle?: React.CSSProperties;
+  paddingInner?: number;
 }
 
 export enum ColorModel {
   Depth,
   Value,
-  NumberOfChildren
+  NumberOfChildren,
+  OneEachChildren
 }
