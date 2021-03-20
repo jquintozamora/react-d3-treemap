@@ -175,8 +175,12 @@ const Node: React.FunctionComponent<NodeProps> = ({
     fontSize,
     nodeTotalNodes.toString().length
   );
-  const clipWidth =
-    currentWidth > itemsWidth ? currentWidth - itemsWidth : currentWidth;
+  const showNumberOfItems = !hideNumberOfChildren && hasChildren;
+
+  const clipWidth = Math.max(
+    0,
+    showNumberOfItems ? currentWidth - itemsWidth : currentWidth
+  );
 
   return (
     <g
@@ -197,7 +201,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
         }}
       />
       <clipPath id={`clip-${treemapId}-${id}`}>
-        <rect width={Math.max(0, clipWidth - 5)} height={currentHeight} />
+        <rect width={clipWidth} height={currentHeight} />
       </clipPath>
       <a href={url} target="_blank">
         <text clipPath={`url(#clip-${treemapId}-${id})`}>
@@ -210,7 +214,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
           />
         </text>
       </a>
-      {!hideNumberOfChildren && hasChildren && (
+      {showNumberOfItems && (
         <NumberOfItemsRect
           name={name}
           width={currentWidth}
