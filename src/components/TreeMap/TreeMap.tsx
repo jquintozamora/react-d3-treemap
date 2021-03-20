@@ -16,11 +16,17 @@ import {
   hierarchy as d3hierarchy,
   treemapSquarify as d3TreemapSquarify
 } from "d3-hierarchy";
-import { scaleLinear, scaleSequential } from "d3-scale";
+import {
+  ScaleLinear,
+  scaleLinear,
+  ScaleSequential,
+  scaleSequential
+} from "d3-scale";
 import { extent } from "d3-array";
 import * as chromatic from "d3-scale-chromatic";
 import { interpolateHcl } from "d3-interpolate";
 import { IBreadcrumbItem, BreadcrumbStyled } from "../Breadcrumb/Breadcrumb";
+import { domain } from "process";
 
 export interface CustomHierarchyRectangularNode<TreeMapInputData>
   extends HierarchyRectangularNode<TreeMapInputData> {
@@ -60,7 +66,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
   // Numeric value format function
   private _valueFormatFunction: (n: number) => string;
   // Background Color function
-  private _nodesbgColorFunction: (t: number) => string;
+  private _nodesbgColorFunction:
+    | ScaleSequential<string>
+    | ScaleLinear<string, string>;
 
   constructor(props: ITreeMapProps<TreeMapInputData>) {
     super(props);
@@ -151,7 +159,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
       svgClassName,
       svgStyle,
       className,
-      childrenPropInData
+      childrenPropInData,
+      colorModel,
+      disableBreadcrumb
     } = this.props;
 
     this._createD3TreeMap(width, height, data);
@@ -178,7 +188,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
     let highestBgColor = this._nodesbgColorFunction(totalNodes);
     let lowestBgColor = this._nodesbgColorFunction(1);
-    switch (this.props.colorModel) {
+    switch (colorModel) {
       case ColorModel.OneEachChildren:
         highestBgColor = lowestBgColor = this._nodesbgColorFunction(0);
         break;
@@ -191,7 +201,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
     return (
       <div className={className}>
-        {this.props.disableBreadcrumb === false ? (
+        {disableBreadcrumb === false ? (
           <BreadcrumbStyled
             bgColor={lowestBgColor}
             hoverBgColor={highestBgColor}
@@ -217,7 +227,15 @@ class TreeMap<TreeMapInputData> extends React.Component<
     height: number,
     data: TreeMapInputData
   ) {
-    const { valuePropInData } = this.props;
+    const {
+      valuePropInData,
+      paddingInner,
+      valueFormat,
+      colorModel,
+      bgColorRangeLow,
+      bgColorRangeHigh,
+      customD3ColorScale
+    } = this.props;
 
     // 1. Create treemap structure
     if (!this._treemap) {
@@ -226,7 +244,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
         .tile(d3TreemapSquarify)
         .paddingOuter(3)
         .paddingTop(19)
-        .paddingInner(this.props.paddingInner)
+        .paddingInner(paddingInner)
         .round(true);
     }
 
@@ -250,10 +268,10 @@ class TreeMap<TreeMapInputData> extends React.Component<
       .descendants() as Array<CustomHierarchyRectangularNode<TreeMapInputData>>;
 
     // Format function
-    this._valueFormatFunction = format(this.props.valueFormat);
+    this._valueFormatFunction = format(valueFormat);
 
     let d: [number | { valueOf(): number }, number | { valueOf(): number }];
-    switch (this.props.colorModel) {
+    switch (colorModel) {
       case ColorModel.Depth:
         d = [0, Utils.getDepth(data) - 1];
         break;
@@ -277,17 +295,13 @@ class TreeMap<TreeMapInputData> extends React.Component<
     }
 
     // Create bgColorFunction
-    if (
-      this.props.hasOwnProperty("bgColorRangeLow") &&
-      this.props.hasOwnProperty("bgColorRangeHigh")
-    ) {
+    if (bgColorRangeLow && bgColorRangeHigh) {
       this._nodesbgColorFunction = scaleLinear<string>()
         .domain(d)
         .interpolate(interpolateHcl)
-        .range([this.props.bgColorRangeLow, this.props.bgColorRangeHigh]);
+        .range([bgColorRangeLow, bgColorRangeHigh]);
     } else {
-      this._nodesbgColorFunction = this.props.customD3ColorScale.domain(d);
-
+      this._nodesbgColorFunction = customD3ColorScale.domain(d);
       // Red, yellow, green: interpolateYlOrRd
       // this._nodesbgColorFunction = scaleSequential(
       //   chromatic.interpolateSpectral
@@ -307,7 +321,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
       valuePropInData,
       childrenPropInData,
       namePropInData,
-      linkPropInData
+      linkPropInData,
+      colorModel
     } = this.props;
 
     const {
@@ -335,7 +350,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     const nodeTotalNodes = node.descendants().length - 1;
 
     let backgroundColor;
-    switch (this.props.colorModel) {
+    switch (colorModel) {
       case ColorModel.Depth:
         backgroundColor = this._nodesbgColorFunction(node.depth);
         if (node.parent === null) {
@@ -355,9 +370,18 @@ class TreeMap<TreeMapInputData> extends React.Component<
         }
         break;
       case ColorModel.OneEachChildren:
-        backgroundColor = this._nodesbgColorFunction(
+        const originalBackgroundColor = this._nodesbgColorFunction(
           Utils.getTopSubParent<TreeMapInputData>(node)
         );
+        if (node.depth > 1) {
+          backgroundColor = scaleLinear<string>()
+            .domain([0, node && node.children ? node.children.length : 1])
+            .range(["white", originalBackgroundColor])(
+            Utils.getTopSubParent<TreeMapInputData>(node)
+          );
+        } else {
+          backgroundColor = originalBackgroundColor;
+        }
         if (node.parent === null) {
           backgroundColor = this._nodesbgColorFunction(0);
         }

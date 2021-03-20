@@ -7,7 +7,7 @@ export class Utils {
 
   public static getTopSubParent<TreeMapInputData>(
     node: CustomHierarchyRectangularNode<TreeMapInputData>
-  ) {
+  ): number {
     if (node.parent && node.parent.parent) {
       return this.getTopSubParent(node.parent);
     }

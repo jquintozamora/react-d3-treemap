@@ -18,7 +18,7 @@ interface TreeMapInPutData {
   className?: string;
 }
 
-class App extends React.Component<{}, { data: any }> {
+class App extends React.Component<{}, { data: TreeMapInPutData }> {
   private treeMapRef: React.RefObject<TreeMap<TreeMapInPutData>>;
 
   constructor(props) {
@@ -29,14 +29,12 @@ class App extends React.Component<{}, { data: any }> {
     this.treeMapRef = React.createRef();
   }
 
-  onResetZoomClick = () => {};
-
   public render() {
     return (
       <React.Fragment>
         <ContainerDimensions>
           {({ width, height }) => (
-            <TreeMap
+            <TreeMap<TreeMapInPutData>
               ref={this.treeMapRef}
               id="myTreeMap"
               width={width}
@@ -49,7 +47,9 @@ class App extends React.Component<{}, { data: any }> {
               nodeClassName="AppTreeMap__node"
               svgClassName="AppTreeMap__svg"
               paddingInner={2}
-              customD3ColorScale={scaleSequential(chromatic.interpolateSpectral)}
+              customD3ColorScale={scaleSequential(
+                chromatic.interpolateSpectral
+              )}
               // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
               // nodeStyle={{fill: "black", stroke: "white"}}
               // disableBreadcrumb={true}
