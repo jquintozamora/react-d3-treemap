@@ -27,15 +27,24 @@ export class Utils {
     return 1 + depth;
   }
 
-  public static getRGBColor(color: string) {
-    if (color === "white" || color === "papayawhip") {
+  public static getRGBColor(color: string | Array<string>) {
+    if (!color) {
+      return {
+        r: 0,
+        g: 0,
+        b: 0
+      };
+    }
+    const actualColor = Array.isArray(color) ? color.pop() : color;
+
+    if (actualColor === "white" || actualColor === "papayawhip") {
       return {
         r: 255,
         g: 255,
         b: 255
       };
     }
-    if (color === "black") {
+    if (actualColor === "black") {
       return {
         r: 0,
         g: 0,
@@ -43,7 +52,7 @@ export class Utils {
       };
     }
     // format: "rgb(254, 214, 118)"
-    const ret = color.replace(/[^\d,]/g, "").split(",");
+    const ret = actualColor.replace(/[^\d,]/g, "").split(",");
     if (ret && ret.length === 3) {
       return {
         r: parseInt(ret[0], 10),
@@ -66,12 +75,16 @@ export class Utils {
       }
     }
     const luminance = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
-    return luminance > 0.179 ? "black" : "white";
+    // return luminance > 0.179 ? "black" : "white";
+    return luminance > 0.4 ? "black" : "white";
   }
 
   public static getHighContrastColorFromString(
-    backgroundColor: string
+    backgroundColor: string | undefined
   ): string {
+    if (!backgroundColor) {
+      return "black";
+    }
     const rgbColor = Utils.getRGBColor(backgroundColor);
     if (rgbColor) {
       // console.log("background: " + backgroundColor);

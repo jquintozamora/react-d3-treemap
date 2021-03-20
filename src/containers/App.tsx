@@ -6,6 +6,8 @@ import { data as data1 } from "../data/data";
 import { data as data2 } from "../data/data.1.level";
 import ContainerDimensions from "react-container-dimensions";
 import { ColorModel } from "../components/TreeMap/ITreeMapProps";
+import { scaleSequential } from "d3-scale";
+import * as chromatic from "d3-scale-chromatic";
 
 import { hot } from "react-hot-loader";
 
@@ -47,6 +49,7 @@ class App extends React.Component<{}, { data: any }> {
               nodeClassName="AppTreeMap__node"
               svgClassName="AppTreeMap__svg"
               paddingInner={2}
+              customD3ColorScale={scaleSequential(chromatic.interpolateSpectral)}
               // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
               // nodeStyle={{fill: "black", stroke: "white"}}
               // disableBreadcrumb={true}

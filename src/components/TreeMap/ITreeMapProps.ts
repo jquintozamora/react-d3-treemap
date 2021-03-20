@@ -1,3 +1,5 @@
+import { ScaleSequential } from "d3-scale";
+
 export interface ITreeMapProps<TreeMapInputData> {
   id: string;
   width: number;
@@ -42,6 +44,13 @@ export interface ITreeMapProps<TreeMapInputData> {
   svgStyle?: React.CSSProperties;
   nodeStyle?: React.CSSProperties;
   paddingInner?: number;
+
+  customD3ColorScale?: ScaleSequential<string>;
+
+  namePropInData?: string;
+  linkPropInData?: string;
+  valuePropInData?: string;
+  childrenPropInData?: string;
 }
 
 export enum ColorModel {
