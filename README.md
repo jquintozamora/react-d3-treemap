@@ -1,36 +1,35 @@
 # react-d3-treemap
+
 TreeMap component built with [D3 Treemap](https://github.com/d3/d3-hierarchy/blob/master/README.md#treemap)
 and [React](https://facebook.github.io/react) based on [Mike Bostock´s Treemap](https://bl.ocks.org/mbostock/911ad09bdead40ec0061).
-
 
 [![npm version](https://badge.fury.io/js/react-d3-treemap.svg)](https://badge.fury.io/js/react-d3-treemap)
 [![Code Climate](https://codeclimate.com/github/jquintozamora/react-d3-treemap/badges/gpa.svg)](https://codeclimate.com/github/jquintozamora/react-d3-treemap)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](Readme.md#want-to-contribute)
 
-[![NPM](https://nodei.co/npm/react-d3-treemap.png?downloads=true)](https://nodei.co/npm/react-d3-treemap/) [![Greenkeeper badge](https://badges.greenkeeper.io/jquintozamora/react-d3-treemap.svg)](https://greenkeeper.io/)
-
 ![React-d3-treemap-gif](./assets/react-d3-treemap.gif)
 
 ## DEMO
+
 [React D3 Treemap demo](https://jquintozamora.github.io/react-d3-treemap)
 
 ## Features
+
 - React for painting SVG
 - D3 for doing the maths calculations
-- [Styled-Components](https://github.com/styled-components/styled-components)
-- Using [React-motion](https://github.com/chenglou/react-motion) for animations
-  - Good combination using: d3, React, React-Motion
-  - ReactTransitionGroup to be deprecated: https://github.com/facebook/react/issues/1368
-  - [Playing with D3 Version 4, React, React-Motion](https://medium.com/@ilikepiecharts/playing-with-d3-version-4-react-react-motion-3d04c6eb21c9#.25pnrcyg3)
 
 ## Installation
+
 Steps to use react-d3-treemap in your React project
+
 ### 1.Install from NPM
+
 ```
 npm install --save react-d3-treemap
 ```
 
 ### 2. Import and use in your application
+
 ```js
 import TreeMap from "react-d3-treemap";
 // Include its styles in you build process as well
@@ -38,43 +37,189 @@ import "react-d3-treemap/dist/react.d3.treemap.css";
 ```
 
 ### 3. Usage
-```js
-  <TreeMap
-      id="myTreeMap"
-      height={500}
-      width={800}
-      data={data}
-      valueUnit={"MB"}
-  />
+
+```ts
+interface TreeMapInPutData {
+  name: string;
+  value?: number;
+  children?: Array<TreeMapInPutData>;
+  className?: string;
+}
+
+<TreeMap<TreeMapInPutData>
+    id="myTreeMap"
+    width={500}
+    height={400}
+    data={<my data matching TreeMapInputData interface>}
+    valueUnit={"MB"}
+/>
 ```
+
+## Props
+
+```ts
+  /**
+   * TreeMap id, will be use for create customId for each node
+   */
+  id: string;
+
+  /**
+   * TreeMap width
+   */
+  width: number;
+
+  /**
+   * TreeMap height
+   */
+  height: number;
+
+  /**
+   * TreeMap data. Normally should have at least name, value and children.
+   *
+   * Example:
+   *  interface TreeMapInPutData {
+   *      name: string;
+   *      value?: number;
+   *      children?: Array<TreeMapInPutData>;
+   *      className?: string;
+   *  }
+   */
+  data: TreeMapInputData;
+
+  /*
+        Unit for values. For example MB
+    */
+  valueUnit?: string;
+
+  /*
+   * Format for the values
+   * https://github.com/d3/d3-format#format
+   */
+  valueFormat?: string;
+
+  /**
+   * Hide breadcrumb.
+   *
+   * If you app doesn't use breadcrumb, you can pass down a ref
+   * and use the methods: zoomOut, resetZoom
+   */
+  disableBreadcrumb?: boolean;
+
+  /**
+   * There are few color strategies for nodes:
+   *    Depth: different color per depth
+   *    Value: different color depends on how big / small is the value
+   *    NumberOfChildren: different color depends on how many children node has
+   *    OneEachChildren: one color per each top children, then range of colors from white to that one
+   */
+  colorModel?: ColorModel;
+
+  /**
+   * Don't show the top right corner box indicating number of children
+   */
+  hideNumberOfChildren?: boolean;
+
+  /**
+   * Don't show the value
+   */
+  hideValue?: boolean;
+
+  /**
+   * Overrides top div main class
+   */
+  className?: string;
+
+  /**
+   * Overrides svg class
+   */
+  svgClassName?: string;
+
+  /**
+   * Overrides node class
+   */
+  nodeClassName?: string;
+
+  /**
+   * Overrides breadcrumb class
+   */
+  breadCrumbClassName?: string;
+
+  /**
+   * Overrides svg style
+   */
+  svgStyle?: React.CSSProperties;
+
+  /**
+   * Overrides node style
+   */
+  nodeStyle?: React.CSSProperties;
+
+  /**
+   * Padding between nodes ( calculated by D3 )
+   */
+  paddingInner?: number;
+
+  /**
+   * Custom ScaleSequential from D3
+   */
+  customD3ColorScale?: ScaleSequential<string>;
+
+  /**
+   * Name for the property `name` included in data
+   *
+   * @default "name"
+   */
+  namePropInData?: string;
+
+  /**
+   * Name for the property `link` included in data
+   *
+   * @default "link"
+   */
+  linkPropInData?: string;
+
+  /**
+   * Name for the property `value` included in data
+   *
+   * @default "value"
+   */
+  valuePropInData?: string;
+
+  /**
+   * Name for the property `children` included in data
+   *
+   * @default "children"
+   */
+  childrenPropInData?: string;
+
+```
+
 ## Data sample
+
 You can see an example of data [here](https://github.com/jquintozamora/react-d3-treemap/blob/master/src/data/data.ts).
 
 ## TypeScript sample
+
 I created a [TypeScript consume sample for React D3 Treemap](https://github.com/jquintozamora/react-d3-treemap-consume-typescript).
 
-## TODOs
-- Make it [responsive](https://truongtx.me/2016/08/20/moving-away-from-d3js-im-using-reactjs-for-dom-manipulation-now)
-- Add @types
-
-
 ## License
+
 BSD 3-Clause License
 
-Copyright (c) 2017, [José Quinto](https://blog.josequinto.com)
+Copyright (c) 2021, [José Quinto](https://blog.josequinto.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-* Redistributions of source code must retain the above copyright notice, this
+- Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
 
-* Redistributions in binary form must reproduce the above copyright notice,
+- Redistributions in binary form must reproduce the above copyright notice,
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the copyright holder nor the names of its
+- Neither the name of the copyright holder nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 

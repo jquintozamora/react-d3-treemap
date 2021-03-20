@@ -1,0 +1,19 @@
+.TreeMap__breadcrumb {
+  display: flex;
+  padding-bottom: 10px;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto",
+    "Helvetica Neue", sans-serif;
+}
+
+.TreeMap__breadcrumbItem {
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
+  font-size: 12px;
+  color: black;
+  background-color: #ffffff;
+}
+
+.TreeMap__breadcrumbSeparator {
+  padding: 0 5px;
+}

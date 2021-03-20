@@ -2,12 +2,6 @@ import "./TreeMap.css";
 
 import * as React from "react";
 import classnames from "classnames";
-
-import Node from "../Node";
-import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
-import { ITreeMapState } from "./ITreeMapState";
-import AnimatedNode from "../AnimatedNode";
-import { Utils } from "../../utils/Utils";
 import { format } from "d3-format";
 import {
   TreemapLayout,
@@ -25,8 +19,12 @@ import {
 import { extent } from "d3-array";
 import * as chromatic from "d3-scale-chromatic";
 import { interpolateHcl } from "d3-interpolate";
-import { IBreadcrumbItem, BreadcrumbStyled } from "../Breadcrumb/Breadcrumb";
-import { domain } from "process";
+
+import Node from "../Node";
+import Breadcrumb, { IBreadcrumbItem } from "../Breadcrumb";
+import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
+import { ITreeMapState } from "./ITreeMapState";
+import { Utils } from "../../utils/Utils";
 
 export interface CustomHierarchyRectangularNode<TreeMapInputData>
   extends HierarchyRectangularNode<TreeMapInputData> {
@@ -47,7 +45,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
     valueUnit: "MB",
     disableBreadcrumb: false,
     colorModel: ColorModel.Depth,
-    animated: false,
     paddingInner: 0,
     customD3ColorScale: scaleSequential(chromatic.interpolateSpectral),
     namePropInData: "name",
@@ -146,21 +143,14 @@ class TreeMap<TreeMapInputData> extends React.Component<
   }
 
   public render() {
-    const {
-      width,
-      height,
-      breadCrumbItems,
-      selectedNode,
-      totalNodes,
-      data
-    } = this.state;
+    const { width, height, breadCrumbItems, selectedNode, data } = this.state;
 
     const {
       svgClassName,
       svgStyle,
       className,
       childrenPropInData,
-      colorModel,
+      breadCrumbClassName,
       disableBreadcrumb
     } = this.props;
 
@@ -186,28 +176,10 @@ class TreeMap<TreeMapInputData> extends React.Component<
     };
     iterateAllChildren(selectedNode, 0);
 
-    let highestBgColor = this._nodesbgColorFunction(totalNodes);
-    let lowestBgColor = this._nodesbgColorFunction(1);
-    switch (colorModel) {
-      case ColorModel.OneEachChildren:
-        highestBgColor = lowestBgColor = this._nodesbgColorFunction(0);
-        break;
-      case ColorModel.Depth:
-      case ColorModel.Value:
-      case ColorModel.NumberOfChildren:
-      default:
-        break;
-    }
-
     return (
       <div className={className}>
         {disableBreadcrumb === false ? (
-          <BreadcrumbStyled
-            bgColor={lowestBgColor}
-            hoverBgColor={highestBgColor}
-            currentBgColor={highestBgColor}
-            items={breadCrumbItems}
-          />
+          <Breadcrumb items={breadCrumbItems} className={breadCrumbClassName} />
         ) : null}
         <svg
           className={classnames("TreeMap__mainSvg", svgClassName)}
@@ -232,8 +204,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
       paddingInner,
       valueFormat,
       colorModel,
-      bgColorRangeLow,
-      bgColorRangeHigh,
       customD3ColorScale
     } = this.props;
 
@@ -294,25 +264,12 @@ class TreeMap<TreeMapInputData> extends React.Component<
         break;
     }
 
-    // Create bgColorFunction
-    if (bgColorRangeLow && bgColorRangeHigh) {
-      this._nodesbgColorFunction = scaleLinear<string>()
-        .domain(d)
-        .interpolate(interpolateHcl)
-        .range([bgColorRangeLow, bgColorRangeHigh]);
-    } else {
-      this._nodesbgColorFunction = customD3ColorScale.domain(d);
-      // Red, yellow, green: interpolateYlOrRd
-      // this._nodesbgColorFunction = scaleSequential(
-      //   chromatic.interpolateSpectral
-      // ).domain(d);
-    }
+    this._nodesbgColorFunction = customD3ColorScale.domain(d);
   }
 
   private _getNode(node: CustomHierarchyRectangularNode<TreeMapInputData>) {
     const {
       id: treemapId,
-      animated,
       valueUnit,
       hideValue,
       hideNumberOfChildren,
@@ -321,8 +278,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
       valuePropInData,
       childrenPropInData,
       namePropInData,
-      linkPropInData,
-      colorModel
+      linkPropInData
     } = this.props;
 
     const {
@@ -348,6 +304,61 @@ class TreeMap<TreeMapInputData> extends React.Component<
       node[valuePropInData]
     )} ${valueUnit})`;
     const nodeTotalNodes = node.descendants().length - 1;
+
+    const { bgColor, textColor } = this._getColorsFromNode(
+      node,
+      nodeTotalNodes
+    );
+
+    return (
+      <Node
+        bgColor={bgColor}
+        className={classnames(nodeClassName, nodeClassNameFromData)}
+        style={nodeStyle}
+        fontSize={14}
+        globalTotalNodes={totalNodes}
+        hasChildren={hasChildren}
+        hideNumberOfChildren={hideNumberOfChildren}
+        id={id}
+        isSelectedNode={id === selectedId}
+        key={id}
+        label={name}
+        name={name}
+        nodeTotalNodes={nodeTotalNodes}
+        onClick={this._onNodeClick}
+        textColor={textColor}
+        treemapId={treemapId}
+        url={url}
+        value={!hideValue && formattedValue}
+        x0={node.x0}
+        x1={node.x1}
+        xScaleFactor={xScaleFactor}
+        xScaleFunction={xScaleFunction}
+        y0={node.y0}
+        y1={node.y1}
+        yScaleFactor={yScaleFactor}
+        yScaleFunction={yScaleFunction}
+        zoomEnabled={zoomEnabled}
+      />
+    );
+  }
+
+  private _onBreadcrumbItemClicked = (
+    ev: React.MouseEvent<HTMLElement>,
+    item: IBreadcrumbItem
+  ) => {
+    this._zoomTo(parseInt(item.key));
+  };
+
+  private _onNodeClick = (ev: React.MouseEvent<HTMLElement>) => {
+    this._zoomTo(parseInt(ev.currentTarget.id));
+  };
+
+  private _getColorsFromNode(
+    node: CustomHierarchyRectangularNode<TreeMapInputData>,
+    nodeTotalNodes: number
+  ) {
+    const { colorModel, valuePropInData } = this.props;
 
     let backgroundColor;
     switch (colorModel) {
@@ -389,53 +400,11 @@ class TreeMap<TreeMapInputData> extends React.Component<
         break;
     }
 
-    const colorText = Utils.getHighContrastColorFromString(backgroundColor);
-
-    const NodeComponent = animated ? AnimatedNode : Node;
-
-    return (
-      <NodeComponent
-        bgColor={backgroundColor}
-        className={classnames(nodeClassName, nodeClassNameFromData)}
-        style={nodeStyle}
-        fontSize={14}
-        globalTotalNodes={totalNodes}
-        hasChildren={hasChildren}
-        hideNumberOfChildren={hideNumberOfChildren}
-        id={id}
-        isSelectedNode={id === selectedId}
-        key={id}
-        label={name}
-        name={name}
-        nodeTotalNodes={nodeTotalNodes}
-        onClick={this._onNodeClick}
-        textColor={colorText}
-        treemapId={treemapId}
-        url={url}
-        value={!hideValue && formattedValue}
-        x0={node.x0}
-        x1={node.x1}
-        xScaleFactor={xScaleFactor}
-        xScaleFunction={xScaleFunction}
-        y0={node.y0}
-        y1={node.y1}
-        yScaleFactor={yScaleFactor}
-        yScaleFunction={yScaleFunction}
-        zoomEnabled={zoomEnabled}
-      />
-    );
+    return {
+      bgColor: backgroundColor,
+      textColor: Utils.getHighContrastColorFromString(backgroundColor)
+    };
   }
-
-  private _onBreadcrumbItemClicked = (
-    ev: React.MouseEvent<HTMLElement>,
-    item: IBreadcrumbItem
-  ) => {
-    this._zoomTo(parseInt(item.key));
-  };
-
-  private _onNodeClick = (ev: React.MouseEvent<HTMLElement>) => {
-    this._zoomTo(parseInt(ev.currentTarget.id));
-  };
 
   public resetZoom() {
     this._zoomTo(0);

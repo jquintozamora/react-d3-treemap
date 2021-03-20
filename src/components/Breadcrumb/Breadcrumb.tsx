@@ -1,113 +1,62 @@
+import "./Breadcrumb.css";
+
 import * as React from "react";
-import { Utils } from "../../utils/Utils";
+import classnames from "classnames";
 
-import * as styled from "styled-components";
-
-import { IBreadcrumbProps, IBreadcrumbItem } from "./IBreadcrumbProps";
-
-export class Breadcrumb extends React.Component<IBreadcrumbProps, {}> {
-
-    public render() {
-        return (
-            <div className={this.props.className}>
-                {this._renderItems()}
-            </div>
-        );
-    }
-
-    private _renderItems() {
-        const { items } = this.props;
-        if (items
-            && items.hasOwnProperty("length")
-            && items.length > 0) {
-            return items.map((item: IBreadcrumbItem) => {
-                return (
-                    <a
-                        id={item.key}
-                        key={item.key}
-                        onClick={this._onBreadcrumbClicked.bind(this, item)}
-                        href={item.href}
-                    >
-                        {item.text}
-                    </a>
-                );
-            });
-        }
-    }
-
-    private _onBreadcrumbClicked(item: IBreadcrumbItem, ev: React.MouseEvent<HTMLElement>) {
-        if (item.onClick) {
-            item.onClick(ev, item);
-        }
-    }
+export interface IBreadcrumbProps {
+  /**
+   * Collection of breadcrumbs to render
+   */
+  items: IBreadcrumbItem[];
+  className?: string;
 }
 
-export const BreadcrumbStyled: any = styled.default(Breadcrumb) `
-    text-align: center;
-    display: block;
-    overflow: hidden;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+export interface IBreadcrumbItem {
+  /**
+   * Text to display to the user for the breadcrumb
+   */
+  text: string;
+  /**
+   * Arbitrary unique string associated with the breadcrumb
+   */
+  key: string;
+  /**
+   * Callback issued when the breadcrumb is selected.
+   */
+  onClick?: (
+    ev?: React.MouseEvent<HTMLElement>,
+    item?: IBreadcrumbItem
+  ) => void;
+  /**
+   * Url to navigate to when this breadcrumb is clicked.
+   */
+  href?: string;
+}
 
-    > a {
-        text-decoration: none;
-        outline: none;
-        display: block;
-        float: left;
-        font-size: 12px;
-        line-height: 36px;
-        color: black;
-        padding: 0 10px 0 30px;
-        position: relative;
-        cursor: pointer;
-        background-color: #ffffff;
-        background-color: ${props => props.bgColor};
-    }
+export const Breadcrumb: React.FunctionComponent<IBreadcrumbProps> = ({
+  className,
+  items
+}) => {
+  if (!items) {
+    return null;
+  }
 
-    a:first-child {
-        padding-left: 16px;
-    }
-
-    a::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: -18px;
-        width: 36px;
-        height: 36px;
-        transform: scale(.707) rotate(45deg);
-        z-index: 1;
-        box-shadow: 2px -2px 0 2px rgb(206, 230, 140);
-        box-shadow: 1px -1px 0 0px ${props => props.currentBgColor};
-        border-radius: 0 5px 0 50px;
-        background-color: #ffffff;
-        background-color: ${props => props.bgColor};
-        color: rgb(206, 230, 140);
-        color: ${props => Utils.getHighContrastColorFromString(props.bgColor)};
-    }
-
-    a:hover, a:hover::after {
-        background-color: rgb(206, 230, 140);
-        background-color: ${props => props.hoverBgColor};
-        color: #ffffff;
-        color: ${props => Utils.getHighContrastColorFromString(props.hoverBgColor)};
-    }
-
-    a:last-child {
-        padding-right: 20px;
-        background-color: rgb(206, 230, 140);
-        background-color: ${props => props.currentBgColor};
-        color: #ffffff;
-        color: ${props => Utils.getHighContrastColorFromString(props.currentBgColor)};
-        cursor: auto;
-    }
-    a:last-child::after {
-        background-color: rgb(206, 230, 140);
-        background-color: ${props => props.currentBgColor};
-        color: #ffffff;
-        color: ${props => Utils.getHighContrastColorFromString(props.currentBgColor)};
-    }
-`;
-
-export { IBreadcrumbItem } from "./IBreadcrumbProps";
+  return (
+    <div className={classnames("TreeMap__breadcrumb", className)}>
+      {items.map((item: IBreadcrumbItem, index: number) => (
+        <div key={index}>
+          <a
+            className="TreeMap__breadcrumbItem"
+            id={item.key}
+            key={item.key}
+            onClick={item.onClick ? ev => item.onClick(ev, item) : undefined}
+            href={item.href}
+          >
+            {item.text}
+          </a>
+          {index < items.length - 1 ? <span className="TreeMap__breadcrumbSeparator">/</span> : null}
+        </div>
+      ))}
+    </div>
+  );
+};

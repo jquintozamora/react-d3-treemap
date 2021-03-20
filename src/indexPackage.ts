@@ -1,3 +1,1 @@
-export { ITreeMapProps, ColorModel } from "./components/TreeMap/ITreeMapProps";
-import TreeMap from "./components/TreeMap/TreeMap";
-export default TreeMap;
+export { default, ITreeMapProps, ColorModel } from "./components/TreeMap";

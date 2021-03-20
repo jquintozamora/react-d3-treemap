@@ -47,6 +47,12 @@
 
 - Refactor node count label in the corner to allow rounded corner
 
+- Disable animated as it was increasing bundle size significantly
+
+- Remove styled-components as it was was also increasing bundle size just for breadcrumb
+
+- use yarn
+
 ## 1.0.15
 
 - React for painting SVG

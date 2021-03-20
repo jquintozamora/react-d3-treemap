@@ -4,6 +4,6 @@ import { render } from "react-dom";
 /*
   Main App Container
  */
-import App from "./containers/App";
+import App from "./App";
 
 render(<App />, document.getElementById("app"));

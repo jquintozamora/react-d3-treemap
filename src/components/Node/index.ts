@@ -1,2 +1,1 @@
-export { default } from "./Node"
-export { NodeProps } from "./Node"
+export { default, NodeProps } from "./Node";

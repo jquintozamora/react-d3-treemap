@@ -1,15 +1,14 @@
 import "./App.css";
 
-import * as React from "react";
-import TreeMap from "../components/TreeMap/TreeMap";
-import { data as data1 } from "../data/data";
-import { data as data2 } from "../data/data.1.level";
 import ContainerDimensions from "react-container-dimensions";
-import { ColorModel } from "../components/TreeMap/ITreeMapProps";
 import { scaleSequential } from "d3-scale";
 import * as chromatic from "d3-scale-chromatic";
-
 import { hot } from "react-hot-loader";
+
+import * as React from "react";
+import { data as data1 } from "../data/data";
+import { data as data2 } from "../data/data.1.level";
+import TreeMap, { ColorModel } from "../components/TreeMap";
 
 interface TreeMapInPutData {
   name: string;
@@ -42,7 +41,6 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
               data={this.state.data}
               valueUnit={"MB"}
               colorModel={ColorModel.OneEachChildren}
-              animated={false}
               className="AppTreeMap"
               nodeClassName="AppTreeMap__node"
               svgClassName="AppTreeMap__svg"
@@ -53,12 +51,8 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
               // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
               // nodeStyle={{fill: "black", stroke: "white"}}
               // disableBreadcrumb={true}
-              // hideNumberOfChildren
-              // hideValue
-              // bgColorRangeLow={"#007AFF"}
-              // bgColorRangeHigh={"#FFF500"}
-              // bgColorRangeLow={"#FFFFBF"}
-              // bgColorRangeHigh={"#91CF60"}
+              // hideNumberOfChildren={true}
+              // hideValue={true}
             />
           )}
         </ContainerDimensions>
