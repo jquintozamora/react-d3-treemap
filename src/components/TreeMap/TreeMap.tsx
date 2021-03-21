@@ -10,15 +10,9 @@ import {
   hierarchy as d3hierarchy,
   treemapSquarify as d3TreemapSquarify
 } from "d3-hierarchy";
-import {
-  ScaleLinear,
-  scaleLinear,
-  ScaleSequential,
-  scaleSequential
-} from "d3-scale";
+import { scaleLinear, ScaleSequential, scaleSequential } from "d3-scale";
 import { extent } from "d3-array";
-import * as chromatic from "d3-scale-chromatic";
-import { interpolateHcl } from "d3-interpolate";
+import { interpolateSpectral } from "d3-scale-chromatic";
 
 import Node from "../Node";
 import Breadcrumb, { IBreadcrumbItem } from "../Breadcrumb";
@@ -44,9 +38,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
     valueFormat: ",d",
     valueUnit: "MB",
     disableBreadcrumb: false,
-    colorModel: ColorModel.Depth,
+    colorModel: ColorModel.OneEachChildren,
     paddingInner: 0,
-    customD3ColorScale: scaleSequential(chromatic.interpolateSpectral),
+    customD3ColorScale: scaleSequential(interpolateSpectral),
     namePropInData: "name",
     linkPropInData: "link",
     valuePropInData: "value", // can be value, count, ...
@@ -63,9 +57,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
   // Numeric value format function
   private _valueFormatFunction: (n: number) => string;
   // Background Color function
-  private _nodesbgColorFunction:
-    | ScaleSequential<string>
-    | ScaleLinear<string, string>;
+  private _nodesbgColorFunction: ScaleSequential<string>;
 
   constructor(props: ITreeMapProps<TreeMapInputData>) {
     super(props);
@@ -406,31 +398,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
     };
   }
 
-  public resetZoom() {
-    this._zoomTo(0);
-  }
-
-  public zoomOut() {
-    const { selectedId } = this.state;
-    const selectedNode = this._nodes
-      .filter((item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
-        return item.customId === selectedId;
-      })
-      .pop();
-    if (
-      selectedNode &&
-      selectedNode.parent &&
-      selectedNode.parent.customId !== undefined
-    ) {
-      this._zoomTo(selectedNode.parent.customId);
-    }
-  }
-
-  public getZoomLevel() {
-    const { selectedNode } = this.state;
-    return selectedNode.depth;
-  }
-
   private _zoomTo(nodeId: number) {
     const {
       selectedId,
@@ -440,7 +407,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
       height
     } = this.state;
 
+    console.log("zoomTo");
     if (selectedId !== nodeId) {
+      console.log("zoomTo-Doing-something");
       const currentNodeArray = this._nodes.filter(
         (item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
           return item.customId.toString() === nodeId.toString();
@@ -480,6 +449,35 @@ class TreeMap<TreeMapInputData> extends React.Component<
         console.warn("No node found for " + nodeId);
       }
     }
+  }
+
+  public resetZoom() {
+    this._zoomTo(0);
+  }
+
+  public zoomOut() {
+    const { selectedId } = this.state;
+    const selectedNode = this._nodes
+      .filter((item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
+        return item.customId === selectedId;
+      })
+      .pop();
+    if (
+      selectedNode &&
+      selectedNode.parent &&
+      selectedNode.parent.customId !== undefined
+    ) {
+      this._zoomTo(selectedNode.parent.customId);
+    }
+  }
+
+  public getZoomLevel() {
+    const { selectedNode } = this.state;
+    return selectedNode.depth;
+  }
+
+  public getBreadcrumbItems() {
+    return this.state.breadCrumbItems;
   }
 }
 

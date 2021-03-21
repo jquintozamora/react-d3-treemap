@@ -39,6 +39,7 @@
   "homepage": "https://github.com/jquintozamora/react-d3-treemap#readme",
   "dependencies": {
     "@types/d3-array": "2.9.0",
+    "@types/d3-color": "2.0.1",
     "@types/d3-format": "2.0.0",
     "@types/d3-hierarchy": "2.0.0",
     "@types/d3-interpolate": "2.0.0",
@@ -46,6 +47,7 @@
     "@types/d3-scale-chromatic": "2.0.0",
     "classnames": "2.2.6",
     "d3-array": "2.12.0",
+    "d3-color": "^2.0.0",
     "d3-format": "2.0.0",
     "d3-hierarchy": "2.0.0",
     "d3-interpolate": "2.0.1",

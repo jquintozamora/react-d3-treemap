@@ -40,14 +40,13 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
               height={400}
               data={this.state.data}
               valueUnit={"MB"}
-              colorModel={ColorModel.OneEachChildren}
               className="AppTreeMap"
               nodeClassName="AppTreeMap__node"
               svgClassName="AppTreeMap__svg"
               paddingInner={2}
-              customD3ColorScale={scaleSequential(
-                chromatic.interpolateSpectral
-              )}
+              // customD3ColorScale={scaleSequential(
+              //   chromatic.interpolateViridis
+              // )}
               // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
               // nodeStyle={{fill: "black", stroke: "white"}}
               // disableBreadcrumb={true}

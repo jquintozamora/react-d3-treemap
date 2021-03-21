@@ -1,4 +1,5 @@
 import { CustomHierarchyRectangularNode } from "../components/TreeMap/TreeMap";
+import { rgb } from "d3-color";
 
 export class Utils {
   public static getTopChildren(data: any) {
@@ -27,41 +28,6 @@ export class Utils {
     return 1 + depth;
   }
 
-  public static getRGBColor(color: string | Array<string>) {
-    if (!color) {
-      return {
-        r: 0,
-        g: 0,
-        b: 0
-      };
-    }
-    const actualColor = Array.isArray(color) ? color.pop() : color;
-
-    if (actualColor === "white" || actualColor === "papayawhip") {
-      return {
-        r: 255,
-        g: 255,
-        b: 255
-      };
-    }
-    if (actualColor === "black") {
-      return {
-        r: 0,
-        g: 0,
-        b: 0
-      };
-    }
-    // format: "rgb(254, 214, 118)"
-    const ret = actualColor.replace(/[^\d,]/g, "").split(",");
-    if (ret && ret.length === 3) {
-      return {
-        r: parseInt(ret[0], 10),
-        g: parseInt(ret[1], 10),
-        b: parseInt(ret[2], 10)
-      };
-    }
-  }
-
   public static getHighContrastColor(r: number, g: number, b: number) {
     // based on
     // http://stackoverflow.com/questions/407793/programmatically-choose-high-contrast-colors
@@ -85,10 +51,8 @@ export class Utils {
     if (!backgroundColor) {
       return "black";
     }
-    const rgbColor = Utils.getRGBColor(backgroundColor);
+    const rgbColor = rgb(backgroundColor);
     if (rgbColor) {
-      // console.log("background: " + backgroundColor);
-      // console.log("color: " + Utils.getHighContrastColor(rgbColor.r, rgbColor.g, rgbColor.b));
       return Utils.getHighContrastColor(rgbColor.r, rgbColor.g, rgbColor.b);
     }
   }
