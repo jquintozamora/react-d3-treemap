@@ -44,6 +44,8 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
               nodeClassName="AppTreeMap__node"
               svgClassName="AppTreeMap__svg"
               paddingInner={2}
+              onZoom={(level, id, items) => console.log({ level, id, items })}
+              nodeStyle={{ fontSize: 12, paddingTop: 2, paddingLeft: 2 }}
               // customD3ColorScale={scaleSequential(
               //   chromatic.interpolateViridis
               // )}

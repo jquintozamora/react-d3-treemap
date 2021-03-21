@@ -204,7 +204,11 @@ const Node: React.FunctionComponent<NodeProps> = ({
         <rect width={clipWidth} height={currentHeight} />
       </clipPath>
       <a href={url} target="_blank">
-        <text clipPath={`url(#clip-${treemapId}-${id})`}>
+        <text
+          clipPath={`url(#clip-${treemapId}-${id})`}
+          transform={`translate(${style.paddingTop || 0},${style.paddingLeft ||
+            0})`}
+        >
           <LabelNewLine
             label={label}
             textColor={textColor}

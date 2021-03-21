@@ -1,4 +1,5 @@
 import { ScaleSequential } from "d3-scale";
+import { IBreadcrumbItem } from "../Breadcrumb";
 
 export interface ITreeMapProps<TreeMapInputData> {
   /**
@@ -134,6 +135,15 @@ export interface ITreeMapProps<TreeMapInputData> {
    * @default "children"
    */
   childrenPropInData?: string;
+
+  /**
+   * Captures on zoom event
+   */
+  onZoom?: (
+    zoomLevel: number,
+    zoomId: number,
+    breadcrumbItems: IBreadcrumbItem[]
+  ) => void;
 }
 
 export enum ColorModel {

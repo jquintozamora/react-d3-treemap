@@ -1,3 +1,11 @@
+## 1.0.17 (2021-03-20)
+
+- Add App Sample to Readme.md
+- Solve convert to RBG color issue
+- Solve domain issue with color
+- Add `onZoom` for listening to changes in the zoom
+- Enable fontSize, paddingTop and paddingLeft for Nodes
+
 ## 1.0.16 (2021-03-20)
 
 - Refactor CSS.

@@ -19,7 +19,7 @@ export interface IBreadcrumbItem {
   /**
    * Arbitrary unique string associated with the breadcrumb
    */
-  key: string;
+  key: number;
   /**
    * Callback issued when the breadcrumb is selected.
    */
@@ -27,10 +27,6 @@ export interface IBreadcrumbItem {
     ev?: React.MouseEvent<HTMLElement>,
     item?: IBreadcrumbItem
   ) => void;
-  /**
-   * Url to navigate to when this breadcrumb is clicked.
-   */
-  href?: string;
 }
 
 export const Breadcrumb: React.FunctionComponent<IBreadcrumbProps> = ({
@@ -47,14 +43,15 @@ export const Breadcrumb: React.FunctionComponent<IBreadcrumbProps> = ({
         <div key={index}>
           <a
             className="TreeMap__breadcrumbItem"
-            id={item.key}
             key={item.key}
             onClick={item.onClick ? ev => item.onClick(ev, item) : undefined}
-            href={item.href}
+            style={{ cursor: item.onClick ? "pointer" : "auto" }}
           >
             {item.text}
           </a>
-          {index < items.length - 1 ? <span className="TreeMap__breadcrumbSeparator">/</span> : null}
+          {index < items.length - 1 ? (
+            <span className="TreeMap__breadcrumbSeparator">/</span>
+          ) : null}
         </div>
       ))}
     </div>

@@ -194,6 +194,10 @@ interface TreeMapInPutData {
 
 ```
 
+## App sample
+
+You can see an example of App [here](https://github.com/jquintozamora/react-d3-treemap/blob/master/src/App/App.tsx).
+
 ## Data sample
 
 You can see an example of data [here](https://github.com/jquintozamora/react-d3-treemap/blob/master/src/data/data.ts).
