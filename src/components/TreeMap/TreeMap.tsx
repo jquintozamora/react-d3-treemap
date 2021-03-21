@@ -13,6 +13,7 @@ import {
 import { scaleLinear, ScaleSequential, scaleSequential } from "d3-scale";
 import { extent } from "d3-array";
 import { interpolateSpectral } from "d3-scale-chromatic";
+import { interpolateHcl } from "d3-interpolate";
 
 import Node from "../Node";
 import Breadcrumb, { IBreadcrumbItem } from "../Breadcrumb";
@@ -378,7 +379,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
         );
         if (node.depth > 1) {
           backgroundColor = scaleLinear<string>()
-            .domain([0, node && node.children ? node.children.length : 1])
+            .domain([0, node && node.children ? node.children.length : 0])
+            .interpolate(interpolateHcl)
             .range(["white", originalBackgroundColor])(
             Utils.getTopSubParent<TreeMapInputData>(node)
           );
