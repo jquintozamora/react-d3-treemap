@@ -1,3 +1,7 @@
 .Node {
   stroke-width: 1;
 }
+
+.Node__link:hover > text {
+  text-decoration: underline;
+}

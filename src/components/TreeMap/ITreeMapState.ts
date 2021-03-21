@@ -1,3 +1,4 @@
+import { ScaleLinear } from "d3-scale";
 import { IBreadcrumbItem } from "../Breadcrumb";
 import { CustomHierarchyRectangularNode } from "./TreeMap";
 export interface ITreeMapState<TreeMapInputData> {
@@ -6,8 +7,8 @@ export interface ITreeMapState<TreeMapInputData> {
   height: number;
   xScaleFactor: number;
   yScaleFactor: number;
-  xScaleFunction: any;
-  yScaleFunction: any;
+  xScaleFunction: ScaleLinear<number, number>;
+  yScaleFunction: ScaleLinear<number, number>;
   zoomEnabled: boolean;
   breadcrumbItems: IBreadcrumbItem[];
   selectedId: number;

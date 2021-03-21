@@ -16,7 +16,7 @@ import { interpolateSpectral } from "d3-scale-chromatic";
 import { interpolateHcl } from "d3-interpolate";
 
 import Node from "../Node";
-import Breadcrumb, { IBreadcrumbItem } from "../Breadcrumb";
+import Breadcrumb from "../Breadcrumb";
 import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
 import { ITreeMapState } from "./ITreeMapState";
 import { Utils } from "../../utils/Utils";
@@ -67,9 +67,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
     // Default State values
     this.state = {
-      height: height,
-      width: width,
-      data: data,
+      height,
+      width,
+      data,
       xScaleFactor: 1,
       yScaleFactor: 1,
       xScaleFunction: scaleLinear().range([0, width]),
@@ -97,16 +97,12 @@ class TreeMap<TreeMapInputData> extends React.Component<
   public componentWillReceiveProps(nextProps: ITreeMapProps<TreeMapInputData>) {
     const { width, height, data, namePropInData } = nextProps;
 
-    if (height !== this.props.height || width !== this.props.width) {
-      this.setState({
-        width,
-        height,
-        xScaleFunction: scaleLinear().range([0, width]),
-        yScaleFunction: scaleLinear().range([0, height])
-      });
-    }
-
-    this._createD3TreeMap(width, height, data);
+    if (
+      height !== this.props.height ||
+      width !== this.props.width ||
+      data !== this.props.data
+    )
+      this._createD3TreeMap(width, height, data);
     this.setState({
       data,
       width,
@@ -116,7 +112,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
       xScaleFunction: scaleLinear().range([0, width]),
       yScaleFunction: scaleLinear().range([0, height]),
       zoomEnabled: false,
-      // TODO: Replace data.name by id
       breadcrumbItems: [
         {
           text: data[namePropInData],
@@ -193,6 +188,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
   ) {
     const {
       valuePropInData,
+      childrenPropInData,
       paddingInner,
       valueFormat,
       colorModel,
@@ -200,26 +196,21 @@ class TreeMap<TreeMapInputData> extends React.Component<
     } = this.props;
 
     // 1. Create treemap structure
-    if (!this._treemap) {
-      this._treemap = d3treemap<TreeMapInputData>()
-        .size([width, height])
-        .tile(d3TreemapSquarify)
-        .paddingOuter(3)
-        .paddingTop(19)
-        .paddingInner(paddingInner)
-        .round(true);
-    }
+    this._treemap = d3treemap<TreeMapInputData>()
+      .size([width, height])
+      .tile(d3TreemapSquarify)
+      .paddingOuter(3)
+      .paddingTop(19)
+      .paddingInner(paddingInner)
+      .round(true);
 
     // 2. Before compute a hierarchical layout, we need a root node
     //    If the data is in JSON we use d3.hierarchy
-    if (!this._rootData) {
-      this._rootData = d3hierarchy(data)
-        .sum(s => s[valuePropInData])
-        .sort(
-          (a, b) =>
-            b.height - a.height || b[valuePropInData] - a[valuePropInData]
-        ) as HierarchyRectangularNode<TreeMapInputData>;
-    }
+    this._rootData = d3hierarchy(data)
+      .sum(s => s[valuePropInData])
+      .sort(
+        (a, b) => b.height - a.height || b[valuePropInData] - a[valuePropInData]
+      ) as HierarchyRectangularNode<TreeMapInputData>;
 
     // 3. Get array of nodes
     let numberItemId = 0;
@@ -235,7 +226,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     let d: [number | { valueOf(): number }, number | { valueOf(): number }];
     switch (colorModel) {
       case ColorModel.Depth:
-        d = [0, Utils.getDepth(data) - 1];
+        d = [0, Utils.getDepth<TreeMapInputData>(data, childrenPropInData) - 1];
         break;
       case ColorModel.Value:
         d = extent(this._nodes, n => {
@@ -250,7 +241,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
         );
         break;
       case ColorModel.OneEachChildren:
-        d = [Utils.getTopChildren(data), 0];
+        d = [data[childrenPropInData] ? data[childrenPropInData].length : 0, 0];
         break;
       default:
         break;
@@ -339,14 +330,11 @@ class TreeMap<TreeMapInputData> extends React.Component<
     );
   }
 
-  private _onBreadcrumbItemClicked = (
-    ev: React.MouseEvent<HTMLElement>,
-    item: IBreadcrumbItem
-  ) => {
-    this._zoomTo(item.key);
+  private _onBreadcrumbItemClicked = (ev: React.MouseEvent<HTMLElement>) => {
+    this._zoomTo(Number(ev.currentTarget.id));
   };
 
-  private _onNodeClick = (ev: React.MouseEvent<HTMLElement>) => {
+  private _onNodeClick = (ev: React.MouseEvent<SVGElement>) => {
     this._zoomTo(parseInt(ev.currentTarget.id));
   };
 

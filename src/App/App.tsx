@@ -32,30 +32,32 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
     return (
       <React.Fragment>
         <ContainerDimensions>
-          {({ width, height }) => (
-            <TreeMap<TreeMapInPutData>
-              ref={this.treeMapRef}
-              id="myTreeMap"
-              width={width}
-              height={400}
-              data={this.state.data}
-              valueUnit={"MB"}
-              className="AppTreeMap"
-              nodeClassName="AppTreeMap__node"
-              svgClassName="AppTreeMap__svg"
-              paddingInner={2}
-              onZoom={(level, id, items) => console.log({ level, id, items })}
-              nodeStyle={{ fontSize: 12, paddingTop: 2, paddingLeft: 2 }}
-              // customD3ColorScale={scaleSequential(
-              //   chromatic.interpolateViridis
-              // )}
-              // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
-              // nodeStyle={{fill: "black", stroke: "white"}}
-              // disableBreadcrumb={true}
-              // hideNumberOfChildren={true}
-              // hideValue={true}
-            />
-          )}
+          {({ width, height }) => {
+            return (
+              <TreeMap<TreeMapInPutData>
+                ref={this.treeMapRef}
+                id="myTreeMap"
+                width={width}
+                height={400}
+                data={this.state.data}
+                valueUnit={"MB"}
+                className="AppTreeMap"
+                nodeClassName="AppTreeMap__node"
+                svgClassName="AppTreeMap__svg"
+                paddingInner={2}
+                onZoom={(level, id, items) => console.log({ level, id, items })}
+                nodeStyle={{ fontSize: 12, paddingTop: 2, paddingLeft: 2 }}
+                // customD3ColorScale={scaleSequential(
+                //   chromatic.interpolateViridis
+                // )}
+                // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
+                // nodeStyle={{fill: "black", stroke: "white"}}
+                // disableBreadcrumb={true}
+                // hideNumberOfChildren={true}
+                // hideValue={true}
+              />
+            );
+          }}
         </ContainerDimensions>
         <div>
           <a onClick={() => this.setState({ data: data2 })}>Change data</a>

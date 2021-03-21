@@ -2,6 +2,7 @@ import "./Node.css";
 
 import * as React from "react";
 import classnames from "classnames";
+import { ScaleLinear } from "d3-scale";
 
 export interface NodeProps {
   /*
@@ -24,7 +25,7 @@ export interface NodeProps {
   label: string;
   name: string;
   nodeTotalNodes: number;
-  onClick?: any;
+  onClick?: (ev?: React.MouseEvent<SVGElement>) => void;
   style?: React.CSSProperties;
   textColor: string;
   treemapId?: string;
@@ -32,10 +33,10 @@ export interface NodeProps {
   value: string;
   width?: number;
   xScaleFactor?: number;
-  xScaleFunction?: any;
+  xScaleFunction?: ScaleLinear<number, number>;
   xTranslated?: number;
   yScaleFactor?: number;
-  yScaleFunction?: any;
+  yScaleFunction?: ScaleLinear<number, number>;
   yTranslated?: number;
   zoomEnabled?: boolean;
 }
@@ -203,7 +204,11 @@ const Node: React.FunctionComponent<NodeProps> = ({
       <clipPath id={`clip-${treemapId}-${id}`}>
         <rect width={clipWidth} height={currentHeight} />
       </clipPath>
-      <a href={url} target="_blank">
+      <a
+        className={classnames({ Node__link: !!url })}
+        href={url}
+        target="_blank"
+      >
         <text
           clipPath={`url(#clip-${treemapId}-${id})`}
           transform={`translate(${style.paddingTop || 0},${style.paddingLeft ||

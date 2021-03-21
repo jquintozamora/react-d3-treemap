@@ -44,7 +44,8 @@ export const Breadcrumb: React.FunctionComponent<IBreadcrumbProps> = ({
           <a
             className="TreeMap__breadcrumbItem"
             key={item.key}
-            onClick={item.onClick ? ev => item.onClick(ev, item) : undefined}
+            id={`${item.key}`}
+            onClick={item.onClick ? item.onClick : undefined}
             style={{ cursor: item.onClick ? "pointer" : "auto" }}
           >
             {item.text}

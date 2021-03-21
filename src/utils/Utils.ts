@@ -2,10 +2,6 @@ import { CustomHierarchyRectangularNode } from "../components/TreeMap/TreeMap";
 import { rgb } from "d3-color";
 
 export class Utils {
-  public static getTopChildren(data: any) {
-    return data.children ? data.children.length : 0;
-  }
-
   public static getTopSubParent<TreeMapInputData>(
     node: CustomHierarchyRectangularNode<TreeMapInputData>
   ): number {
@@ -15,11 +11,14 @@ export class Utils {
     return node.customId;
   }
 
-  public static getDepth(obj: any) {
+  public static getDepth<TreeMapInputData>(
+    obj: TreeMapInputData,
+    childrenPropInData: string
+  ) {
     let depth = 0;
-    if (obj.children) {
-      obj.children.forEach((d: any) => {
-        const tmpDepth = this.getDepth(d);
+    if (obj[childrenPropInData]) {
+      obj[childrenPropInData].forEach(d => {
+        const tmpDepth = this.getDepth(d, childrenPropInData);
         if (tmpDepth > depth) {
           depth = tmpDepth;
         }
