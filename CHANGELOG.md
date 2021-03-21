@@ -1,4 +1,4 @@
-## 1.0.17 (2021-03-20)
+## 1.0.18 (2021-03-20)
 
 - Add App Sample to Readme.md
 - Solve convert to RBG color issue
