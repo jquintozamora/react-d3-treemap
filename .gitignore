@@ -7,3 +7,5 @@ public/
 coverage/
 
 webpack/stats
+
+.DS_Store

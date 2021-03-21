@@ -1,38 +1,21 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "declaration": true,
-        "outDir": "./dist",
-        "noImplicitAny": false,
-        "suppressImplicitAnyIndexErrors": true,
-        "removeComments": true,
-        "noLib": false,
-        "preserveConstEnums": true,
-        "sourceMap": true,
-        "jsx": "react",
-        "typeRoots": [
-            "./node_modules/@types"
-        ],
-        "types": [
-            "jest",
-            "node",
-            "react",
-            "react-dom"
-        ]
-    },
-    "filesGlob": [
-        "./**/*.ts",
-        "!./node_modules/**/*.ts"
-    ],
-    "files": [
-        "./src/indexPackage.ts"
-    ],
-    "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
-    ]
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "removeComments": true,
+    "noLib": false,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "jsx": "react",
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node", "react", "react-dom"]
+  },
+  "filesGlob": ["./**/*.ts", "!./node_modules/**/*.ts"],
+  "files": ["./src/indexPackage.ts"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
