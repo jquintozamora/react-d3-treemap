@@ -192,6 +192,27 @@ interface TreeMapInPutData {
    */
   childrenPropInData?: string;
 
+    /**
+   * Captures on zoom event
+   */
+  onZoom?: (
+    zoomLevel: number,
+    zoomId: number,
+    breadcrumbItems: IBreadcrumbItem[]
+  ) => void;
+
+  /**
+   * Triggers when TreeMap is mounted
+   */
+  onTreeMapDidMount?: (treeMap: TreeMap<TreeMapInputData>) => void;
+
+  /**
+   * Indicates where to place NumberOfChildren box
+   *
+   * @default NumberOfChildrenPlacement.BottomRight
+   */
+  numberOfChildrenPlacement: NumberOfChildrenPlacement;
+
 ```
 
 ## App sample

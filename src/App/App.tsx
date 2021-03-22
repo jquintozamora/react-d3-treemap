@@ -9,6 +9,7 @@ import * as React from "react";
 import { data as data1 } from "../data/data";
 import { data as data2 } from "../data/data.1.level";
 import TreeMap, { ColorModel } from "../components/TreeMap";
+import { NumberOfChildrenPlacement } from "../components/Node";
 
 interface TreeMapInPutData {
   name: string;
@@ -23,9 +24,16 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
   constructor(props) {
     super(props);
     this.state = {
-      data: data1
+      data: data1,
     };
     this.treeMapRef = React.createRef();
+  }
+
+  componentDidMount() {
+    console.log(
+      "componentDidMount: ",
+      this.treeMapRef && this.treeMapRef.current
+    );
   }
 
   public render() {
@@ -43,13 +51,23 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
                 valueUnit={"MB"}
                 className="AppTreeMap"
                 nodeClassName="AppTreeMap__node"
-                svgClassName="AppTreeMap__svg"
+                // svgClassName="AppTreeMap__svg"
                 paddingInner={2}
                 onZoom={(level, id, items) => console.log({ level, id, items })}
-                nodeStyle={{ fontSize: 12, paddingTop: 2, paddingLeft: 2 }}
-                // customD3ColorScale={scaleSequential(
-                //   chromatic.interpolateViridis
-                // )}
+                onTreeMapDidMount={(treeMap: TreeMap<TreeMapInPutData>) =>
+                  console.log(treeMap.getZoomLevel())
+                }
+                nodeStyle={{
+                  fontSize: 12,
+                  paddingTop: 2,
+                  paddingLeft: 5,
+                  paddingRight: 5,
+                }}
+                numberOfChildrenPlacement={NumberOfChildrenPlacement.BottomRight}
+                customD3ColorScale={scaleSequential(
+                  chromatic.interpolateSpectral
+                )}
+                colorModel={ColorModel.OneEachChildren}
                 // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
                 // nodeStyle={{fill: "black", stroke: "white"}}
                 // disableBreadcrumb={true}

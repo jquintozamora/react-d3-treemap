@@ -1,3 +1,11 @@
+## 1.0.19 (2021-03-21)
+
+- Add `onTreeMapDidMount`
+- Add `numberOfChildrenPlacement`
+- Export `NumberOfChildrenPlacement` enum
+- Solve bug with paddingTop and paddingLeft
+- Implement wrap of characters and ellipsis when text doesn't fit in the node
+
 ## 1.0.18 (2021-03-20)
 
 - Add App Sample to Readme.md

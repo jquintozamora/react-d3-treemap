@@ -1,5 +1,7 @@
 import { ScaleSequential } from "d3-scale";
+import TreeMap from "../TreeMap";
 import { IBreadcrumbItem } from "../Breadcrumb";
+import { NumberOfChildrenPlacement } from "../Node";
 
 export interface ITreeMapProps<TreeMapInputData> {
   /**
@@ -144,11 +146,23 @@ export interface ITreeMapProps<TreeMapInputData> {
     zoomId: number,
     breadcrumbItems: IBreadcrumbItem[]
   ) => void;
+
+  /**
+   * Triggers when TreeMap is mounted
+   */
+  onTreeMapDidMount?: (treeMap: TreeMap<TreeMapInputData>) => void;
+
+  /**
+   * Indicates where to place NumberOfChildren box
+   *
+   * @default NumberOfChildrenPlacement.BottomRight
+   */
+  numberOfChildrenPlacement: NumberOfChildrenPlacement;
 }
 
 export enum ColorModel {
   Depth,
   Value,
   NumberOfChildren,
-  OneEachChildren
+  OneEachChildren,
 }

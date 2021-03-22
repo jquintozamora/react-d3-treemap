@@ -15,7 +15,6 @@ export interface NodeProps {
 
   bgColor: string;
   className?: string;
-  fontSize: number;
   globalTotalNodes: number;
   hasChildren: boolean;
   height?: number;
@@ -39,6 +38,12 @@ export interface NodeProps {
   yScaleFunction?: ScaleLinear<number, number>;
   yTranslated?: number;
   zoomEnabled?: boolean;
+  numberOfChildrenPlacement: NumberOfChildrenPlacement;
+}
+
+export enum NumberOfChildrenPlacement {
+  TopRight,
+  BottomRight,
 }
 
 const getNumberItemsWidthByNumberOfChars = (
@@ -48,71 +53,169 @@ const getNumberItemsWidthByNumberOfChars = (
   return (fontSize / 2) * numberOfChars + 5;
 };
 
-const LabelNewLine = ({ label, textColor, fontSize, value, hasChildren }) => {
+let canvas;
+const getTextWidth = (
+  text,
+  style: React.CSSProperties = {
+    fontVariant: "normal",
+    fontWeight: "normal",
+    fontSize: 14,
+    fontFamily: "Arial",
+  }
+) => {
+  // re-use canvas object for better performance
+  if (!canvas) {
+    canvas = document.createElement("canvas");
+  }
+  var context = canvas.getContext("2d");
+  const { fontVariant, fontWeight, fontSize, fontFamily } = style;
+  if (context) {
+    context.font = `${fontVariant} ${fontWeight} ${fontSize}px '${fontFamily}'`;
+    return {
+      width: context.measureText(text).width,
+      height: fontSize,
+    };
+  } else {
+    return { width: 0, height: fontSize };
+  }
+};
+
+const charWidthCache: Record<string, number> = {};
+const truncateText = (
+  text: string,
+  style: React.CSSProperties,
+  maxWidth: number,
+  ellipsis: string = "..."
+) => {
+  const cachedCharWidth = (char: string) => {
+    const cached = charWidthCache[char];
+    if (cached !== undefined) {
+      return cached;
+    }
+    const charWidth = getTextWidth(char, style).width;
+    charWidthCache[char] = charWidth;
+    return charWidth;
+  };
+
+  const truncatedChars: string[] = [];
+  const charArray = Array.from(text);
+
+  const ellipsisWidth = cachedCharWidth(ellipsis);
+  if (maxWidth - ellipsisWidth < 0) {
+    return text.charAt(0);
+  }
+
+  let currentWidth = ellipsisWidth;
+  let didTruncate = false;
+  for (let i = 0; i < charArray.length; i++) {
+    const charWidth = cachedCharWidth(charArray[i]);
+    if (currentWidth + charWidth <= maxWidth) {
+      truncatedChars[i] = charArray[i];
+      currentWidth += charWidth;
+    } else {
+      truncatedChars[i] = ellipsis;
+      didTruncate = true;
+      break;
+    }
+  }
+
+  if (didTruncate) {
+    return truncatedChars.join("");
+  }
+
+  return text;
+};
+
+const LabelNewLine = ({
+  label,
+  textColor,
+  fontSize,
+  value,
+  hasChildren,
+  containerWidth,
+  style,
+}) => {
   if (!label) {
     return null;
   }
 
-  if (hasChildren === true) {
-    const fullLabel = value ? `${label}\xa0${value}` : label;
+  const fullLabel = value ? `${label}\xa0${value}` : label;
+  const splitLabel =
+    getTextWidth(fullLabel, style).width >= containerWidth || !hasChildren
+      ? label.split(/(?=[A-Z][^A-Z])/g).concat(value)
+      : [fullLabel];
+
+  return splitLabel.map((item: string, index) => {
     return (
-      <tspan fontSize={fontSize} fill={textColor} dx={4} dy={fontSize}>
-        {fullLabel}
+      <tspan
+        fontSize={fontSize}
+        fill={textColor}
+        key={index}
+        x={0}
+        dy={fontSize}
+      >
+        {truncateText(item, style, containerWidth)}
       </tspan>
     );
-  } else {
-    const fullLabel = value
-      ? label.split(/(?=[A-Z][^A-Z])/g).concat(value)
-      : label.split(/(?=[A-Z][^A-Z])/g);
-    return fullLabel.map((item, index) => {
-      return (
-        <tspan
-          fontSize={fontSize}
-          fill={textColor}
-          key={index}
-          x={4}
-          dy={fontSize}
-        >
-          {item}
-        </tspan>
-      );
-    });
-  }
+  });
 };
 
-const NumberOfItemsRect = ({
+const NumberOfChildren = ({
   name,
   width,
   height,
-  fontSize,
   textColor,
-  nodeTotalNodes
+  nodeTotalNodes,
+  isSelectedNode,
+  placement,
+  style,
 }) => {
+  const realPlacement = isSelectedNode
+    ? NumberOfChildrenPlacement.TopRight
+    : placement;
+
+  const fontSize = Number(style.fontSize);
   const itemsWidth = getNumberItemsWidthByNumberOfChars(
     fontSize,
     nodeTotalNodes.toString().length
   );
-  const itemsHeight = fontSize;
+  const itemHeightFactor = 2;
+  const itemsHeight = fontSize + itemHeightFactor;
   const strokeDasharrayTotal = itemsWidth + itemsHeight;
   if (width > itemsWidth && height > itemsHeight) {
     return (
-      <g>
+      <g
+        transform={`translate(0, ${
+          realPlacement === NumberOfChildrenPlacement.BottomRight
+            ? height - itemsHeight
+            : 0
+        })`}
+      >
         <rect
           id={`rectNumberItems-${name}`}
           x={width - itemsWidth}
           y={0}
           width={itemsWidth}
-          height={itemsHeight + 2}
+          height={itemsHeight}
           fill="none"
           stroke={textColor}
-          strokeDasharray={`0,${strokeDasharrayTotal},${strokeDasharrayTotal}`}
+          strokeDasharray={`${
+            realPlacement === NumberOfChildrenPlacement.BottomRight
+              ? itemsWidth
+              : 0
+          },${strokeDasharrayTotal},${strokeDasharrayTotal}`}
         />
         <text
-          fontSize={fontSize}
           fill={textColor}
           x={width - itemsWidth + itemsWidth / 2}
-          y={itemsHeight}
+          y={itemsHeight - itemHeightFactor}
           textAnchor="middle"
+          style={{
+            fontVariant: style.fontVariant,
+            fontWeight: style.fontWeight,
+            fontSize: style.fontSize,
+            fontFamily: style.fontFamily,
+          }}
         >
           {nodeTotalNodes}
         </text>
@@ -125,7 +228,6 @@ const NumberOfItemsRect = ({
 const Node: React.FunctionComponent<NodeProps> = ({
   bgColor,
   className,
-  fontSize,
   globalTotalNodes,
   hasChildren,
   height,
@@ -151,7 +253,8 @@ const Node: React.FunctionComponent<NodeProps> = ({
   yScaleFunction,
   yTranslated,
   zoomEnabled,
-  style
+  style,
+  numberOfChildrenPlacement,
 }) => {
   const currentXTranslated =
     xTranslated !== undefined
@@ -172,15 +275,23 @@ const Node: React.FunctionComponent<NodeProps> = ({
   const cursor =
     hasChildren === true && isSelectedNode === false ? "pointer" : "auto";
 
+  const fontSize = Number(style.fontSize);
   const itemsWidth = getNumberItemsWidthByNumberOfChars(
     fontSize,
     nodeTotalNodes.toString().length
   );
   const showNumberOfItems = !hideNumberOfChildren && hasChildren;
 
+  const paddedCurrentWidth =
+    currentWidth -
+    (Number(style.paddingLeft) || 0) -
+    (Number(style.paddingRight) || 4);
   const clipWidth = Math.max(
     0,
-    showNumberOfItems ? currentWidth - itemsWidth : currentWidth
+    showNumberOfItems &&
+      numberOfChildrenPlacement === NumberOfChildrenPlacement.TopRight
+      ? paddedCurrentWidth - itemsWidth
+      : paddedCurrentWidth
   );
 
   return (
@@ -198,7 +309,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
         style={{
           fill: bgColor,
           stroke: textColor,
-          ...style
+          ...style,
         }}
       />
       <clipPath id={`clip-${treemapId}-${id}`}>
@@ -211,8 +322,15 @@ const Node: React.FunctionComponent<NodeProps> = ({
       >
         <text
           clipPath={`url(#clip-${treemapId}-${id})`}
-          transform={`translate(${style.paddingTop || 0},${style.paddingLeft ||
-            0})`}
+          transform={`translate(${style.paddingLeft || 0},${
+            style.paddingTop || 0
+          })`}
+          style={{
+            fontVariant: style.fontVariant,
+            fontWeight: style.fontWeight,
+            fontSize: style.fontSize,
+            fontFamily: style.fontFamily,
+          }}
         >
           <LabelNewLine
             label={label}
@@ -220,17 +338,21 @@ const Node: React.FunctionComponent<NodeProps> = ({
             fontSize={fontSize}
             value={value}
             hasChildren={hasChildren}
+            containerWidth={clipWidth}
+            style={style}
           />
         </text>
       </a>
       {showNumberOfItems && (
-        <NumberOfItemsRect
+        <NumberOfChildren
           name={name}
           width={currentWidth}
           height={currentHeight}
-          fontSize={fontSize}
+          style={style}
           textColor={textColor}
           nodeTotalNodes={nodeTotalNodes}
+          isSelectedNode={isSelectedNode}
+          placement={numberOfChildrenPlacement}
         />
       )}
       <title>

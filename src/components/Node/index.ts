@@ -1,1 +1,1 @@
-export { default, NodeProps } from "./Node";
+export { default, NodeProps, NumberOfChildrenPlacement } from "./Node";

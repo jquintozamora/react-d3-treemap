@@ -1,5 +1,3 @@
-import "./TreeMap.css";
-
 import * as React from "react";
 import classnames from "classnames";
 import { format } from "d3-format";
@@ -8,14 +6,14 @@ import {
   HierarchyRectangularNode,
   treemap as d3treemap,
   hierarchy as d3hierarchy,
-  treemapSquarify as d3TreemapSquarify
+  treemapSquarify as d3TreemapSquarify,
 } from "d3-hierarchy";
 import { scaleLinear, ScaleSequential, scaleSequential } from "d3-scale";
 import { extent } from "d3-array";
 import { interpolateSpectral } from "d3-scale-chromatic";
 import { interpolateHcl } from "d3-interpolate";
 
-import Node from "../Node";
+import Node, { NumberOfChildrenPlacement } from "../Node";
 import Breadcrumb from "../Breadcrumb";
 import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
 import { ITreeMapState } from "./ITreeMapState";
@@ -45,7 +43,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
     namePropInData: "name",
     linkPropInData: "link",
     valuePropInData: "value", // can be value, count, ...
-    childrenPropInData: "children"
+    childrenPropInData: "children",
+    numberOfChildrenPlacement: NumberOfChildrenPlacement.BottomRight,
   };
 
   // Note. This treemap element initially was using treemap and hierarchy directly on the render.
@@ -79,55 +78,38 @@ class TreeMap<TreeMapInputData> extends React.Component<
       breadcrumbItems: [
         {
           text: data[namePropInData],
-          key: 0
-        }
+          key: 0,
+        },
       ],
       selectedId: 0,
       selectedNode: this._treemap(
         this._rootData
       ) as CustomHierarchyRectangularNode<TreeMapInputData>,
-      totalNodes: this._nodes.length
+      totalNodes: this._nodes.length,
     };
   }
 
   public componentDidMount() {
+    const { onTreeMapDidMount } = this.props;
     this._zoomTo(0);
+    if (onTreeMapDidMount) {
+      onTreeMapDidMount(this);
+    }
   }
 
   public componentWillReceiveProps(nextProps: ITreeMapProps<TreeMapInputData>) {
-    const { width, height, data, namePropInData } = nextProps;
-
-    if (
-      height !== this.props.height ||
-      width !== this.props.width ||
-      data !== this.props.data
-    )
-      this._createD3TreeMap(width, height, data);
-    this.setState({
-      data,
-      width,
-      height,
-      xScaleFactor: 1,
-      yScaleFactor: 1,
-      xScaleFunction: scaleLinear().range([0, width]),
-      yScaleFunction: scaleLinear().range([0, height]),
-      zoomEnabled: false,
-      breadcrumbItems: [
-        {
-          text: data[namePropInData],
-          key: 0,
-          onClick:
-            this.state.selectedId !== 0
-              ? this._onBreadcrumbItemClicked
-              : undefined
-        }
-      ],
-      selectedId: 0,
-      selectedNode: this._treemap(
-        this._rootData
-      ) as CustomHierarchyRectangularNode<TreeMapInputData>,
-      totalNodes: this._nodes.length
-    });
+    const { width, height } = nextProps;
+    if (height !== this.props.height || width !== this.props.width) {
+      this.setState({
+        width,
+        height,
+        xScaleFunction: scaleLinear().range([0, width]),
+        yScaleFunction: scaleLinear().range([0, height]),
+        selectedNode: this._treemap(
+          this._rootData
+        ) as CustomHierarchyRectangularNode<TreeMapInputData>,
+      });
+    }
   }
 
   public render() {
@@ -139,7 +121,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
       className,
       childrenPropInData,
       breadCrumbClassName,
-      disableBreadcrumb
+      disableBreadcrumb,
     } = this.props;
 
     this._createD3TreeMap(width, height, data);
@@ -156,7 +138,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
           mainNode.hasOwnProperty(childrenPropInData) &&
           mainNode[childrenPropInData].length > 0
         ) {
-          mainNode[childrenPropInData].forEach(element => {
+          mainNode[childrenPropInData].forEach((element) => {
             iterateAllChildren(element, level + 1);
           });
         }
@@ -170,7 +152,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
           <Breadcrumb items={breadcrumbItems} className={breadCrumbClassName} />
         ) : null}
         <svg
-          className={classnames("TreeMap__mainSvg", svgClassName)}
+          className={classnames(svgClassName)}
           height={height}
           width={width}
           style={{ ...svgStyle }}
@@ -192,7 +174,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
       paddingInner,
       valueFormat,
       colorModel,
-      customD3ColorScale
+      customD3ColorScale,
     } = this.props;
 
     // 1. Create treemap structure
@@ -207,7 +189,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     // 2. Before compute a hierarchical layout, we need a root node
     //    If the data is in JSON we use d3.hierarchy
     this._rootData = d3hierarchy(data)
-      .sum(s => s[valuePropInData])
+      .sum((s) => s[valuePropInData])
       .sort(
         (a, b) => b.height - a.height || b[valuePropInData] - a[valuePropInData]
       ) as HierarchyRectangularNode<TreeMapInputData>;
@@ -229,14 +211,14 @@ class TreeMap<TreeMapInputData> extends React.Component<
         d = [0, Utils.getDepth<TreeMapInputData>(data, childrenPropInData) - 1];
         break;
       case ColorModel.Value:
-        d = extent(this._nodes, n => {
+        d = extent(this._nodes, (n) => {
           if (n.parent !== null) {
             return n[valuePropInData];
           }
         });
         break;
       case ColorModel.NumberOfChildren:
-        d = extent(this._nodes, n =>
+        d = extent(this._nodes, (n) =>
           n.parent !== null ? n.descendants().length : 1
         );
         break;
@@ -261,7 +243,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
       valuePropInData,
       childrenPropInData,
       namePropInData,
-      linkPropInData
+      linkPropInData,
+      numberOfChildrenPlacement,
     } = this.props;
 
     const {
@@ -271,7 +254,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
       xScaleFunction,
       yScaleFactor,
       yScaleFunction,
-      zoomEnabled
+      zoomEnabled,
     } = this.state;
 
     const { customId, data, x0, x1, y0, y1 } = node;
@@ -301,8 +284,13 @@ class TreeMap<TreeMapInputData> extends React.Component<
       <Node
         bgColor={bgColor}
         className={classnames(nodeClassName, nodeClassNameFromData)}
-        style={nodeStyle}
-        fontSize={Number(nodeStyle.fontSize) || 14}
+        style={{
+          fontVariant: "normal",
+          fontWeight: "normal",
+          fontSize: 14,
+          fontFamily: "Arial",
+          ...nodeStyle,
+        }}
         globalTotalNodes={totalNodes}
         hasChildren={hasChildren}
         hideNumberOfChildren={hideNumberOfChildren}
@@ -326,6 +314,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
         yScaleFactor={yScaleFactor}
         yScaleFunction={yScaleFunction}
         zoomEnabled={zoomEnabled}
+        numberOfChildrenPlacement={numberOfChildrenPlacement}
       />
     );
   }
@@ -387,7 +376,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
     return {
       bgColor: backgroundColor,
-      textColor: Utils.getHighContrastColorFromString(backgroundColor)
+      textColor: Utils.getHighContrastColorFromString(backgroundColor),
     };
   }
 
@@ -413,13 +402,13 @@ class TreeMap<TreeMapInputData> extends React.Component<
         .map(
           ({
             data,
-            customId
+            customId,
           }: CustomHierarchyRectangularNode<TreeMapInputData>) => {
             return {
               text: data["name"],
               key: customId,
               onClick:
-                customId !== nodeId ? this._onBreadcrumbItemClicked : undefined
+                customId !== nodeId ? this._onBreadcrumbItemClicked : undefined,
             };
           }
         );
@@ -434,7 +423,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
         zoomEnabled: currentNode.parent === null ? false : true,
         selectedId: nodeId,
         selectedNode: currentNode,
-        breadcrumbItems
+        breadcrumbItems,
       });
     } else {
       console.warn("No node found for " + nodeId);
