@@ -3,20 +3,19 @@ const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  mode: "production",
   devtool: "source-map",
   entry: {
-    "react.d3.treemap": "./src/indexPackage.ts"
+    "react.d3.treemap": "./src/indexPackage.ts",
   },
   context: resolve(__dirname, "../"),
   output: {
     path: resolve(__dirname, "./../dist"),
     filename: "[name].js",
     libraryTarget: "umd",
-    library: "ReactD3Treemap"
+    library: "ReactD3Treemap",
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: [".ts", ".tsx", ".js"],
   },
   externals: {
     react: {
@@ -24,40 +23,28 @@ module.exports = {
       commonjs2: "react",
       commonjs: "react",
       amd: "react",
-      umd: "react"
+      umd: "react",
     },
     "react-dom": {
       root: "ReactDOM",
       commonjs2: "react-dom",
       commonjs: "react-dom",
       amd: "react-dom",
-      umd: "react-dom"
-    }
+      umd: "react-dom",
+    },
   },
+  mode: "production",
   optimization: {
+    usedExports: true,
     minimize: true,
   },
   plugins: [
-    new webpack.DefinePlugin({
-      "process.env": {
-        NODE_ENV: JSON.stringify("production") 
-      },
-      DEBUG: false, 
-      __DEVTOOLS__: false 
-    }),
-    
     new MiniCssExtractPlugin({
       filename: "../dist/[name].css",
-    })
+    }),
   ],
   module: {
     rules: [
-      {
-        enforce: "pre",
-        test: /\.js$/,
-        loader: "source-map-loader",
-        exclude: ["/node_modules/"]
-      },
       {
         test: /\.ts(x?)$/,
         exclude: /node_modules/,
@@ -65,10 +52,10 @@ module.exports = {
           {
             loader: "ts-loader",
             options: {
-              configFile: "tsconfig.package.json"
-            }
-          }
-        ]
+              configFile: "tsconfig.package.json",
+            },
+          },
+        ],
       },
       {
         test: /\.css$/i,
@@ -76,10 +63,10 @@ module.exports = {
         use: [
           MiniCssExtractPlugin.loader,
           {
-            loader: "css-loader"
-          }
-        ]
-      }
-    ]
-  }
+            loader: "css-loader",
+          },
+        ],
+      },
+    ],
+  },
 };

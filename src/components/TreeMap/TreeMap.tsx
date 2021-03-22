@@ -4,9 +4,9 @@ import { format } from "d3-format";
 import {
   TreemapLayout,
   HierarchyRectangularNode,
-  treemap as d3treemap,
-  hierarchy as d3hierarchy,
-  treemapSquarify as d3TreemapSquarify,
+  treemap,
+  hierarchy,
+  treemapSquarify,
 } from "d3-hierarchy";
 import { scaleLinear, ScaleSequential, scaleSequential } from "d3-scale";
 import { extent } from "d3-array";
@@ -97,7 +97,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
     }
   }
 
-  public componentWillReceiveProps(nextProps: ITreeMapProps<TreeMapInputData>) {
+  public UNSAFE_componentWillReceiveProps(
+    nextProps: ITreeMapProps<TreeMapInputData>
+  ) {
     const { width, height } = nextProps;
     if (height !== this.props.height || width !== this.props.width) {
       this.setState({
@@ -178,9 +180,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
     } = this.props;
 
     // 1. Create treemap structure
-    this._treemap = d3treemap<TreeMapInputData>()
+    this._treemap = treemap<TreeMapInputData>()
       .size([width, height])
-      .tile(d3TreemapSquarify)
+      .tile(treemapSquarify)
       .paddingOuter(3)
       .paddingTop(19)
       .paddingInner(paddingInner)
@@ -188,7 +190,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
     // 2. Before compute a hierarchical layout, we need a root node
     //    If the data is in JSON we use d3.hierarchy
-    this._rootData = d3hierarchy(data)
+    this._rootData = hierarchy(data)
       .sum((s) => s[valuePropInData])
       .sort(
         (a, b) => b.height - a.height || b[valuePropInData] - a[valuePropInData]

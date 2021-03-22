@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "es6",
+    "moduleResolution": "node",
     "declaration": true,
     "outDir": "./dist",
     "noImplicitAny": false,
@@ -9,7 +10,7 @@
     "removeComments": true,
     "noLib": false,
     "preserveConstEnums": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "jsx": "react",
     "typeRoots": ["./node_modules/@types"],
     "types": ["node", "react", "react-dom"]
@@ -17,5 +18,12 @@
   "filesGlob": ["./**/*.ts", "!./node_modules/**/*.ts"],
   "files": ["./src/indexPackage.ts"],
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": [
+    "node_modules",
+    "./src/App/*.*",
+    "./src/data/*.*",
+    "./src/pages/*.*",
+    "./src/index.tsx",
+    "**/*.spec.ts"
+  ]
 }
