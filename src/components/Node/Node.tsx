@@ -54,8 +54,8 @@ const getNumberItemsWidthByNumberOfChars = (
 };
 
 let canvas;
-const getTextWidth = (
-  text,
+const getTextDimensions = (
+  text: string,
   style: React.CSSProperties = {
     fontVariant: "normal",
     fontWeight: "normal",
@@ -69,14 +69,16 @@ const getTextWidth = (
   }
   var context = canvas.getContext("2d");
   const { fontVariant, fontWeight, fontSize, fontFamily } = style;
+  const heightSpacingAround = 2;
+  const height = Number(fontSize) + heightSpacingAround;
   if (context) {
     context.font = `${fontVariant} ${fontWeight} ${fontSize}px '${fontFamily}'`;
     return {
-      width: context.measureText(text).width,
-      height: fontSize,
+      width: Number(context.measureText(text).width),
+      height,
     };
   } else {
-    return { width: 0, height: fontSize };
+    return { width: 0, height };
   }
 };
 
@@ -92,7 +94,7 @@ const truncateText = (
     if (cached !== undefined) {
       return cached;
     }
-    const charWidth = getTextWidth(char, style).width;
+    const charWidth = getTextDimensions(char, style).width;
     charWidthCache[char] = charWidth;
     return charWidth;
   };
@@ -126,13 +128,22 @@ const truncateText = (
   return text;
 };
 
-const LabelNewLine = ({
+interface LabelNewLineProps {
+  label: string;
+  textColor: string;
+  value: string;
+  hasChildren: boolean;
+  containerWidth: number;
+  containerHeight: number;
+  style: React.CSSProperties;
+}
+const LabelNewLine: React.FunctionComponent<LabelNewLineProps> = ({
   label,
   textColor,
-  fontSize,
   value,
   hasChildren,
   containerWidth,
+  containerHeight,
   style,
 }) => {
   if (!label) {
@@ -140,24 +151,33 @@ const LabelNewLine = ({
   }
 
   const fullLabel = value ? `${label}\xa0${value}` : label;
+  const { width, height } = getTextDimensions(fullLabel, style);
+  const maxTextRows = Math.floor(containerHeight / height);
   const splitLabel =
-    getTextWidth(fullLabel, style).width >= containerWidth || !hasChildren
-      ? label.split(/(?=[A-Z/a-z0-9.][^A-Z/a-z0-9.])/g).concat(value)
+    width >= containerWidth || !hasChildren
+      ? label
+          .split(/(?=[A-Z/a-z0-9.][^A-Z/a-z0-9.])/g)
+          .concat(value)
+          .slice(0, maxTextRows)
       : [fullLabel];
 
-  return splitLabel.map((item: string, index) => {
-    return (
-      <tspan
-        fontSize={fontSize}
-        fill={textColor}
-        key={index}
-        x={0}
-        dy={fontSize}
-      >
-        {truncateText(item, style, containerWidth)}
-      </tspan>
-    );
-  });
+  return (
+    <>
+      {splitLabel.map((item: string, index) => {
+        return (
+          <tspan
+            fontSize={style.fontSize}
+            fill={textColor}
+            key={index}
+            x={0}
+            dy={style.fontSize}
+          >
+            {truncateText(item, style, containerWidth)}
+          </tspan>
+        );
+      })}
+    </>
+  );
 };
 
 const NumberOfChildren = ({
@@ -335,10 +355,10 @@ const Node: React.FunctionComponent<NodeProps> = ({
           <LabelNewLine
             label={label}
             textColor={textColor}
-            fontSize={fontSize}
             value={value}
             hasChildren={hasChildren}
             containerWidth={clipWidth}
+            containerHeight={currentHeight}
             style={style}
           />
         </text>

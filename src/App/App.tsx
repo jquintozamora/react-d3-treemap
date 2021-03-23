@@ -48,9 +48,11 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
                 width={width}
                 height={400}
                 data={this.state.data}
-                valueUnit={"MB"}
                 className="AppTreeMap"
                 nodeClassName="AppTreeMap__node"
+                // isTimeFormat={true}
+                // valueFormat="%I:%M"
+                valueUnit={"MB"}
                 // svgClassName="AppTreeMap__svg"
                 paddingInner={2}
                 onZoom={(level, id, items) => console.log({ level, id, items })}

@@ -40,6 +40,7 @@ export interface ITreeMapProps<TreeMapInputData> {
   /*
    * Format for the values
    * https://github.com/d3/d3-format#format
+   * https://github.com/d3/d3-time-format if isTimeFormat
    */
   valueFormat?: string;
 
@@ -158,6 +159,11 @@ export interface ITreeMapProps<TreeMapInputData> {
    * @default NumberOfChildrenPlacement.BottomRight
    */
   numberOfChildrenPlacement: NumberOfChildrenPlacement;
+
+  /**
+   * If true when uses d3-time-format otherwise uses d3-format
+   */
+  isTimeFormat?: boolean;
 }
 
 export enum ColorModel {

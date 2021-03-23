@@ -1,6 +1,8 @@
 import * as React from "react";
 import classnames from "classnames";
 import { format } from "d3-format";
+import { timeFormat } from "d3-time-format";
+
 import {
   TreemapLayout,
   HierarchyRectangularNode,
@@ -35,7 +37,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
     height: 600,
     width: 600,
     valueFormat: ",d",
-    valueUnit: "MB",
     disableBreadcrumb: false,
     colorModel: ColorModel.OneEachChildren,
     paddingInner: 0,
@@ -45,6 +46,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     valuePropInData: "value", // can be value, count, ...
     childrenPropInData: "children",
     numberOfChildrenPlacement: NumberOfChildrenPlacement.BottomRight,
+    isTimeFormat: false,
   };
 
   // Note. This treemap element initially was using treemap and hierarchy directly on the render.
@@ -54,7 +56,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
   private _rootData: HierarchyRectangularNode<TreeMapInputData>;
   private _nodes: Array<CustomHierarchyRectangularNode<TreeMapInputData>>;
 
-  private _valueFormatFunction: (n: number) => string;
+  private _valueFormatFunction:
+    | ((n: number | { valueOf(): number }) => string)
+    | ((date: Date) => string);
   private _nodesbgColorFunction: ScaleSequential<string>;
 
   constructor(props: ITreeMapProps<TreeMapInputData>) {
@@ -177,12 +181,13 @@ class TreeMap<TreeMapInputData> extends React.Component<
       valueFormat,
       colorModel,
       customD3ColorScale,
+      isTimeFormat,
     } = this.props;
 
     // 1. Create treemap structure
     this._treemap = treemap<TreeMapInputData>()
       .size([width, height])
-      .tile(treemapSquarify)
+      .tile(treemapSquarify.ratio(1))
       .paddingOuter(3)
       .paddingTop(19)
       .paddingInner(paddingInner)
@@ -205,7 +210,13 @@ class TreeMap<TreeMapInputData> extends React.Component<
       .descendants() as Array<CustomHierarchyRectangularNode<TreeMapInputData>>;
 
     // Format function
-    this._valueFormatFunction = format(valueFormat);
+    try {
+      this._valueFormatFunction = isTimeFormat
+        ? timeFormat(valueFormat)
+        : format(valueFormat);
+    } catch (e) {
+      console.warn(e);
+    }
 
     let d: [number | { valueOf(): number }, number | { valueOf(): number }];
     switch (colorModel) {
@@ -269,9 +280,13 @@ class TreeMap<TreeMapInputData> extends React.Component<
       node[childrenPropInData] && node[childrenPropInData].length > 0
         ? true
         : false;
-    const formattedValue = `(${this._valueFormatFunction(
-      node[valuePropInData]
-    )} ${valueUnit})`;
+    let formatted = node[valuePropInData];
+    try {
+      formatted = this._valueFormatFunction(node[valuePropInData]);
+    } catch (e) {
+      console.warn(e);
+    }
+    const formattedValue = `(${formatted}${valueUnit ? ` ${valueUnit}` : ""})`;
 
     const nodeTotalNodes = node.descendants().length - 1;
 

@@ -1,3 +1,10 @@
+## 1.0.22 (2021-03-23)
+
+- Solve wrapping text issue
+- Limit number of text rows to show depending on the hight of the node
+- Set ratio(1) for d3 layout
+- Add d3-time-format and `isTimeFormat` prop to enable it
+
 ## 1.0.21 (2021-03-23)
 
 - Enable Tree Shaking and reduce bundle size
