@@ -4,6 +4,13 @@
 - Limit number of text rows to show depending on the hight of the node
 - Set ratio(1) for d3 layout
 - Add d3-time-format and `isTimeFormat` prop to enable it
+- Add props to configure dark and light colors for text and border
+  ```ts
+  darkNodeTextColor?: string;
+  darkNodeBorderColor?: string;
+  lightNodeTextColor?: string;
+  lightNodeBorderColor?: string;
+  ```
 
 ## 1.0.21 (2021-03-23)
 
