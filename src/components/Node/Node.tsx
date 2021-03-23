@@ -142,7 +142,7 @@ const LabelNewLine = ({
   const fullLabel = value ? `${label}\xa0${value}` : label;
   const splitLabel =
     getTextWidth(fullLabel, style).width >= containerWidth || !hasChildren
-      ? label.split(/(?=[A-Z][^A-Z])/g).concat(value)
+      ? label.split(/(?=[A-Z/a-z0-9.][^A-Z/a-z0-9.])/g).concat(value)
       : [fullLabel];
 
   return splitLabel.map((item: string, index) => {
