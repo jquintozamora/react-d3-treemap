@@ -75,6 +75,10 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
                 // disableBreadcrumb={true}
                 // hideNumberOfChildren={true}
                 // hideValue={true}
+                darkNodeBorderColor="silver"
+                darkNodeTextColor="white"
+                lightNodeBorderColor="brown"
+                lightNodeTextColor="brown"
               />
             );
           }}

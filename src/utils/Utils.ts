@@ -17,7 +17,7 @@ export class Utils {
   ) {
     let depth = 0;
     if (obj[childrenPropInData]) {
-      obj[childrenPropInData].forEach(d => {
+      obj[childrenPropInData].forEach((d) => {
         const tmpDepth = this.getDepth(d, childrenPropInData);
         if (tmpDepth > depth) {
           depth = tmpDepth;
@@ -27,7 +27,11 @@ export class Utils {
     return 1 + depth;
   }
 
-  public static getHighContrastColor(r: number, g: number, b: number) {
+  public static getHighContrastColor(
+    r: number,
+    g: number,
+    b: number
+  ): "dark" | "light" {
     // based on
     // http://stackoverflow.com/questions/407793/programmatically-choose-high-contrast-colors
     // http://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
@@ -41,14 +45,14 @@ export class Utils {
     }
     const luminance = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
     // return luminance > 0.179 ? "black" : "white";
-    return luminance > 0.4 ? "black" : "white";
+    return luminance > 0.4 ? "light" : "dark";
   }
 
   public static getHighContrastColorFromString(
     backgroundColor: string | undefined
-  ): string {
+  ): "dark" | "light" {
     if (!backgroundColor) {
-      return "black";
+      return "dark";
     }
     const rgbColor = rgb(backgroundColor);
     if (rgbColor) {

@@ -14,6 +14,8 @@ export interface NodeProps {
   y1?: number;
 
   bgColor: string;
+  textColor: string;
+  borderColor: string;
   className?: string;
   globalTotalNodes: number;
   hasChildren: boolean;
@@ -26,7 +28,6 @@ export interface NodeProps {
   nodeTotalNodes: number;
   onClick?: (ev?: React.MouseEvent<SVGElement>) => void;
   style?: React.CSSProperties;
-  textColor: string;
   treemapId?: string;
   url: string;
   value: string;
@@ -247,6 +248,7 @@ const NumberOfChildren = ({
 
 const Node: React.FunctionComponent<NodeProps> = ({
   bgColor,
+  borderColor,
   className,
   globalTotalNodes,
   hasChildren,
@@ -328,7 +330,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
         className={classnames("Node", className)}
         style={{
           fill: bgColor,
-          stroke: textColor,
+          stroke: borderColor,
           ...style,
         }}
       />

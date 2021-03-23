@@ -47,6 +47,10 @@ class TreeMap<TreeMapInputData> extends React.Component<
     childrenPropInData: "children",
     numberOfChildrenPlacement: NumberOfChildrenPlacement.BottomRight,
     isTimeFormat: false,
+    darkNodeTextColor: "white",
+    darkNodeBorderColor: "white",
+    lightNodeTextColor: "black",
+    lightNodeBorderColor: "black",
   };
 
   // Note. This treemap element initially was using treemap and hierarchy directly on the render.
@@ -258,6 +262,10 @@ class TreeMap<TreeMapInputData> extends React.Component<
       namePropInData,
       linkPropInData,
       numberOfChildrenPlacement,
+      darkNodeTextColor,
+      darkNodeBorderColor,
+      lightNodeTextColor,
+      lightNodeBorderColor,
     } = this.props;
 
     const {
@@ -290,9 +298,15 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
     const nodeTotalNodes = node.descendants().length - 1;
 
-    const { bgColor, textColor } = this._getColorsFromNode(
+    const { bgColor, textColor, borderColor } = this._getColorsFromNode(
       node,
-      nodeTotalNodes
+      nodeTotalNodes,
+      {
+        darkNodeTextColor,
+        darkNodeBorderColor,
+        lightNodeTextColor,
+        lightNodeBorderColor,
+      }
     );
 
     const isSelectedNode = customId === selectedId;
@@ -300,6 +314,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
     return (
       <Node
         bgColor={bgColor}
+        textColor={textColor}
+        borderColor={borderColor}
         className={classnames(nodeClassName, nodeClassNameFromData)}
         style={{
           fontVariant: "normal",
@@ -318,7 +334,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
         name={name}
         nodeTotalNodes={nodeTotalNodes}
         onClick={!isSelectedNode ? this._onNodeClick : undefined}
-        textColor={textColor}
         treemapId={treemapId}
         url={url}
         value={!hideValue && formattedValue}
@@ -346,7 +361,13 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
   private _getColorsFromNode(
     node: CustomHierarchyRectangularNode<TreeMapInputData>,
-    nodeTotalNodes: number
+    nodeTotalNodes: number,
+    {
+      darkNodeTextColor,
+      darkNodeBorderColor,
+      lightNodeTextColor,
+      lightNodeBorderColor,
+    }
   ) {
     const { colorModel, valuePropInData } = this.props;
 
@@ -393,7 +414,14 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
     return {
       bgColor: backgroundColor,
-      textColor: Utils.getHighContrastColorFromString(backgroundColor),
+      textColor:
+        Utils.getHighContrastColorFromString(backgroundColor) === "dark"
+          ? darkNodeTextColor
+          : lightNodeTextColor,
+      borderColor:
+        Utils.getHighContrastColorFromString(backgroundColor) === "dark"
+          ? darkNodeBorderColor
+          : lightNodeBorderColor,
     };
   }
 

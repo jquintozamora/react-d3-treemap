@@ -192,7 +192,7 @@ interface TreeMapInPutData {
    */
   childrenPropInData?: string;
 
-    /**
+  /**
    * Captures on zoom event
    */
   onZoom?: (
@@ -217,6 +217,34 @@ interface TreeMapInPutData {
    * If true when uses d3-time-format otherwise uses d3-format
    */
   isTimeFormat?: boolean;
+
+  /**
+   * Color for text and children counter when background is dark
+   *
+   * @default white
+   */
+  darkNodeTextColor?: string;
+
+  /**
+   * Color for node border when background is dark
+   *
+   * @default white
+   */
+  darkNodeBorderColor?: string;
+
+  /**
+   * Color for text and children counter when background is light
+   *
+   * @default black
+   */
+  lightNodeTextColor?: string;
+
+  /**
+   * Color for node border when background is dark
+   *
+   * @default black
+   */
+  lightNodeBorderColor?: string;
 
 ```
 
