@@ -1,3 +1,7 @@
+## 1.0.22 (2021-03-24)
+- Remove `isTimeFormat`
+- Expose `formatFn` to overrides the rendering of value in nodes
+
 ## 1.0.22 (2021-03-23)
 
 - Solve wrapping text issue

@@ -40,7 +40,6 @@ export interface ITreeMapProps<TreeMapInputData> {
   /*
    * Format for the values
    * https://github.com/d3/d3-format#format
-   * https://github.com/d3/d3-time-format if isTimeFormat
    */
   valueFormat?: string;
 
@@ -161,11 +160,6 @@ export interface ITreeMapProps<TreeMapInputData> {
   numberOfChildrenPlacement: NumberOfChildrenPlacement;
 
   /**
-   * If true when uses d3-time-format otherwise uses d3-format
-   */
-  isTimeFormat?: boolean;
-
-  /**
    * Color for text and children counter when background is dark
    *
    * @default white
@@ -192,6 +186,11 @@ export interface ITreeMapProps<TreeMapInputData> {
    * @default black
    */
   lightNodeBorderColor?: string;
+
+  /**
+   * Override value text for node 
+   */
+  valueFn?: (value: number) => string
 }
 
 export enum ColorModel {

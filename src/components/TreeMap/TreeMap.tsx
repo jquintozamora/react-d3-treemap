@@ -1,7 +1,6 @@
 import * as React from "react";
 import classnames from "classnames";
 import { format } from "d3-format";
-import { timeFormat } from "d3-time-format";
 
 import {
   TreemapLayout,
@@ -46,7 +45,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
     valuePropInData: "value", // can be value, count, ...
     childrenPropInData: "children",
     numberOfChildrenPlacement: NumberOfChildrenPlacement.BottomRight,
-    isTimeFormat: false,
     darkNodeTextColor: "white",
     darkNodeBorderColor: "white",
     lightNodeTextColor: "black",
@@ -185,7 +183,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
       valueFormat,
       colorModel,
       customD3ColorScale,
-      isTimeFormat,
+      valueFn,
     } = this.props;
 
     // 1. Create treemap structure
@@ -215,8 +213,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
     // Format function
     try {
-      this._valueFormatFunction = isTimeFormat
-        ? timeFormat(valueFormat)
+      this._valueFormatFunction = valueFn
+        ? valueFn
         : format(valueFormat);
     } catch (e) {
       console.warn(e);

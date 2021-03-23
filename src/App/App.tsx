@@ -50,9 +50,10 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
                 data={this.state.data}
                 className="AppTreeMap"
                 nodeClassName="AppTreeMap__node"
-                // isTimeFormat={true}
-                // valueFormat="%I:%M"
-                valueUnit={"MB"}
+                valueFn={(value: number) => {
+                  return `${value.toString().charAt(0)} min`;
+                }}
+                // valueUnit={"MB"}
                 // svgClassName="AppTreeMap__svg"
                 paddingInner={2}
                 onZoom={(level, id, items) => console.log({ level, id, items })}
@@ -65,7 +66,9 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
                   paddingLeft: 5,
                   paddingRight: 5,
                 }}
-                numberOfChildrenPlacement={NumberOfChildrenPlacement.BottomRight}
+                numberOfChildrenPlacement={
+                  NumberOfChildrenPlacement.BottomRight
+                }
                 customD3ColorScale={scaleSequential(
                   chromatic.interpolateSpectral
                 )}

@@ -214,11 +214,6 @@ interface TreeMapInPutData {
   numberOfChildrenPlacement: NumberOfChildrenPlacement;
 
   /**
-   * If true when uses d3-time-format otherwise uses d3-format
-   */
-  isTimeFormat?: boolean;
-
-  /**
    * Color for text and children counter when background is dark
    *
    * @default white
@@ -245,6 +240,11 @@ interface TreeMapInPutData {
    * @default black
    */
   lightNodeBorderColor?: string;
+  
+  /**
+   * Override value text for node 
+   */
+  valueFn?: (value: number) => string
 
 ```
 
