@@ -213,6 +213,11 @@ interface TreeMapInPutData {
    */
   numberOfChildrenPlacement: NumberOfChildrenPlacement;
 
+  /**
+   * If true when uses d3-time-format otherwise uses d3-format
+   */
+  isTimeFormat?: boolean;
+
 ```
 
 ## App sample
