@@ -1,3 +1,8 @@
+## 1.0.21 (2021-03-23)
+
+- Enable Tree Shaking and reduce bundle size
+- UNSAFE_componentWillReceiveProps warning
+
 ## 1.0.19 (2021-03-21)
 
 - Add `onTreeMapDidMount`
