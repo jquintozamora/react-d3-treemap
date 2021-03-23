@@ -1,6 +1,5 @@
 {
   "name": "react-d3-treemap",
-  "sideEffects": false,
   "version": "1.0.20",
   "description": "Integrating D3 Treemap with React",
   "main": "dist/react.d3.treemap.js",
@@ -8,8 +7,8 @@
   "style": "dist/react.d3.treemap.css",
   "scripts": {
     "dev": "webpack serve --open --config ./webpack/webpack.config.dev.js",
-    "build": "webpack --progress --config ./webpack/webpack.config.prod.js",
-    "stats": "webpack --progress --config ./webpack/webpack.config.stats.js --profile --json > ./webpack/stats/stats.json",
+    "build": "rm -rf ./dist & webpack --progress --config ./webpack/webpack.config.prod.js",
+    "stats": "rm -rf ./dist & webpack --progress --config ./webpack/webpack.config.stats.js --profile --json > ./webpack/stats/stats.json",
     "gatsby:deploy": "gatsby build --prefix-paths && gh-pages -d public",
     "gatsby:develop": "gatsby develop"
   },

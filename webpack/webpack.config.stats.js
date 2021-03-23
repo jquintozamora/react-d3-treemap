@@ -17,7 +17,6 @@ const currentTime = currentDateTime.toLocaleTimeString('en-GB', { hour12: false 
 const fileDateTime = currentDate + "-" + currentTime;
 const statisticsFileName = '../webpack/stats/statistics-' + fileDateTime + '.html';
 const prodConfig = require('./webpack.config.prod.js');
-console.log(prodConfig);
 prodConfig.plugins = prodConfig.plugins.concat(
     new Visualizer({
         filename: statisticsFileName

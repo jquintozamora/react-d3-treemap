@@ -22,6 +22,7 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"]
   },
+  stats: "verbose",
   devServer: {
     hot: true,
     contentBase: commonPaths.contentBasePath, 
