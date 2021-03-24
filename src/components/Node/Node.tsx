@@ -153,6 +153,9 @@ const LabelNewLine: React.FunctionComponent<LabelNewLineProps> = ({
 
   const fullLabel = value ? `${label}\xa0${value}` : label;
   const { width, height } = getTextDimensions(fullLabel, style);
+  if (containerHeight < height) {
+    return null;
+  }
   const maxTextRows = Math.floor(containerHeight / height);
   const splitLabel =
     width >= containerWidth || !hasChildren
