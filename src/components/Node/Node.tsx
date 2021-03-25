@@ -3,6 +3,8 @@ import "./Node.css";
 import * as React from "react";
 import classnames from "classnames";
 import { ScaleLinear } from "d3-scale";
+import useTooltip from "../Tooltip/useTooltip";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 export interface NodeProps {
   /*
@@ -319,8 +321,24 @@ const Node: React.FunctionComponent<NodeProps> = ({
       : paddedCurrentWidth
   );
 
+  const { hideTooltip, showTooltip, disableTooltip } = useTooltip();
+
+  const handleMouseMove = React.useCallback(
+    (ev: React.MouseEvent) => {
+      showTooltip(<Tooltip label={label} value={value} />, ev);
+    },
+    [showTooltip]
+  );
+
+  const handleMouseLeave = React.useCallback(() => {
+    hideTooltip();
+  }, [showTooltip]);
+
   return (
     <g
+      onMouseEnter={disableTooltip ? undefined : handleMouseMove}
+      onMouseLeave={disableTooltip ? undefined : handleMouseLeave}
+      onMouseMove={disableTooltip ? undefined : handleMouseMove}
       transform={`translate(${currentXTranslated},${currentYTranslated})`}
       id={`${id}`}
       onClick={hasChildren ? onClick : null}
@@ -380,9 +398,9 @@ const Node: React.FunctionComponent<NodeProps> = ({
           placement={numberOfChildrenPlacement}
         />
       )}
-      <title>
+      {/* <title>
         {`${label}\n${value}\n${nodeTotalNodes}/${globalTotalNodes}`}
-      </title>
+      </title> */}
     </g>
   );
 };

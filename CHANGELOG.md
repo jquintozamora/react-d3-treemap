@@ -1,4 +1,29 @@
+## 1.0.23 (2021-03-25)
+
+- Hide text when node height < text height
+- Add custom Tooltip implementation and some props:
+  ```ts
+   /**
+    * Tooltip placement. If none is specified then is automatic depending on
+    * the quadrant of the treeMap
+    */
+    tooltipPlacement?: TooltipPlacement;
+
+    /**
+     * Tooltip custom css class
+    */
+    tooltipClassName?: string;
+
+    /**
+     * Disable custom tooltip
+    * 
+    * @default false
+    */
+    disableTooltip?: boolean
+  ```
+
 ## 1.0.22 (2021-03-24)
+
 - Remove `isTimeFormat`
 - Expose `formatFn` to overrides the rendering of value in nodes
 

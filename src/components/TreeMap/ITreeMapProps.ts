@@ -2,6 +2,7 @@ import { ScaleSequential } from "d3-scale";
 import TreeMap from "../TreeMap";
 import { IBreadcrumbItem } from "../Breadcrumb";
 import { NumberOfChildrenPlacement } from "../Node";
+import { TooltipPlacement } from "../Tooltip/types";
 
 export interface ITreeMapProps<TreeMapInputData> {
   /**
@@ -188,9 +189,27 @@ export interface ITreeMapProps<TreeMapInputData> {
   lightNodeBorderColor?: string;
 
   /**
-   * Override value text for node 
+   * Override value text for node
    */
-  valueFn?: (value: number) => string
+  valueFn?: (value: number) => string;
+
+  /**
+   * Tooltip placement. If none is specified then is automatic depending on
+   * the quadrant of the treeMap
+   */
+  tooltipPlacement?: TooltipPlacement;
+
+  /**
+   * Tooltip custom css class
+   */
+  tooltipClassName?: string;
+
+  /**
+   * Disable custom tooltip
+   * 
+   * @default false
+   */
+  disableTooltip?: boolean
 }
 
 export enum ColorModel {

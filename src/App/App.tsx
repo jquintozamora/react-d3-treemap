@@ -53,6 +53,9 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
                 valueFn={(value: number) => {
                   return `${value.toString().charAt(0)} min`;
                 }}
+                // tooltipClassName="MyCustomTooltip"
+                // tooltipPlacement="top"
+                // disableTooltip={true}
                 // valueUnit={"MB"}
                 // svgClassName="AppTreeMap__svg"
                 paddingInner={2}

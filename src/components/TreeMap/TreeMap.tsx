@@ -19,6 +19,7 @@ import Breadcrumb from "../Breadcrumb";
 import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
 import { ITreeMapState } from "./ITreeMapState";
 import { Utils } from "../../utils/Utils";
+import TooltipProvider from "../Tooltip/TooltipProvider";
 
 export interface CustomHierarchyRectangularNode<TreeMapInputData>
   extends HierarchyRectangularNode<TreeMapInputData> {
@@ -49,6 +50,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     darkNodeBorderColor: "white",
     lightNodeTextColor: "black",
     lightNodeBorderColor: "black",
+    disableTooltip: false,
   };
 
   // Note. This treemap element initially was using treemap and hierarchy directly on the render.
@@ -130,6 +132,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
       childrenPropInData,
       breadCrumbClassName,
       disableBreadcrumb,
+      tooltipPlacement,
+      tooltipClassName,
+      disableTooltip,
     } = this.props;
 
     this._createD3TreeMap(width, height, data);
@@ -155,19 +160,29 @@ class TreeMap<TreeMapInputData> extends React.Component<
     iterateAllChildren(selectedNode, 0);
 
     return (
-      <div className={className}>
-        {disableBreadcrumb === false ? (
-          <Breadcrumb items={breadcrumbItems} className={breadCrumbClassName} />
-        ) : null}
-        <svg
-          className={classnames(svgClassName)}
-          height={height}
-          width={width}
-          style={{ ...svgStyle }}
-        >
-          {reactNodes}
-        </svg>
-      </div>
+      <TooltipProvider
+        tooltipPlacement={tooltipPlacement}
+        tooltipClassName={tooltipClassName}
+        disableTooltip={disableTooltip}
+      >
+        <div className={className}>
+          {disableBreadcrumb === false ? (
+            <Breadcrumb
+              items={breadcrumbItems}
+              className={breadCrumbClassName}
+            />
+          ) : null}
+          <svg
+            className={classnames(svgClassName)}
+            height={height}
+            width={width}
+            style={{ ...svgStyle }}
+          >
+            {reactNodes}
+          </svg>
+          <div style={{ position: "absolute" }}>tooltip</div>
+        </div>
+      </TooltipProvider>
     );
   }
 
@@ -213,9 +228,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
     // Format function
     try {
-      this._valueFormatFunction = valueFn
-        ? valueFn
-        : format(valueFormat);
+      this._valueFormatFunction = valueFn ? valueFn : format(valueFormat);
     } catch (e) {
       console.warn(e);
     }

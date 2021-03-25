@@ -246,6 +246,24 @@ interface TreeMapInPutData {
    */
   valueFn?: (value: number) => string
 
+  /**
+   * Tooltip placement. If none is specified then is automatic depending on
+   * the quadrant of the treeMap
+   */
+  tooltipPlacement?: TooltipPlacement;
+
+  /**
+   * Tooltip custom css class
+   */
+  tooltipClassName?: string;
+
+  /**
+   * Disable custom tooltip
+   * 
+   * @default false
+   */
+  disableTooltip?: boolean
+
 ```
 
 ## App sample
