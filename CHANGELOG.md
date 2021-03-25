@@ -1,3 +1,6 @@
+## 1.0.25 (2021-03-25)
+- Remove temp tooltip string
+
 ## 1.0.24 (2021-03-25)
 
 - Hide text when node height < text height

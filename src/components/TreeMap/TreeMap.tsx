@@ -180,7 +180,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
           >
             {reactNodes}
           </svg>
-          <div style={{ position: "absolute" }}>tooltip</div>
         </div>
       </TooltipProvider>
     );
