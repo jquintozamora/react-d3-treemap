@@ -1,4 +1,4 @@
-## 1.0.23 (2021-03-25)
+## 1.0.24 (2021-03-25)
 
 - Hide text when node height < text height
 - Add custom Tooltip implementation and some props:
@@ -22,7 +22,7 @@
     disableTooltip?: boolean
   ```
 
-## 1.0.22 (2021-03-24)
+## 1.0.23 (2021-03-24)
 
 - Remove `isTimeFormat`
 - Expose `formatFn` to overrides the rendering of value in nodes
