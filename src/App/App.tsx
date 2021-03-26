@@ -24,7 +24,7 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
   constructor(props) {
     super(props);
     this.state = {
-      data: data1,
+      data: data2,
     };
     this.treeMapRef = React.createRef();
   }
@@ -53,6 +53,8 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
                 valueFn={(value: number) => {
                   return `${value.toString().charAt(0)} min`;
                 }}
+                levelsToDisplay={2}
+                // tooltipOffsetY={25}
                 // tooltipClassName="MyCustomTooltip"
                 // tooltipPlacement="top"
                 // disableTooltip={true}
@@ -69,9 +71,7 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
                   paddingLeft: 5,
                   paddingRight: 5,
                 }}
-                numberOfChildrenPlacement={
-                  NumberOfChildrenPlacement.BottomRight
-                }
+                numberOfChildrenPlacement={NumberOfChildrenPlacement.TopRight}
                 customD3ColorScale={scaleSequential(
                   chromatic.interpolateSpectral
                 )}

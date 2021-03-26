@@ -6,56 +6,61 @@ interface TooltipContainerProps {
   position: TooltipPosition;
   placement: TooltipPlacement;
   children?: React.ReactNode;
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export const TooltipContainer = React.memo<TooltipContainerProps>(
-  ({ position, placement, children }) => {
+  ({ position, placement, offsetX = 0, offsetY = 0, children }) => {
     const [measureRef, { width, height }] = useMeasure();
 
     const [newX, newY] = position;
     let x = Math.round(newX);
     let y = Math.round(newY);
 
-    const offset = 10;
+    const marginOffset = 10;
 
     if (width > 0 && height > 0) {
       switch (placement) {
         case "bottom":
           x -= width / 2;
-          y += offset;
+          y += marginOffset;
           break;
         case "bottomLeft":
-          x -= width + offset;
-          y += height / 2 + offset;
+          x -= width + marginOffset;
+          y += height / 2 + marginOffset;
           break;
         case "bottomRight":
-          x += offset;
-          y += height / 2 + offset;
+          x += marginOffset;
+          y += height / 2 + marginOffset;
           break;
         case "left":
-          x -= width + offset;
+          x -= width + marginOffset;
           y -= height / 2;
           break;
         case "right":
-          x += offset;
+          x += marginOffset;
           y -= height / 2;
           break;
         case "top":
           x -= width / 2;
-          y -= height + offset;
+          y -= height + marginOffset;
           break;
         case "topLeft":
-          x -= width + offset;
-          y -= height + offset;
+          x -= width + marginOffset;
+          y -= height + marginOffset;
           break;
         case "topRight":
-          x += offset;
-          y -= height + offset;
+          x += marginOffset;
+          y -= height + marginOffset;
           break;
         default:
           break;
       }
     }
+
+    x += offsetX;
+    y += offsetY;
 
     const style: React.CSSProperties = {
       pointerEvents: "none",

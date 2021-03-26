@@ -5,6 +5,11 @@ import classnames from "classnames";
 import { ScaleLinear } from "d3-scale";
 import useTooltip from "../Tooltip/useTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
+import NumberOfChildren, {
+  NumberOfChildrenPlacement,
+} from "./NumberOfChildren";
+import { getNumberItemsWidthByNumberOfChars } from "./helpers";
+import LabelNewLine from "./LabelNewLine";
 
 export interface NodeProps {
   /*
@@ -19,14 +24,12 @@ export interface NodeProps {
   textColor: string;
   borderColor: string;
   className?: string;
-  globalTotalNodes: number;
   hasChildren: boolean;
   height?: number;
   hideNumberOfChildren?: boolean;
   id: number;
   isSelectedNode: boolean;
   label: string;
-  name: string;
   nodeTotalNodes: number;
   onClick?: (ev?: React.MouseEvent<SVGElement>) => void;
   style?: React.CSSProperties;
@@ -44,218 +47,10 @@ export interface NodeProps {
   numberOfChildrenPlacement: NumberOfChildrenPlacement;
 }
 
-export enum NumberOfChildrenPlacement {
-  TopRight,
-  BottomRight,
-}
-
-const getNumberItemsWidthByNumberOfChars = (
-  fontSize: number,
-  numberOfChars: number
-) => {
-  return (fontSize / 2) * numberOfChars + 5;
-};
-
-let canvas;
-const getTextDimensions = (
-  text: string,
-  style: React.CSSProperties = {
-    fontVariant: "normal",
-    fontWeight: "normal",
-    fontSize: 14,
-    fontFamily: "Arial",
-  }
-) => {
-  // re-use canvas object for better performance
-  if (!canvas) {
-    canvas = document.createElement("canvas");
-  }
-  var context = canvas.getContext("2d");
-  const { fontVariant, fontWeight, fontSize, fontFamily } = style;
-  const heightSpacingAround = 2;
-  const height = Number(fontSize) + heightSpacingAround;
-  if (context) {
-    context.font = `${fontVariant} ${fontWeight} ${fontSize}px '${fontFamily}'`;
-    return {
-      width: Number(context.measureText(text).width),
-      height,
-    };
-  } else {
-    return { width: 0, height };
-  }
-};
-
-const charWidthCache: Record<string, number> = {};
-const truncateText = (
-  text: string,
-  style: React.CSSProperties,
-  maxWidth: number,
-  ellipsis: string = "..."
-) => {
-  const cachedCharWidth = (char: string) => {
-    const cached = charWidthCache[char];
-    if (cached !== undefined) {
-      return cached;
-    }
-    const charWidth = getTextDimensions(char, style).width;
-    charWidthCache[char] = charWidth;
-    return charWidth;
-  };
-
-  const truncatedChars: string[] = [];
-  const charArray = Array.from(text);
-
-  const ellipsisWidth = cachedCharWidth(ellipsis);
-  if (maxWidth - ellipsisWidth < 0) {
-    return text.charAt(0);
-  }
-
-  let currentWidth = ellipsisWidth;
-  let didTruncate = false;
-  for (let i = 0; i < charArray.length; i++) {
-    const charWidth = cachedCharWidth(charArray[i]);
-    if (currentWidth + charWidth <= maxWidth) {
-      truncatedChars[i] = charArray[i];
-      currentWidth += charWidth;
-    } else {
-      truncatedChars[i] = ellipsis;
-      didTruncate = true;
-      break;
-    }
-  }
-
-  if (didTruncate) {
-    return truncatedChars.join("");
-  }
-
-  return text;
-};
-
-interface LabelNewLineProps {
-  label: string;
-  textColor: string;
-  value: string;
-  hasChildren: boolean;
-  containerWidth: number;
-  containerHeight: number;
-  style: React.CSSProperties;
-}
-const LabelNewLine: React.FunctionComponent<LabelNewLineProps> = ({
-  label,
-  textColor,
-  value,
-  hasChildren,
-  containerWidth,
-  containerHeight,
-  style,
-}) => {
-  if (!label) {
-    return null;
-  }
-
-  const fullLabel = value ? `${label}\xa0${value}` : label;
-  const { width, height } = getTextDimensions(fullLabel, style);
-  if (containerHeight < height) {
-    return null;
-  }
-  const maxTextRows = Math.floor(containerHeight / height);
-  const splitLabel =
-    width >= containerWidth || !hasChildren
-      ? label
-          .split(/(?=[A-Z/a-z0-9.][^A-Z/a-z0-9.])/g)
-          .concat(value)
-          .slice(0, maxTextRows)
-      : [fullLabel];
-
-  return (
-    <>
-      {splitLabel.map((item: string, index) => {
-        return (
-          <tspan
-            fontSize={style.fontSize}
-            fill={textColor}
-            key={index}
-            x={0}
-            dy={style.fontSize}
-          >
-            {truncateText(item, style, containerWidth)}
-          </tspan>
-        );
-      })}
-    </>
-  );
-};
-
-const NumberOfChildren = ({
-  name,
-  width,
-  height,
-  textColor,
-  nodeTotalNodes,
-  isSelectedNode,
-  placement,
-  style,
-}) => {
-  const realPlacement = isSelectedNode
-    ? NumberOfChildrenPlacement.TopRight
-    : placement;
-
-  const fontSize = Number(style.fontSize);
-  const itemsWidth = getNumberItemsWidthByNumberOfChars(
-    fontSize,
-    nodeTotalNodes.toString().length
-  );
-  const itemHeightFactor = 2;
-  const itemsHeight = fontSize + itemHeightFactor;
-  const strokeDasharrayTotal = itemsWidth + itemsHeight;
-  if (width > itemsWidth && height > itemsHeight) {
-    return (
-      <g
-        transform={`translate(0, ${
-          realPlacement === NumberOfChildrenPlacement.BottomRight
-            ? height - itemsHeight
-            : 0
-        })`}
-      >
-        <rect
-          id={`rectNumberItems-${name}`}
-          x={width - itemsWidth}
-          y={0}
-          width={itemsWidth}
-          height={itemsHeight}
-          fill="none"
-          stroke={textColor}
-          strokeDasharray={`${
-            realPlacement === NumberOfChildrenPlacement.BottomRight
-              ? itemsWidth
-              : 0
-          },${strokeDasharrayTotal},${strokeDasharrayTotal}`}
-        />
-        <text
-          fill={textColor}
-          x={width - itemsWidth + itemsWidth / 2}
-          y={itemsHeight - itemHeightFactor}
-          textAnchor="middle"
-          style={{
-            fontVariant: style.fontVariant,
-            fontWeight: style.fontWeight,
-            fontSize: style.fontSize,
-            fontFamily: style.fontFamily,
-          }}
-        >
-          {nodeTotalNodes}
-        </text>
-      </g>
-    );
-  }
-  return null;
-};
-
 const Node: React.FunctionComponent<NodeProps> = ({
   bgColor,
   borderColor,
   className,
-  globalTotalNodes,
   hasChildren,
   height,
   hideNumberOfChildren,
@@ -388,7 +183,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
       </a>
       {showNumberOfItems && (
         <NumberOfChildren
-          name={name}
+          customId={id}
           width={currentWidth}
           height={currentHeight}
           style={style}
@@ -398,9 +193,6 @@ const Node: React.FunctionComponent<NodeProps> = ({
           placement={numberOfChildrenPlacement}
         />
       )}
-      {/* <title>
-        {`${label}\n${value}\n${nodeTotalNodes}/${globalTotalNodes}`}
-      </title> */}
     </g>
   );
 };

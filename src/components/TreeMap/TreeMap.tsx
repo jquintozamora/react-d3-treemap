@@ -51,6 +51,9 @@ class TreeMap<TreeMapInputData> extends React.Component<
     lightNodeTextColor: "black",
     lightNodeBorderColor: "black",
     disableTooltip: false,
+    tooltipOffsetX: 0,
+    tooltipOffsetY: 0,
+    levelsToDisplay: 1,
   };
 
   // Note. This treemap element initially was using treemap and hierarchy directly on the render.
@@ -93,7 +96,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
       selectedNode: this._treemap(
         this._rootData
       ) as CustomHierarchyRectangularNode<TreeMapInputData>,
-      totalNodes: this._nodes.length,
     };
   }
 
@@ -135,12 +137,15 @@ class TreeMap<TreeMapInputData> extends React.Component<
       tooltipPlacement,
       tooltipClassName,
       disableTooltip,
+      tooltipOffsetX,
+      tooltipOffsetY,
+      levelsToDisplay,
     } = this.props;
 
     this._createD3TreeMap(width, height, data);
 
     let reactNodes: Array<React.ReactNode> = [];
-    const maxLevel = 1;
+    const maxLevel = levelsToDisplay;
     const iterateAllChildren = (
       mainNode: CustomHierarchyRectangularNode<TreeMapInputData>,
       level: number
@@ -164,6 +169,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
         tooltipPlacement={tooltipPlacement}
         tooltipClassName={tooltipClassName}
         disableTooltip={disableTooltip}
+        tooltipOffsetX={tooltipOffsetX}
+        tooltipOffsetY={tooltipOffsetY}
       >
         <div className={className}>
           {disableBreadcrumb === false ? (
@@ -279,7 +286,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
     } = this.props;
 
     const {
-      totalNodes,
       selectedId,
       xScaleFactor,
       xScaleFunction,
@@ -334,14 +340,12 @@ class TreeMap<TreeMapInputData> extends React.Component<
           fontFamily: "Arial",
           ...nodeStyle,
         }}
-        globalTotalNodes={totalNodes}
         hasChildren={hasChildren}
         hideNumberOfChildren={hideNumberOfChildren}
         id={customId}
         isSelectedNode={isSelectedNode}
         key={customId}
         label={name}
-        name={name}
         nodeTotalNodes={nodeTotalNodes}
         onClick={!isSelectedNode ? this._onNodeClick : undefined}
         treemapId={treemapId}

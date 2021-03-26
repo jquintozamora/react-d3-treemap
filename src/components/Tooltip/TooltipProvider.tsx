@@ -7,8 +7,17 @@ const TooltipProvider: React.FunctionComponent<{
   tooltipPlacement?: TooltipPlacement;
   tooltipClassName?: string;
   disableTooltip: boolean;
+  tooltipOffsetX?: number;
+  tooltipOffsetY?: number;
   children?: React.ReactNode;
-}> = ({ tooltipPlacement, tooltipClassName, disableTooltip, children }) => {
+}> = ({
+  tooltipPlacement,
+  tooltipClassName,
+  tooltipOffsetX,
+  tooltipOffsetY,
+  disableTooltip,
+  children,
+}) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = React.useState<boolean>(false);
   const [pos, setPos] = React.useState<TooltipPosition>([null, null]);
@@ -66,7 +75,12 @@ const TooltipProvider: React.FunctionComponent<{
       <div ref={containerRef}>
         {children}
         {isVisible && (
-          <TooltipContainer position={pos} placement={placement}>
+          <TooltipContainer
+            position={pos}
+            placement={placement}
+            offsetX={tooltipOffsetX}
+            offsetY={tooltipOffsetY}
+          >
             {content}
           </TooltipContainer>
         )}

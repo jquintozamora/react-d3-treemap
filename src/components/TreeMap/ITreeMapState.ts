@@ -13,5 +13,4 @@ export interface ITreeMapState<TreeMapInputData> {
   breadcrumbItems: IBreadcrumbItem[];
   selectedId: number;
   selectedNode: CustomHierarchyRectangularNode<TreeMapInputData>;
-  totalNodes: number;
 }

@@ -206,10 +206,31 @@ export interface ITreeMapProps<TreeMapInputData> {
 
   /**
    * Disable custom tooltip
-   * 
+   *
    * @default false
    */
-  disableTooltip?: boolean
+  disableTooltip?: boolean;
+
+  /**
+   * Tooltip offset X
+   *
+   * @default 0
+   */
+  tooltipOffsetX?: number;
+
+  /**
+   * Tooltip offset Y
+   *
+   * @default 0
+   */
+  tooltipOffsetY?: number;
+
+  /**
+   * Number of levels to display in TreeMap
+   *
+   * @default 1
+   */
+  levelsToDisplay?: number;
 }
 
 export enum ColorModel {

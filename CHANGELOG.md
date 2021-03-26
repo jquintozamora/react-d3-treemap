@@ -1,10 +1,17 @@
+## 1.0.26 (2021-03-26)
+
+- Add `tooltipOffsetX`and `tooltipOffsetY`
+- Add `levelsToDisplay`
+
 ## 1.0.25 (2021-03-25)
+
 - Remove temp tooltip string
 
 ## 1.0.24 (2021-03-25)
 
 - Hide text when node height < text height
 - Add custom Tooltip implementation and some props:
+
   ```ts
    /**
     * Tooltip placement. If none is specified then is automatic depending on
@@ -19,7 +26,7 @@
 
     /**
      * Disable custom tooltip
-    * 
+    *
     * @default false
     */
     disableTooltip?: boolean
