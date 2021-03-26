@@ -24,7 +24,7 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
   constructor(props) {
     super(props);
     this.state = {
-      data: data2,
+      data: data1,
     };
     this.treeMapRef = React.createRef();
   }
