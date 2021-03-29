@@ -18,8 +18,12 @@ import Node, { NumberOfChildrenPlacement } from "../Node";
 import Breadcrumb from "../Breadcrumb";
 import { ITreeMapProps, ColorModel } from "./ITreeMapProps";
 import { ITreeMapState } from "./ITreeMapState";
-import { Utils } from "../../utils/Utils";
 import TooltipProvider from "../Tooltip/TooltipProvider";
+import {
+  getDepth,
+  getHighContrastColorFromString,
+  getTopSubParent,
+} from "./helpers";
 
 export interface CustomHierarchyRectangularNode<TreeMapInputData>
   extends HierarchyRectangularNode<TreeMapInputData> {
@@ -242,7 +246,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     let d: [number | { valueOf(): number }, number | { valueOf(): number }];
     switch (colorModel) {
       case ColorModel.Depth:
-        d = [0, Utils.getDepth<TreeMapInputData>(data, childrenPropInData) - 1];
+        d = [0, getDepth<TreeMapInputData>(data, childrenPropInData) - 1];
         break;
       case ColorModel.Value:
         d = extent(this._nodes, (n) => {
@@ -407,14 +411,14 @@ class TreeMap<TreeMapInputData> extends React.Component<
         break;
       case ColorModel.OneEachChildren:
         const originalBackgroundColor = this._nodesbgColorFunction(
-          Utils.getTopSubParent<TreeMapInputData>(node)
+          getTopSubParent<TreeMapInputData>(node)
         );
         if (node.depth > 1) {
           backgroundColor = scaleLinear<string>()
             .domain([0, node && node.children ? node.children.length : 0])
             .interpolate(interpolateHcl)
             .range(["white", originalBackgroundColor])(
-            Utils.getTopSubParent<TreeMapInputData>(node)
+            getTopSubParent<TreeMapInputData>(node)
           );
         } else {
           backgroundColor = originalBackgroundColor;
@@ -429,11 +433,11 @@ class TreeMap<TreeMapInputData> extends React.Component<
     return {
       bgColor: backgroundColor,
       textColor:
-        Utils.getHighContrastColorFromString(backgroundColor) === "dark"
+        getHighContrastColorFromString(backgroundColor) === "dark"
           ? darkNodeTextColor
           : lightNodeTextColor,
       borderColor:
-        Utils.getHighContrastColorFromString(backgroundColor) === "dark"
+        getHighContrastColorFromString(backgroundColor) === "dark"
           ? darkNodeBorderColor
           : lightNodeBorderColor,
     };
