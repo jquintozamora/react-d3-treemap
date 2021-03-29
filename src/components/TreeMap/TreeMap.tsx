@@ -35,7 +35,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
   ITreeMapState<TreeMapInputData>
 > {
   // Default Props values
-  public static defaultProps: ITreeMapProps<{}> = {
+  public static defaultProps = {
     id: "myTreeMap",
     data: null,
     height: 600,
@@ -103,7 +103,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     };
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     const { onTreeMapDidMount } = this.props;
     this._zoomTo(0);
     if (onTreeMapDidMount) {
@@ -113,7 +113,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
 
   public UNSAFE_componentWillReceiveProps(
     nextProps: ITreeMapProps<TreeMapInputData>
-  ) {
+  ): void {
     const { width, height } = nextProps;
     if (height !== this.props.height || width !== this.props.width) {
       this.setState({
@@ -128,7 +128,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { width, height, breadcrumbItems, selectedNode, data } = this.state;
 
     const {
@@ -157,6 +157,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
       reactNodes = reactNodes.concat(this._getNode(mainNode));
       if (level < maxLevel) {
         if (
+          // eslint-disable-next-line no-prototype-builtins
           mainNode.hasOwnProperty(childrenPropInData) &&
           mainNode[childrenPropInData].length > 0
         ) {
@@ -409,7 +410,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
           backgroundColor = this._nodesbgColorFunction(1);
         }
         break;
-      case ColorModel.OneEachChildren:
+      case ColorModel.OneEachChildren: {
         const originalBackgroundColor = this._nodesbgColorFunction(
           getTopSubParent<TreeMapInputData>(node)
         );
@@ -426,8 +427,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
         if (node.parent === null) {
           backgroundColor = this._nodesbgColorFunction(0);
         }
-      default:
-        break;
+      }
     }
 
     return {
@@ -493,11 +493,11 @@ class TreeMap<TreeMapInputData> extends React.Component<
     }
   }
 
-  public resetZoom() {
+  public resetZoom(): void {
     this._zoomTo(0);
   }
 
-  public zoomOut() {
+  public zoomOut(): void {
     const { selectedId } = this.state;
     const selectedNode = this._nodes
       .filter((item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
@@ -513,7 +513,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
     }
   }
 
-  public getZoomLevel() {
+  public getZoomLevel(): number {
     const { selectedNode } = this.state;
     return selectedNode.depth;
   }

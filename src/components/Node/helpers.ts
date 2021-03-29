@@ -7,12 +7,12 @@ export const getTextDimensions = (
     fontSize: 14,
     fontFamily: "Arial",
   }
-) => {
+): { width: number; height: number } => {
   // re-use canvas object for better performance
   if (!canvas) {
     canvas = document.createElement("canvas");
   }
-  var context = canvas.getContext("2d");
+  const context = canvas.getContext("2d");
   const { fontVariant, fontWeight, fontSize, fontFamily } = style;
   const heightSpacingAround = 2;
   const height = Number(fontSize) + heightSpacingAround;
@@ -32,8 +32,8 @@ export const truncateText = (
   text: string,
   style: React.CSSProperties,
   maxWidth: number,
-  ellipsis: string = "..."
-) => {
+  ellipsis = "..."
+): string => {
   const cachedCharWidth = (char: string) => {
     const cached = charWidthCache[char];
     if (cached !== undefined) {
@@ -76,6 +76,6 @@ export const truncateText = (
 export const getNumberItemsWidthByNumberOfChars = (
   fontSize: number,
   numberOfChars: number
-) => {
+): number => {
   return (fontSize / 2) * numberOfChars + 5;
 };

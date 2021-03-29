@@ -9,3 +9,5 @@ coverage/
 webpack/stats
 
 .DS_Store
+
+yarn-error.log

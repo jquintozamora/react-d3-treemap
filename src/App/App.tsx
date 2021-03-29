@@ -18,7 +18,7 @@ interface TreeMapInPutData {
   className?: string;
 }
 
-class App extends React.Component<{}, { data: TreeMapInPutData }> {
+class App extends React.Component<unknown, { data: TreeMapInPutData }> {
   private treeMapRef: React.RefObject<TreeMap<TreeMapInPutData>>;
 
   constructor(props) {
@@ -40,7 +40,7 @@ class App extends React.Component<{}, { data: TreeMapInPutData }> {
     return (
       <React.Fragment>
         <ContainerDimensions>
-          {({ width, height }) => {
+          {({ width }) => {
             return (
               <TreeMap<TreeMapInPutData>
                 ref={this.treeMapRef}

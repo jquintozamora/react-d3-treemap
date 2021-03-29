@@ -13,7 +13,7 @@ export const getTopSubParent = <TreeMapInputData>(
 export const getDepth = <TreeMapInputData>(
   obj: TreeMapInputData,
   childrenPropInData: string
-) => {
+): number => {
   let depth = 0;
   if (obj[childrenPropInData]) {
     obj[childrenPropInData].forEach((d) => {
