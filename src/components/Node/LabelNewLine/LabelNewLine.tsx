@@ -33,7 +33,7 @@ const LabelNewLine: React.FunctionComponent<LabelNewLineProps> = ({
   const splitLabel =
     width >= containerWidth || !hasChildren
       ? label
-          .split(/(?=[A-Z/a-z0-9.][^A-Z/a-z0-9. ])/g)
+          .split(/(?=[A-Z/a-z0-9.][^A-Z/a-z0-9. -])/g)
           .concat(value)
           .slice(0, maxTextRows)
       : [fullLabel];
