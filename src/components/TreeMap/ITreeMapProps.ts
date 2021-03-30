@@ -102,6 +102,11 @@ export interface ITreeMapProps<TreeMapInputData> {
   nodeStyle?: React.CSSProperties;
 
   /**
+   * Padding out of the nodes ( calculated by D3 )
+   */
+  paddingOuter?: number;
+
+  /**
    * Padding between nodes ( calculated by D3 )
    */
   paddingInner?: number;

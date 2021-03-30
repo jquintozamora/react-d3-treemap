@@ -43,7 +43,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
     valueFormat: ",d",
     disableBreadcrumb: false,
     colorModel: ColorModel.OneEachChildren,
-    paddingInner: 0,
+    paddingInner: 4,
+    paddingOuter: 4,
     customD3ColorScale: scaleSequential(interpolateSpectral),
     namePropInData: "name",
     linkPropInData: "link",
@@ -84,11 +85,8 @@ class TreeMap<TreeMapInputData> extends React.Component<
       height,
       width,
       data,
-      xScaleFactor: 1,
-      yScaleFactor: 1,
       xScaleFunction: scaleLinear().range([0, width]),
       yScaleFunction: scaleLinear().range([0, height]),
-      zoomEnabled: false,
       // TODO: Replace data.name by id
       breadcrumbItems: [
         {
@@ -129,7 +127,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
   }
 
   public render(): React.ReactNode {
-    const { width, height, breadcrumbItems, selectedNode, data } = this.state;
+    const { width, height, breadcrumbItems, selectedNode } = this.state;
 
     const {
       svgClassName,
@@ -146,24 +144,24 @@ class TreeMap<TreeMapInputData> extends React.Component<
       levelsToDisplay,
     } = this.props;
 
-    this._createD3TreeMap(width, height, data);
-
     let reactNodes: Array<React.ReactNode> = [];
-    const maxLevel = levelsToDisplay;
+    const maxLevel = selectedNode.depth === 0 ? levelsToDisplay : 1;
     const iterateAllChildren = (
       mainNode: CustomHierarchyRectangularNode<TreeMapInputData>,
       level: number
     ) => {
       reactNodes = reactNodes.concat(this._getNode(mainNode));
+
       if (level < maxLevel) {
         if (
-          // eslint-disable-next-line no-prototype-builtins
-          mainNode.hasOwnProperty(childrenPropInData) &&
+          childrenPropInData in mainNode &&
           mainNode[childrenPropInData].length > 0
         ) {
-          mainNode[childrenPropInData].forEach((element) => {
-            iterateAllChildren(element, level + 1);
-          });
+          mainNode[childrenPropInData].forEach(
+            (element: CustomHierarchyRectangularNode<TreeMapInputData>) => {
+              iterateAllChildren(element, level + 1);
+            }
+          );
         }
       }
     };
@@ -205,28 +203,55 @@ class TreeMap<TreeMapInputData> extends React.Component<
     const {
       valuePropInData,
       childrenPropInData,
-      paddingInner,
+      paddingOuter,
       valueFormat,
       colorModel,
       customD3ColorScale,
       valueFn,
     } = this.props;
 
+    const tile = (node, x0, y0, x1, y1) => {
+      treemapSquarify(node, 0, 0, width, height);
+      for (const child of node.children) {
+        child.x0 = x0 + (child.x0 / width) * (x1 - x0);
+        child.x1 = x0 + (child.x1 / width) * (x1 - x0);
+        child.y0 = y0 + (child.y0 / height) * (y1 - y0);
+        child.y1 = y0 + (child.y1 / height) * (y1 - y0);
+      }
+    };
+
     // 1. Create treemap structure
     this._treemap = treemap<TreeMapInputData>()
+      .tile(tile)
       .size([width, height])
-      .tile(treemapSquarify.ratio(1))
-      .paddingOuter(3)
-      .paddingTop(19)
-      .paddingInner(paddingInner)
-      .round(true);
+      .round(true)
+      .paddingOuter((node) => {
+        if (node.depth > 2) {
+          return 1;
+        }
+        if (node.depth > 1) {
+          return 2;
+        }
+        return paddingOuter;
+      })
+      .paddingTop((node) => {
+        if (node.depth > 2) {
+          return 3;
+        }
+        if (node.depth > 1) {
+          return 5;
+        }
+        return 19;
+      });
+    // .paddingTop(0)
+    // .paddingInner(3);
 
     // 2. Before compute a hierarchical layout, we need a root node
     //    If the data is in JSON we use d3.hierarchy
     this._rootData = hierarchy(data)
       .sum((s) => s[valuePropInData])
       .sort(
-        (a, b) => b.height - a.height || b[valuePropInData] - a[valuePropInData]
+        (a, b) => b[valuePropInData] - a[valuePropInData]
       ) as HierarchyRectangularNode<TreeMapInputData>;
 
     // 3. Get array of nodes
@@ -288,16 +313,10 @@ class TreeMap<TreeMapInputData> extends React.Component<
       darkNodeBorderColor,
       lightNodeTextColor,
       lightNodeBorderColor,
+      paddingInner,
     } = this.props;
 
-    const {
-      selectedId,
-      xScaleFactor,
-      xScaleFunction,
-      yScaleFactor,
-      yScaleFunction,
-      zoomEnabled,
-    } = this.state;
+    const { selectedId, xScaleFunction, yScaleFunction } = this.state;
 
     const { customId, data, x0, x1, y0, y1 } = node;
 
@@ -358,14 +377,12 @@ class TreeMap<TreeMapInputData> extends React.Component<
         value={!hideValue && formattedValue}
         x0={x0}
         x1={x1}
-        xScaleFactor={xScaleFactor}
         xScaleFunction={xScaleFunction}
         y0={y0}
         y1={y1}
-        yScaleFactor={yScaleFactor}
         yScaleFunction={yScaleFunction}
-        zoomEnabled={zoomEnabled}
         numberOfChildrenPlacement={numberOfChildrenPlacement}
+        paddingInner={paddingInner}
       />
     );
   }
@@ -444,7 +461,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
   }
 
   private _zoomTo(nodeId: number) {
-    const { xScaleFunction, yScaleFunction, width, height } = this.state;
+    const { xScaleFunction, yScaleFunction } = this.state;
 
     const { onZoom } = this.props;
 
@@ -454,12 +471,6 @@ class TreeMap<TreeMapInputData> extends React.Component<
       })
       .pop();
     if (currentNode) {
-      const x = currentNode.x0;
-      const y = currentNode.y0;
-      const dx = currentNode.x1 - currentNode.x0;
-      const dy = currentNode.y1 - currentNode.y0;
-      const xScaleFactor = width / dx;
-      const yScaleFactor = height / dy;
       const breadcrumbItems = this._treemap(this._rootData)
         .path(currentNode)
         .map(
@@ -478,12 +489,10 @@ class TreeMap<TreeMapInputData> extends React.Component<
       if (onZoom) {
         onZoom(currentNode.depth, nodeId, breadcrumbItems);
       }
+
       this.setState({
-        xScaleFactor,
-        yScaleFactor,
-        xScaleFunction: xScaleFunction.domain([x, x + dx]),
-        yScaleFunction: yScaleFunction.domain([y, y + dy]),
-        zoomEnabled: currentNode.parent === null ? false : true,
+        xScaleFunction: xScaleFunction.domain([currentNode.x0, currentNode.x1]),
+        yScaleFunction: yScaleFunction.domain([currentNode.y0, currentNode.y1]),
         selectedId: nodeId,
         selectedNode: currentNode,
         breadcrumbItems,

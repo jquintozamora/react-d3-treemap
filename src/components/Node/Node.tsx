@@ -21,30 +21,24 @@ export interface NodeProps {
   y1?: number;
 
   bgColor: string;
-  textColor: string;
   borderColor: string;
   className?: string;
   hasChildren: boolean;
-  height?: number;
   hideNumberOfChildren?: boolean;
   id: number;
   isSelectedNode: boolean;
   label: string;
   nodeTotalNodes: number;
+  numberOfChildrenPlacement: NumberOfChildrenPlacement;
   onClick?: (ev?: React.MouseEvent<SVGElement>) => void;
   style?: React.CSSProperties;
+  textColor: string;
   treemapId?: string;
   url: string;
   value: string;
-  width?: number;
-  xScaleFactor?: number;
   xScaleFunction?: ScaleLinear<number, number>;
-  xTranslated?: number;
-  yScaleFactor?: number;
   yScaleFunction?: ScaleLinear<number, number>;
-  yTranslated?: number;
-  zoomEnabled?: boolean;
-  numberOfChildrenPlacement: NumberOfChildrenPlacement;
+  paddingInner: number;
 }
 
 const Node: React.FunctionComponent<NodeProps> = ({
@@ -52,7 +46,6 @@ const Node: React.FunctionComponent<NodeProps> = ({
   borderColor,
   className,
   hasChildren,
-  height,
   hideNumberOfChildren,
   id,
   isSelectedNode,
@@ -63,36 +56,26 @@ const Node: React.FunctionComponent<NodeProps> = ({
   treemapId,
   url,
   value,
-  width,
   x0,
   x1,
-  xScaleFactor,
   xScaleFunction,
-  xTranslated,
   y0,
   y1,
-  yScaleFactor,
   yScaleFunction,
-  yTranslated,
-  zoomEnabled,
   style,
   numberOfChildrenPlacement,
+  paddingInner,
 }) => {
-  const currentXTranslated =
-    xTranslated !== undefined
-      ? xTranslated
-      : zoomEnabled === true
-      ? xScaleFunction(x0)
-      : x0;
-  const currentYTranslated =
-    yTranslated !== undefined
-      ? yTranslated
-      : zoomEnabled === true
-      ? yScaleFunction(y0)
-      : y0;
-  const currentWidth = width !== undefined ? width : xScaleFactor * (x1 - x0);
-  const currentHeight =
-    height !== undefined ? height : yScaleFactor * (y1 - y0);
+  const currentXTranslated = Math.max(0, xScaleFunction(x0) + paddingInner);
+  const currentYTranslated = Math.max(0, yScaleFunction(y0) + paddingInner);
+  const currentWidth = Math.max(
+    0,
+    xScaleFunction(x1) - xScaleFunction(x0) - paddingInner
+  );
+  const currentHeight = Math.max(
+    0,
+    yScaleFunction(y1) - yScaleFunction(y0) - paddingInner
+  );
 
   const cursor =
     hasChildren === true && isSelectedNode === false ? "pointer" : "auto";
