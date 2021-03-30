@@ -6,8 +6,7 @@ import * as chromatic from "d3-scale-chromatic";
 import { hot } from "react-hot-loader";
 
 import * as React from "react";
-import { data as data1 } from "../data/data";
-import { data as data2 } from "../data/data.1.level";
+// import { data } from "../data/data";
 import { data as generatedData } from "../data/generateData";
 import TreeMap, { ColorModel } from "../components/TreeMap";
 import { NumberOfChildrenPlacement } from "../components/Node";
@@ -90,9 +89,6 @@ class App extends React.Component<unknown, { data: TreeMapInPutData }> {
             );
           }}
         </ContainerDimensions>
-        <div>
-          <a onClick={() => this.setState({ data: data2 })}>Change data</a>
-        </div>
         <div>
           <a onClick={() => this.treeMapRef.current.resetZoom()}>Zoom Reset</a>
         </div>
