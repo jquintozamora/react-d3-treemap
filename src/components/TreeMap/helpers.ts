@@ -1,13 +1,26 @@
 import { CustomHierarchyRectangularNode } from "./TreeMap";
 import { rgb } from "d3-color";
+import { ScaleSequential } from "d3-scale";
+import { ColorModel } from "./ITreeMapProps";
+import { extent } from "d3-array";
+import { format } from "d3-format";
 
-export const getTopSubParent = <TreeMapInputData>(
+export const getTopSubParentId = <TreeMapInputData>(
   node: CustomHierarchyRectangularNode<TreeMapInputData>
 ): number => {
   if (node.parent && node.parent.parent) {
-    return getTopSubParent(node.parent);
+    return getTopSubParentId(node.parent);
   }
   return node.customId;
+};
+
+export const getTopParent = <TreeMapInputData>(
+  node: CustomHierarchyRectangularNode<TreeMapInputData>
+): CustomHierarchyRectangularNode<TreeMapInputData> => {
+  if (node.parent) {
+    return getTopParent(node.parent);
+  }
+  return node;
 };
 
 export const getDepth = <TreeMapInputData>(
@@ -57,4 +70,56 @@ export const getHighContrastColorFromString = (
   if (rgbColor) {
     return getHighContrastColor(rgbColor.r, rgbColor.g, rgbColor.b);
   }
+};
+
+export const getValueFormatFn = (
+  valueFn: (value: number) => string,
+  valueFormat: string
+): ((value: number) => string) => {
+  let valueFormatFn = (value: number) => `${value}`;
+  try {
+    valueFormatFn = valueFn ? valueFn : format(valueFormat);
+  } catch (e) {
+    console.warn(e);
+  }
+  return valueFormatFn;
+};
+
+export const getColorDomainFn = <TreeMapInputData>(
+  topNode: CustomHierarchyRectangularNode<TreeMapInputData>,
+  data: TreeMapInputData,
+  colorModel: ColorModel,
+  childrenPropInData: string,
+  valuePropInData: string,
+  customD3ColorScale: ScaleSequential<string>
+): ScaleSequential<string> => {
+  const nodes = topNode.descendants() as Array<
+    CustomHierarchyRectangularNode<TreeMapInputData>
+  >;
+
+  let d: [number | { valueOf(): number }, number | { valueOf(): number }];
+  switch (colorModel) {
+    case ColorModel.Depth:
+      d = [0, getDepth<TreeMapInputData>(data, childrenPropInData) - 1];
+      break;
+    case ColorModel.Value:
+      d = extent(nodes, (n) => {
+        if (n.parent !== null) {
+          return n[valuePropInData];
+        }
+      });
+      break;
+    case ColorModel.NumberOfChildren:
+      d = extent(nodes, (n) =>
+        n.parent !== null ? n.descendants().length : 1
+      );
+      break;
+    case ColorModel.OneEachChildren:
+      d = [data[childrenPropInData] ? data[childrenPropInData].length : 0, 0];
+      break;
+    default:
+      break;
+  }
+
+  return customD3ColorScale.domain(d);
 };

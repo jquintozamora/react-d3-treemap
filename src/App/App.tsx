@@ -29,12 +29,12 @@ class App extends React.Component<unknown, { data: TreeMapInPutData }> {
     this.treeMapRef = React.createRef();
   }
 
-  componentDidMount() {
-    console.log(
-      "componentDidMount: ",
-      this.treeMapRef && this.treeMapRef.current
-    );
-  }
+  // componentDidMount() {
+  //   console.log(
+  //     "componentDidMount: ",
+  //     this.treeMapRef && this.treeMapRef.current
+  //   );
+  // }
 
   public render() {
     return (
@@ -61,10 +61,10 @@ class App extends React.Component<unknown, { data: TreeMapInPutData }> {
                 // valueUnit={"MB"}
                 // svgClassName="AppTreeMap__svg"
                 // paddingInner={2}
-                onZoom={(level, id, items) => console.log({ level, id, items })}
-                onTreeMapDidMount={(treeMap: TreeMap<TreeMapInPutData>) =>
-                  console.log(treeMap.getZoomLevel())
-                }
+                // onZoom={(level, id, items) => console.log({ level, id, items })}
+                // onTreeMapDidMount={(treeMap: TreeMap<TreeMapInPutData>) =>
+                //   console.log(treeMap.getZoomLevel())
+                // }
                 nodeStyle={{
                   fontSize: 12,
                   paddingTop: 2,
