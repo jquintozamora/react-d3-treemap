@@ -1,3 +1,8 @@
+## 1.0.27 (2021-03-31)
+- Solve issue breaking down word by using "-"
+- Expose `paddingOuter`
+- Refactor padding inner solving issue displaying level 4
+
 ## 1.0.26 (2021-03-26)
 
 - Add `tooltipOffsetX`and `tooltipOffsetY`
