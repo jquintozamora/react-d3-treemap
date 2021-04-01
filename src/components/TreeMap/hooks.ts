@@ -32,10 +32,10 @@ export const useTreeMap = <TreeMapInputData>({
     })
     .paddingTop((node) => {
       if (node.depth > 2) {
-        return 2;
+        return 3;
       }
       if (node.depth > 1) {
-        return 6;
+        return 7;
       }
       return 19;
     })(
