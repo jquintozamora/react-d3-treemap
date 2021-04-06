@@ -110,7 +110,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
 
   const handleMouseLeave = React.useCallback(() => {
     hideTooltip();
-  }, [showTooltip]);
+  }, [hideTooltip]);
 
   return (
     <g
