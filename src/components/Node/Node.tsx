@@ -39,6 +39,7 @@ export interface NodeProps {
   xScaleFunction?: ScaleLinear<number, number>;
   yScaleFunction?: ScaleLinear<number, number>;
   paddingInner: number;
+  splitRegExp?: RegExp
 }
 
 const Node: React.FunctionComponent<NodeProps> = ({
@@ -65,6 +66,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
   style,
   numberOfChildrenPlacement,
   paddingInner,
+  splitRegExp,
 }) => {
   const currentXTranslated = Math.max(0, xScaleFunction(x0) + paddingInner);
   const currentYTranslated = Math.max(0, yScaleFunction(y0) + paddingInner);
@@ -161,6 +163,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
             containerWidth={clipWidth}
             containerHeight={currentHeight}
             style={style}
+            splitRegExp={splitRegExp}
           />
         </text>
       </a>

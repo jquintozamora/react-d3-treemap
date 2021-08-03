@@ -236,6 +236,8 @@ export interface ITreeMapProps<TreeMapInputData> {
    * @default 1
    */
   levelsToDisplay?: number;
+
+  splitRegExp?: RegExp;
 }
 
 export enum ColorModel {

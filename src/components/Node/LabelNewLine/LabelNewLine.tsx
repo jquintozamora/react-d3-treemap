@@ -8,6 +8,7 @@ interface LabelNewLineProps {
   hasChildren: boolean;
   containerWidth: number;
   containerHeight: number;
+  splitRegExp?: RegExp;
   style: React.CSSProperties;
 }
 
@@ -19,6 +20,7 @@ const LabelNewLine: React.FunctionComponent<LabelNewLineProps> = ({
   containerWidth,
   containerHeight,
   style,
+  splitRegExp = /(?=[A-Z/a-z0-9.][^A-Z/a-z0-9. -])/g,
 }) => {
   if (!label) {
     return null;
@@ -32,10 +34,7 @@ const LabelNewLine: React.FunctionComponent<LabelNewLineProps> = ({
   const maxTextRows = Math.floor(containerHeight / height);
   const splitLabel =
     width >= containerWidth || !hasChildren
-      ? label
-          .split(/(?=[A-Z/a-z0-9.][^A-Z/a-z0-9. -])/g)
-          .concat(value)
-          .slice(0, maxTextRows)
+      ? label.split(splitRegExp).concat(value).slice(0, maxTextRows)
       : [fullLabel];
 
   return (

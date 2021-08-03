@@ -206,6 +206,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
       paddingInner,
       valueFn,
       valueFormat,
+      splitRegExp,
     } = this.props;
 
     const { xScaleFunction, yScaleFunction, selectedNode } = this.state;
@@ -275,6 +276,7 @@ class TreeMap<TreeMapInputData> extends React.Component<
         yScaleFunction={yScaleFunction}
         numberOfChildrenPlacement={numberOfChildrenPlacement}
         paddingInner={paddingInner}
+        splitRegExp={splitRegExp}
       />
     );
   }

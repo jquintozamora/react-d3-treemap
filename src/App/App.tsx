@@ -85,6 +85,7 @@ class App extends React.Component<unknown, { data: TreeMapInPutData }> {
                 darkNodeTextColor="white"
                 lightNodeBorderColor="brown"
                 lightNodeTextColor="brown"
+                // splitRegExp={/(?=[A-Z][^A-Z])/g}
               />
             );
           }}

@@ -1,3 +1,6 @@
+## 1.0.28 (2021-08-03)
+- Configure breaking words RegExp via `splitRegExp` prop
+
 ## 1.0.27 (2021-03-31)
 - Solve issue breaking down word by using "-"
 - Expose `paddingOuter`
