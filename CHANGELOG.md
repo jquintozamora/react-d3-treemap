@@ -1,3 +1,6 @@
+## 1.0.29 (2021-09-27)
+- Bump major versions for dependencies
+
 ## 1.0.28 (2021-08-03)
 - Configure breaking words RegExp via `splitRegExp` prop
 
