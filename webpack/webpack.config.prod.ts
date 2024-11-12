@@ -1,7 +1,8 @@
-const resolve = require("path").resolve;
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+import { resolve } from "path"
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import webpack from 'webpack'
 
-module.exports = {
+const config: webpack.Configuration = {
   devtool: "source-map",
   entry: {
     "react.d3.treemap": "./src/indexPackage.ts",
@@ -69,3 +70,5 @@ module.exports = {
     ],
   },
 };
+
+export default config;

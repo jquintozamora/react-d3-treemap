@@ -11,7 +11,7 @@ const randomNumber = (low = 5, high = 15) => {
 };
 
 export const generateData = (level = 1, maxLevels = 4) => {
-  const dataObj: any = {
+  const dataObj: { children?: unknown, value?: number, name: string } = {
     name: randomName(level * 10),
   };
   if (level <= maxLevels) {

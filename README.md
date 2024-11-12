@@ -240,9 +240,9 @@ interface TreeMapInPutData {
    * @default black
    */
   lightNodeBorderColor?: string;
-  
+
   /**
-   * Override value text for node 
+   * Override value text for node
    */
   valueFn?: (value: number) => string
 
@@ -259,7 +259,7 @@ interface TreeMapInPutData {
 
   /**
    * Disable custom tooltip
-   * 
+   *
    * @default false
    */
   disableTooltip?: boolean
@@ -302,7 +302,7 @@ I created a [TypeScript consume sample for React D3 Treemap](https://github.com/
 
 BSD 3-Clause License
 
-Copyright (c) 2021, [José Quinto](https://blog.josequinto.com)
+Copyright (c) 2024, [José Quinto](https://blog.josequinto.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

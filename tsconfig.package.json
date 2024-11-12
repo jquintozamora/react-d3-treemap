@@ -6,18 +6,30 @@
     "declaration": true,
     "outDir": "./dist",
     "noImplicitAny": false,
-    "suppressImplicitAnyIndexErrors": true,
     "removeComments": true,
     "noLib": false,
     "preserveConstEnums": true,
     "sourceMap": false,
     "jsx": "react",
-    "typeRoots": ["./node_modules/@types"],
-    "types": ["node", "react", "react-dom"]
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "types": [
+      "node",
+      "react",
+      "react-dom"
+    ]
   },
-  "filesGlob": ["./**/*.ts", "!./node_modules/**/*.ts"],
-  "files": ["./src/indexPackage.ts"],
-  "include": ["src/**/*"],
+  "filesGlob": [
+    "./**/*.ts",
+    "!./node_modules/**/*.ts"
+  ],
+  "files": [
+    "./src/indexPackage.ts"
+  ],
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "node_modules",
     "./src/App/*.*",
