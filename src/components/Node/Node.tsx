@@ -1,44 +1,42 @@
-import "./Node.css";
+import "./Node.css"
 
-import * as React from "react";
-import classnames from "classnames";
-import { ScaleLinear } from "d3-scale";
-import useTooltip from "../Tooltip/useTooltip";
-import { Tooltip } from "../Tooltip/Tooltip";
-import NumberOfChildren, {
-  NumberOfChildrenPlacement,
-} from "./NumberOfChildren";
-import { getNumberItemsWidthByNumberOfChars } from "./helpers";
-import LabelNewLine from "./LabelNewLine";
+import * as React from "react"
+import classnames from "classnames"
+import { ScaleLinear } from "d3-scale"
+import useTooltip from "../Tooltip/useTooltip"
+import { Tooltip } from "../Tooltip/Tooltip"
+import NumberOfChildren, { NumberOfChildrenPlacement } from "./NumberOfChildren"
+import { getNumberItemsWidthByNumberOfChars } from "./helpers"
+import LabelNewLine from "./LabelNewLine"
 
 export interface NodeProps {
   /*
         HierarchyRectangularNode properties
     */
-  x0?: number;
-  y0?: number;
-  x1?: number;
-  y1?: number;
+  x0?: number
+  y0?: number
+  x1?: number
+  y1?: number
 
-  bgColor: string;
-  borderColor: string;
-  className?: string;
-  hasChildren: boolean;
-  hideNumberOfChildren?: boolean;
-  id: number;
-  isSelectedNode: boolean;
-  label: string;
-  nodeTotalNodes: number;
-  numberOfChildrenPlacement: NumberOfChildrenPlacement;
-  onClick?: (ev?: React.MouseEvent<SVGElement>) => void;
-  style?: React.CSSProperties;
-  textColor: string;
-  treemapId?: string;
-  url: string;
-  value: string;
-  xScaleFunction?: ScaleLinear<number, number>;
-  yScaleFunction?: ScaleLinear<number, number>;
-  paddingInner: number;
+  bgColor: string
+  borderColor: string
+  className?: string
+  hasChildren: boolean
+  hideNumberOfChildren?: boolean
+  id: number
+  isSelectedNode: boolean
+  label: string
+  nodeTotalNodes: number
+  numberOfChildrenPlacement: NumberOfChildrenPlacement
+  onClick?: (ev?: React.MouseEvent<SVGElement>) => void
+  style?: React.CSSProperties
+  textColor: string
+  treemapId?: string
+  url: string
+  value: string
+  xScaleFunction?: ScaleLinear<number, number>
+  yScaleFunction?: ScaleLinear<number, number>
+  paddingInner: number
   splitRegExp?: RegExp
 }
 
@@ -68,51 +66,51 @@ const Node: React.FunctionComponent<NodeProps> = ({
   paddingInner,
   splitRegExp,
 }) => {
-  const currentXTranslated = Math.max(0, xScaleFunction(x0) + paddingInner);
-  const currentYTranslated = Math.max(0, yScaleFunction(y0) + paddingInner);
+  const currentXTranslated = Math.max(0, xScaleFunction(x0) + paddingInner)
+  const currentYTranslated = Math.max(0, yScaleFunction(y0) + paddingInner)
   const currentWidth = Math.max(
     0,
     xScaleFunction(x1) - xScaleFunction(x0) - paddingInner
-  );
+  )
   const currentHeight = Math.max(
     0,
     yScaleFunction(y1) - yScaleFunction(y0) - paddingInner
-  );
+  )
 
   const cursor =
-    hasChildren === true && isSelectedNode === false ? "pointer" : "auto";
+    hasChildren === true && isSelectedNode === false ? "pointer" : "auto"
 
-  const fontSize = Number(style.fontSize);
+  const fontSize = Number(style.fontSize)
   const itemsWidth = getNumberItemsWidthByNumberOfChars(
     fontSize,
     nodeTotalNodes.toString().length
-  );
-  const showNumberOfItems = !hideNumberOfChildren && hasChildren;
+  )
+  const showNumberOfItems = !hideNumberOfChildren && hasChildren
 
   const paddedCurrentWidth =
     currentWidth -
     (Number(style.paddingLeft) || 0) -
-    (Number(style.paddingRight) || 4);
+    (Number(style.paddingRight) || 4)
   const clipWidth = Math.max(
     0,
     showNumberOfItems &&
       numberOfChildrenPlacement === NumberOfChildrenPlacement.TopRight
       ? paddedCurrentWidth - itemsWidth
       : paddedCurrentWidth
-  );
+  )
 
-  const { hideTooltip, showTooltip, disableTooltip } = useTooltip();
+  const { hideTooltip, showTooltip, disableTooltip } = useTooltip()
 
   const handleMouseMove = React.useCallback(
     (ev: React.MouseEvent) => {
-      showTooltip(<Tooltip label={label} value={value} />, ev);
+      showTooltip(<Tooltip label={label} value={value} />, ev)
     },
-    [showTooltip]
-  );
+    [label, showTooltip, value]
+  )
 
   const handleMouseLeave = React.useCallback(() => {
-    hideTooltip();
-  }, [hideTooltip]);
+    hideTooltip()
+  }, [hideTooltip])
 
   return (
     <g
@@ -142,6 +140,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
         className={classnames({ Node__link: !!url })}
         href={url}
         target="_blank"
+        rel="noreferrer"
       >
         <text
           clipPath={`url(#clip-${treemapId}-${id})`}
@@ -180,7 +179,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
         />
       )}
     </g>
-  );
-};
+  )
+}
 
-export default Node;
+export default Node

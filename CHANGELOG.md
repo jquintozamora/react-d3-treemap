@@ -1,10 +1,19 @@
+## 2.0.0 (2024-11-14)
+
+- Migrate to Functional Components
+- remove `onTreeMapDidMount` from api
+- replace last params for `onZoom`, before was breadcrumbItems and now is currentNode: CustomHierarchyRectangularNode<TreeMapInputData>
+
 ## 1.0.29 (2021-09-27)
+
 - Bump major versions for dependencies
 
 ## 1.0.28 (2021-08-03)
+
 - Configure breaking words RegExp via `splitRegExp` prop
 
 ## 1.0.27 (2021-03-31)
+
 - Solve issue breaking down word by using "-"
 - Expose `paddingOuter`
 - Refactor padding inner solving issue displaying level 4
@@ -120,14 +129,13 @@
   - Can be called via ref:
 
     ```ts
-    const treeMapRef: React.RefObject<TreeMap<TreeMapInPutData>>;
-
-    <TreeMap<TreeMapInPutData>
+    const treeMapRef: React.RefObject<TreeMap<TreeMapInPutData>>
+    ;<TreeMap<TreeMapInPutData>
       ref={treeMapRef}
       //...
-    />;
+    />
 
-    treeMapRef.current.resetZoom();
+    treeMapRef.current.resetZoom()
     ```
 
 - Refactor node count label in the corner to allow rounded corner

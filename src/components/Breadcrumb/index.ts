@@ -1,5 +1,5 @@
 export {
   Breadcrumb as default,
-  IBreadcrumbItem,
-  IBreadcrumbProps
+  BreadcrumbItem,
+  BreadcrumbProps
 } from "./Breadcrumb";

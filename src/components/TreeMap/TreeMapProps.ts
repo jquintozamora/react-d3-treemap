@@ -1,10 +1,9 @@
 import { ScaleSequential } from "d3-scale";
-import TreeMap from "../TreeMap";
-import { IBreadcrumbItem } from "../Breadcrumb";
 import { NumberOfChildrenPlacement } from "../Node";
 import { TooltipPlacement } from "../Tooltip/types";
+import { BaseTreeMapInPutData, CustomHierarchyRectangularNode } from "./TreeMap";
 
-export interface ITreeMapProps<TreeMapInputData> {
+export interface TreeMapProps<TreeMapInputData extends BaseTreeMapInPutData> {
   /**
    * TreeMap id, will be use for create customId for each node
    */
@@ -150,13 +149,8 @@ export interface ITreeMapProps<TreeMapInputData> {
   onZoom?: (
     zoomLevel: number,
     zoomId: number,
-    breadcrumbItems: IBreadcrumbItem[]
+    currentNode: CustomHierarchyRectangularNode<TreeMapInputData>
   ) => void;
-
-  /**
-   * Triggers when TreeMap is mounted
-   */
-  onTreeMapDidMount?: (treeMap: TreeMap<TreeMapInputData>) => void;
 
   /**
    * Indicates where to place NumberOfChildren box

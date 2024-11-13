@@ -1,22 +1,22 @@
-import * as React from "react";
+import * as React from "react"
 
-export interface ITooltipContext {
-  showTooltip: (content: React.ReactNode, event: React.MouseEvent) => void;
-  hideTooltip: () => void;
-  tooltipClassName?: string;
-  disableTooltip: boolean;
+export interface TooltipContextValue {
+  showTooltip: (content: React.ReactNode, event: React.MouseEvent) => void
+  hideTooltip: () => void
+  tooltipClassName?: string
+  disableTooltip: boolean
 }
 
-const defaultValues: ITooltipContext = {
+const defaultValues: TooltipContextValue = {
   showTooltip: () => {
-    throw new Error("TooltipContext not initalized");
+    throw new Error("TooltipContext not initalized")
   },
   hideTooltip: () => {
-    throw new Error("TooltipContext not initalized");
+    throw new Error("TooltipContext not initalized")
   },
   disableTooltip: false,
-};
+}
 
-const TooltipContext = React.createContext<ITooltipContext>(defaultValues);
+const TooltipContext = React.createContext<TooltipContextValue>(defaultValues)
 
-export default TooltipContext;
+export default TooltipContext

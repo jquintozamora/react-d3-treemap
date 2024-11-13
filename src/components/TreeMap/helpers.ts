@@ -1,7 +1,7 @@
 import { CustomHierarchyRectangularNode } from "./TreeMap";
 import { rgb } from "d3-color";
 import { ScaleSequential } from "d3-scale";
-import { ColorModel } from "./ITreeMapProps";
+import { ColorModel } from "./TreeMapProps";
 import { extent } from "d3-array";
 import { format } from "d3-format";
 

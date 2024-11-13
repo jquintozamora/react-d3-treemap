@@ -1,16 +1,16 @@
-import "./Tooltip.css";
+import "./Tooltip.css"
 
-import * as React from "react";
+import * as React from "react"
 
-import useTooltip from "./useTooltip";
+import useTooltip from "./useTooltip"
 
 interface TooltipProps {
-  label: React.ReactNode;
-  value?: number | string | Date;
+  label: React.ReactNode
+  value?: number | string | Date
 }
 
-export const Tooltip = React.memo<TooltipProps>(({ label, value }) => {
-  const { tooltipClassName } = useTooltip();
+export const Tooltip = ({ label, value }: TooltipProps) => {
+  const { tooltipClassName } = useTooltip()
   return (
     <div className={tooltipClassName}>
       <div className="TreeMap__tooltip">
@@ -24,5 +24,5 @@ export const Tooltip = React.memo<TooltipProps>(({ label, value }) => {
         )}
       </div>
     </div>
-  );
-});
+  )
+}

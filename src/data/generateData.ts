@@ -1,3 +1,5 @@
+import { TreeMapInPutData } from "../App/App";
+
 const randomName = (maxChars = 50) => {
   const allowedChars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_/.-";
@@ -11,7 +13,7 @@ const randomNumber = (low = 5, high = 15) => {
 };
 
 export const generateData = (level = 1, maxLevels = 4) => {
-  const dataObj: { children?: unknown, value?: number, name: string } = {
+  const dataObj: TreeMapInPutData = {
     name: randomName(level * 10),
   };
   if (level <= maxLevels) {

@@ -31,9 +31,9 @@ npm install --save react-d3-treemap
 ### 2. Import and use in your application
 
 ```js
-import TreeMap from "react-d3-treemap";
+import TreeMap from "react-d3-treemap"
 // Include its styles in you build process as well
-import "react-d3-treemap/dist/react.d3.treemap.css";
+import "react-d3-treemap/dist/react.d3.treemap.css"
 ```
 
 ### 3. Usage
@@ -198,13 +198,8 @@ interface TreeMapInPutData {
   onZoom?: (
     zoomLevel: number,
     zoomId: number,
-    breadcrumbItems: IBreadcrumbItem[]
+    currentNode: CustomHierarchyRectangularNode<TreeMapInputData>
   ) => void;
-
-  /**
-   * Triggers when TreeMap is mounted
-   */
-  onTreeMapDidMount?: (treeMap: TreeMap<TreeMapInputData>) => void;
 
   /**
    * Indicates where to place NumberOfChildren box
