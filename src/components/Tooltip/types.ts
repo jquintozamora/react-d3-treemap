@@ -6,6 +6,6 @@ export type TooltipPlacement =
   | "bottomRight"
   | "bottomLeft"
   | "right"
-  | "left";
+  | "left"
 
-export type TooltipPosition = [number, number];
+export type TooltipPosition = [number, number]

@@ -1,23 +1,23 @@
-import { ScaleSequential } from "d3-scale";
-import { NumberOfChildrenPlacement } from "../Node";
-import { TooltipPlacement } from "../Tooltip/types";
-import { BaseTreeMapInPutData, CustomHierarchyRectangularNode } from "./TreeMap";
+import { ScaleSequential } from "d3-scale"
+import { NumberOfChildrenPlacement } from "../Node"
+import { TooltipPlacement } from "../Tooltip/types"
+import { BaseTreeMapInPutData, CustomHierarchyRectangularNode } from "./TreeMap"
 
 export interface TreeMapProps<TreeMapInputData extends BaseTreeMapInPutData> {
   /**
    * TreeMap id, will be use for create customId for each node
    */
-  id: string;
+  id: string
 
   /**
    * TreeMap width
    */
-  width: number;
+  width: number
 
   /**
    * TreeMap height
    */
-  height: number;
+  height: number
 
   /**
    * TreeMap data. Normally should have at least name, value and children.
@@ -30,18 +30,18 @@ export interface TreeMapProps<TreeMapInputData extends BaseTreeMapInPutData> {
    *      className?: string;
    *  }
    */
-  data: TreeMapInputData;
+  data: TreeMapInputData
 
   /*
         Unit for values. For example MB
     */
-  valueUnit?: string;
+  valueUnit?: string
 
   /*
    * Format for the values
    * https://github.com/d3/d3-format#format
    */
-  valueFormat?: string;
+  valueFormat?: string
 
   /**
    * Hide breadcrumb.
@@ -49,7 +49,7 @@ export interface TreeMapProps<TreeMapInputData extends BaseTreeMapInPutData> {
    * If you app doesn't use breadcrumb, you can pass down a ref
    * and use the methods: zoomOut, resetZoom
    */
-  disableBreadcrumb?: boolean;
+  disableBreadcrumb?: boolean
 
   /**
    * There are few color strategies for nodes:
@@ -58,90 +58,90 @@ export interface TreeMapProps<TreeMapInputData extends BaseTreeMapInPutData> {
    *    NumberOfChildren: different color depends on how many children node has
    *    OneEachChildren: one color per each top children, then range of colors from white to that one
    */
-  colorModel?: ColorModel;
+  colorModel?: ColorModel
 
   /**
    * Don't show the top right corner box indicating number of children
    */
-  hideNumberOfChildren?: boolean;
+  hideNumberOfChildren?: boolean
 
   /**
    * Don't show the value
    */
-  hideValue?: boolean;
+  hideValue?: boolean
 
   /**
    * Overrides top div main class
    */
-  className?: string;
+  className?: string
 
   /**
    * Overrides svg class
    */
-  svgClassName?: string;
+  svgClassName?: string
 
   /**
    * Overrides node class
    */
-  nodeClassName?: string;
+  nodeClassName?: string
 
   /**
    * Overrides breadcrumb class
    */
-  breadCrumbClassName?: string;
+  breadCrumbClassName?: string
 
   /**
    * Overrides svg style
    */
-  svgStyle?: React.CSSProperties;
+  svgStyle?: React.CSSProperties
 
   /**
    * Overrides node style
    */
-  nodeStyle?: React.CSSProperties;
+  nodeStyle?: React.CSSProperties
 
   /**
    * Padding out of the nodes ( calculated by D3 )
    */
-  paddingOuter?: number;
+  paddingOuter?: number
 
   /**
    * Padding between nodes ( calculated by D3 )
    */
-  paddingInner?: number;
+  paddingInner?: number
 
   /**
    * Custom ScaleSequential from D3
    */
-  customD3ColorScale?: ScaleSequential<string>;
+  customD3ColorScale?: ScaleSequential<string>
 
   /**
    * Name for the property `name` included in data
    *
    * @default "name"
    */
-  namePropInData?: string;
+  namePropInData?: string
 
   /**
    * Name for the property `link` included in data
    *
    * @default "link"
    */
-  linkPropInData?: string;
+  linkPropInData?: string
 
   /**
    * Name for the property `value` included in data
    *
    * @default "value"
    */
-  valuePropInData?: string;
+  valuePropInData?: string
 
   /**
    * Name for the property `children` included in data
    *
    * @default "children"
    */
-  childrenPropInData?: string;
+  childrenPropInData?: string
 
   /**
    * Captures on zoom event
@@ -150,88 +150,88 @@ export interface TreeMapProps<TreeMapInputData extends BaseTreeMapInPutData> {
     zoomLevel: number,
     zoomId: number,
     currentNode: CustomHierarchyRectangularNode<TreeMapInputData>
-  ) => void;
+  ) => void
 
   /**
    * Indicates where to place NumberOfChildren box
    *
    * @default NumberOfChildrenPlacement.BottomRight
    */
-  numberOfChildrenPlacement: NumberOfChildrenPlacement;
+  numberOfChildrenPlacement: NumberOfChildrenPlacement
 
   /**
    * Color for text and children counter when background is dark
    *
    * @default white
    */
-  darkNodeTextColor?: string;
+  darkNodeTextColor?: string
 
   /**
    * Color for node border when background is dark
    *
    * @default white
    */
-  darkNodeBorderColor?: string;
+  darkNodeBorderColor?: string
 
   /**
    * Color for text and children counter when background is light
    *
    * @default black
    */
-  lightNodeTextColor?: string;
+  lightNodeTextColor?: string
 
   /**
    * Color for node border when background is dark
    *
    * @default black
    */
-  lightNodeBorderColor?: string;
+  lightNodeBorderColor?: string
 
   /**
    * Override value text for node
    */
-  valueFn?: (value: number) => string;
+  valueFn?: (value: number) => string
 
   /**
    * Tooltip placement. If none is specified then is automatic depending on
    * the quadrant of the treeMap
    */
-  tooltipPlacement?: TooltipPlacement;
+  tooltipPlacement?: TooltipPlacement
 
   /**
    * Tooltip custom css class
    */
-  tooltipClassName?: string;
+  tooltipClassName?: string
 
   /**
    * Disable custom tooltip
    *
    * @default false
    */
-  disableTooltip?: boolean;
+  disableTooltip?: boolean
 
   /**
    * Tooltip offset X
    *
    * @default 0
    */
-  tooltipOffsetX?: number;
+  tooltipOffsetX?: number
 
   /**
    * Tooltip offset Y
    *
    * @default 0
    */
-  tooltipOffsetY?: number;
+  tooltipOffsetY?: number
 
   /**
    * Number of levels to display in TreeMap
    *
    * @default 1
    */
-  levelsToDisplay?: number;
+  levelsToDisplay?: number
 
-  splitRegExp?: RegExp;
+  splitRegExp?: RegExp
 }
 
 export enum ColorModel {

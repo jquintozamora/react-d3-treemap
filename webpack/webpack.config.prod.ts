@@ -1,6 +1,6 @@
 import { resolve } from "path"
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import webpack from 'webpack'
+import MiniCssExtractPlugin from "mini-css-extract-plugin"
+import webpack from "webpack"
 
 const config: webpack.Configuration = {
   devtool: "source-map",
@@ -69,6 +69,6 @@ const config: webpack.Configuration = {
       },
     ],
   },
-};
+}
 
-export default config;
+export default config

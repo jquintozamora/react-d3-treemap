@@ -38,7 +38,7 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
             valueFn={(value: number) => {
               return `${value.toString().charAt(0)} min`
             }}
-            levelsToDisplay={2}
+            // levelsToDisplay={2}
             // tooltipOffsetY={25}
             // tooltipClassName="MyCustomTooltip"
             // tooltipPlacement="top"

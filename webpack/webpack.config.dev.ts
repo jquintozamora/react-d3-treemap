@@ -1,12 +1,12 @@
 import { paths } from "./common-paths"
-import webpack from 'webpack'
+import webpack from "webpack"
 import HtmlWebpackPlugin from "html-webpack-plugin"
 
 // in case you run into any typescript error when configuring `devServer`
-import 'webpack-dev-server';
+import "webpack-dev-server"
 
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
-const host = process.env.HOST || "localhost";
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000
+const host = process.env.HOST || "localhost"
 
 const config: webpack.Configuration = {
   mode: "development",
@@ -84,6 +84,6 @@ const config: webpack.Configuration = {
       },
     ],
   },
-};
+}
 
-export default config;
+export default config
