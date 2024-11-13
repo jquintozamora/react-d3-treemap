@@ -1,45 +1,67 @@
-import "./Breadcrumb.css";
+import "./Breadcrumb.css"
 
-import * as React from "react";
-import classnames from "classnames";
+import * as React from "react"
+import classnames from "classnames"
+import { getTopParent } from "../TreeMap/helpers"
+import {
+  BaseTreeMapInPutData,
+  CustomHierarchyRectangularNode,
+} from "../TreeMap/TreeMap"
 
-export interface IBreadcrumbProps {
+export interface BreadcrumbProps<TreeMapInputData> {
   /**
    * Collection of breadcrumbs to render
    */
-  items: IBreadcrumbItem[];
-  className?: string;
+  selectedNode: CustomHierarchyRectangularNode<TreeMapInputData>
+  className?: string
+  zoomTo: (nodeId: number) => void
+  initialBreadcrumbItem: BreadcrumbItem
 }
 
-export interface IBreadcrumbItem {
+export interface BreadcrumbItem {
   /**
    * Text to display to the user for the breadcrumb
    */
-  text: string;
+  text: string
   /**
    * Arbitrary unique string associated with the breadcrumb
    */
-  key: number;
+  key: number
   /**
    * Callback issued when the breadcrumb is selected.
    */
-  onClick?: (
-    ev?: React.MouseEvent<HTMLElement>,
-    item?: IBreadcrumbItem
-  ) => void;
+  onClick?: (ev?: React.MouseEvent<HTMLElement>, item?: BreadcrumbItem) => void
 }
 
-export const Breadcrumb: React.FunctionComponent<IBreadcrumbProps> = ({
+export const Breadcrumb = <TreeMapInputData extends BaseTreeMapInPutData>({
   className,
-  items
-}) => {
-  if (!items) {
-    return null;
-  }
+  selectedNode,
+  zoomTo,
+  initialBreadcrumbItem,
+}: BreadcrumbProps<TreeMapInputData>) => {
+  const items = getTopParent(selectedNode)
+    .path(selectedNode)
+    .map(
+      ({
+        data,
+        customId,
+      }: CustomHierarchyRectangularNode<TreeMapInputData>) => {
+        return {
+          text: data["name"],
+          key: customId,
+          onClick:
+            customId !== selectedNode.customId
+              ? () => zoomTo(Number(customId))
+              : undefined,
+        }
+      }
+    )
+
+  const itemsFinal = items && items.length ? items : [initialBreadcrumbItem]
 
   return (
     <div className={classnames("TreeMap__breadcrumb", className)}>
-      {items.map((item: IBreadcrumbItem, index: number) => (
+      {itemsFinal.map((item: BreadcrumbItem, index: number) => (
         <div key={index}>
           <a
             className="TreeMap__breadcrumbItem"
@@ -50,11 +72,11 @@ export const Breadcrumb: React.FunctionComponent<IBreadcrumbProps> = ({
           >
             {item.text}
           </a>
-          {index < items.length - 1 ? (
+          {index < itemsFinal.length - 1 ? (
             <span className="TreeMap__breadcrumbSeparator">/</span>
           ) : null}
         </div>
       ))}
     </div>
-  );
-};
+  )
+}

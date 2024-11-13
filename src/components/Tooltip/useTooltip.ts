@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import TooltipContext, { ITooltipContext } from "./TooltipContext";
+import TooltipContext, { TooltipContextValue } from "./TooltipContext";
 
-const useTooltip = (): ITooltipContext => {
+const useTooltip = (): TooltipContextValue => {
   return React.useContext(TooltipContext);
 };
 

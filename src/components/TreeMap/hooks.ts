@@ -1,5 +1,6 @@
 import { treemap, hierarchy, treemapSquarify } from "d3-hierarchy";
 import { CustomHierarchyRectangularNode } from "./TreeMap";
+import React from "react";
 
 interface TreeMapContext<TreeMapInputData> {
   width: number;
@@ -9,7 +10,6 @@ interface TreeMapContext<TreeMapInputData> {
   paddingOuter: number;
 }
 
-// Todo. useMemo once TreeMap is refactored to functional component
 export const useTreeMap = <TreeMapInputData>({
   width,
   height,
@@ -17,39 +17,42 @@ export const useTreeMap = <TreeMapInputData>({
   valuePropInData,
   paddingOuter,
 }: TreeMapContext<TreeMapInputData>): CustomHierarchyRectangularNode<TreeMapInputData> => {
-  const d3TreeMap = treemap<TreeMapInputData>()
-    .tile(treemapSquarify.ratio(1))
-    .size([width, height])
-    .round(true)
-    .paddingOuter((node) => {
-      if (node.depth > 2) {
-        return 1;
-      }
-      if (node.depth > 1) {
-        return 2;
-      }
-      return paddingOuter;
-    })
-    .paddingTop((node) => {
-      if (node.depth > 2) {
-        return 3;
-      }
-      if (node.depth > 1) {
-        return 7;
-      }
-      return 19;
-    })(
-    hierarchy(data)
-      .sum((s) => s[valuePropInData])
-      .sort((a, b) => b[valuePropInData] - a[valuePropInData])
-  );
+  const nodes = React.useMemo(() => {
+    const d3TreeMap = treemap<TreeMapInputData>()
+      .tile(treemapSquarify.ratio(1))
+      .size([width, height])
+      .round(true)
+      .paddingOuter((node) => {
+        if (node.depth > 2) {
+          return 1;
+        }
+        if (node.depth > 1) {
+          return 2;
+        }
+        return paddingOuter;
+      })
+      .paddingTop((node) => {
+        if (node.depth > 2) {
+          return 3;
+        }
+        if (node.depth > 1) {
+          return 7;
+        }
+        return 19;
+      })(
+        hierarchy(data)
+          .sum((s) => s[valuePropInData])
+          .sort((a, b) => b[valuePropInData] - a[valuePropInData])
+      );
 
-  let numberItemId = 0;
-  const customNodes = d3TreeMap.each(
-    (item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
-      item.customId = numberItemId++;
-    }
-  ) as CustomHierarchyRectangularNode<TreeMapInputData>;
+    let numberItemId = 0;
+    return d3TreeMap.each(
+      (item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
+        item.customId = numberItemId++;
+      }
+    ) as CustomHierarchyRectangularNode<TreeMapInputData>;
 
-  return customNodes;
+  }, [data, height, paddingOuter, valuePropInData, width])
+
+  return nodes;
 };

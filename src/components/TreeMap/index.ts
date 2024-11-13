@@ -1,2 +1,2 @@
 export { default } from "./TreeMap"
-export { ITreeMapProps, ColorModel } from "./ITreeMapProps"
+export { TreeMapProps as ITreeMapProps, TreeMapProps, ColorModel } from "./TreeMapProps"
