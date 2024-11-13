@@ -1,8 +1,8 @@
 // @ts-check
-import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
-import react from "eslint-plugin-react";
-import hooksPlugin from "eslint-plugin-react-hooks";
+import eslint from "@eslint/js"
+import tseslint from "typescript-eslint"
+import react from "eslint-plugin-react"
+import hooksPlugin from "eslint-plugin-react-hooks"
 
 export default [
   eslint.configs.recommended,
@@ -35,7 +35,7 @@ export default [
       "react/self-closing-comp": "error",
     },
   },
-];
+]
 
 // export default tseslint.config(
 //   eslint.configs.recommended,

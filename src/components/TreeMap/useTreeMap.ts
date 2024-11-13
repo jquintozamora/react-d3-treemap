@@ -1,13 +1,13 @@
-import { treemap, hierarchy, treemapSquarify } from "d3-hierarchy";
-import { CustomHierarchyRectangularNode } from "./TreeMap";
-import React from "react";
+import { treemap, hierarchy, treemapSquarify } from "d3-hierarchy"
+import { CustomHierarchyRectangularNode } from "./TreeMap"
+import React from "react"
 
 interface TreeMapContext<TreeMapInputData> {
-  width: number;
-  height: number;
-  data: TreeMapInputData;
-  valuePropInData: string;
-  paddingOuter: number;
+  width: number
+  height: number
+  data: TreeMapInputData
+  valuePropInData: string
+  paddingOuter: number
 }
 
 export const useTreeMap = <TreeMapInputData>({
@@ -24,35 +24,34 @@ export const useTreeMap = <TreeMapInputData>({
       .round(true)
       .paddingOuter((node) => {
         if (node.depth > 2) {
-          return 1;
+          return 1
         }
         if (node.depth > 1) {
-          return 2;
+          return 2
         }
-        return paddingOuter;
+        return paddingOuter
       })
       .paddingTop((node) => {
         if (node.depth > 2) {
-          return 3;
+          return 3
         }
         if (node.depth > 1) {
-          return 7;
+          return 7
         }
-        return 19;
+        return 19
       })(
-        hierarchy(data)
-          .sum((s) => s[valuePropInData])
-          .sort((a, b) => b[valuePropInData] - a[valuePropInData])
-      );
+      hierarchy(data)
+        .sum((s) => s[valuePropInData])
+        .sort((a, b) => b[valuePropInData] - a[valuePropInData])
+    )
 
-    let numberItemId = 0;
+    let numberItemId = 0
     return d3TreeMap.each(
       (item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
-        item.customId = numberItemId++;
+        item.customId = numberItemId++
       }
-    ) as CustomHierarchyRectangularNode<TreeMapInputData>;
-
+    ) as CustomHierarchyRectangularNode<TreeMapInputData>
   }, [data, height, paddingOuter, valuePropInData, width])
 
-  return nodes;
-};
+  return nodes
+}

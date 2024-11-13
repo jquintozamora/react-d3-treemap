@@ -4,20 +4,13 @@ import classnames from "classnames"
 import { HierarchyRectangularNode } from "d3-hierarchy"
 import { scaleLinear, scaleSequential } from "d3-scale"
 import { interpolateSpectral } from "d3-scale-chromatic"
-import { interpolateHcl } from "d3-interpolate"
 
 import Node, { NumberOfChildrenPlacement } from "../Node"
 import Breadcrumb from "../Breadcrumb"
 import { TreeMapProps, ColorModel } from "./TreeMapProps"
 import TooltipProvider from "../Tooltip/TooltipProvider"
-import {
-  getColorDomainFn,
-  getHighContrastColorFromString,
-  getTopParent,
-  getTopSubParentId,
-  getValueFormatFn,
-} from "./helpers"
-import { useTreeMap } from "./hooks"
+import { getColorsFromNode, getTopParent, getValueFormatFn } from "./helpers"
+import { useTreeMap } from "./useTreeMap"
 
 export interface BaseTreeMapInPutData {
   name: string
@@ -103,86 +96,6 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     [onZoom, selectedNode]
   )
 
-  const handleNodeZoom = React.useCallback(
-    (ev: React.MouseEvent<SVGElement>) => {
-      zoomTo(parseInt(ev.currentTarget.id))
-    },
-    [zoomTo]
-  )
-
-  const getColorsFromNode = React.useCallback(
-    (
-      node: CustomHierarchyRectangularNode<TreeMapInputData>,
-      nodeTotalNodes: number,
-      darkNodeTextColor,
-      darkNodeBorderColor,
-      lightNodeTextColor,
-      lightNodeBorderColor
-    ) => {
-      const colorDomainFn = getColorDomainFn(
-        getTopParent(node),
-        data,
-        colorModel,
-        childrenPropInData,
-        valuePropInData,
-        customD3ColorScale
-      )
-
-      let backgroundColor
-      switch (colorModel) {
-        case ColorModel.Depth:
-          backgroundColor = colorDomainFn(node.depth)
-          if (node.parent === null) {
-            backgroundColor = colorDomainFn(0)
-          }
-          break
-        case ColorModel.Value:
-          backgroundColor = colorDomainFn(node[valuePropInData])
-          if (node.parent === null) {
-            backgroundColor = colorDomainFn(1)
-          }
-          break
-        case ColorModel.NumberOfChildren:
-          backgroundColor = colorDomainFn(nodeTotalNodes)
-          if (node.parent === null) {
-            backgroundColor = colorDomainFn(1)
-          }
-          break
-        case ColorModel.OneEachChildren: {
-          const originalBackgroundColor = colorDomainFn(
-            getTopSubParentId<TreeMapInputData>(node)
-          )
-          if (node.depth > 1) {
-            backgroundColor = scaleLinear<string>()
-              .domain([0, node && node.children ? node.children.length : 0])
-              .interpolate(interpolateHcl)
-              .range(["white", originalBackgroundColor])(
-              getTopSubParentId<TreeMapInputData>(node)
-            )
-          } else {
-            backgroundColor = originalBackgroundColor
-          }
-          if (node.parent === null) {
-            backgroundColor = colorDomainFn(0)
-          }
-        }
-      }
-
-      return {
-        bgColor: backgroundColor,
-        textColor:
-          getHighContrastColorFromString(backgroundColor) === "dark"
-            ? darkNodeTextColor
-            : lightNodeTextColor,
-        borderColor:
-          getHighContrastColorFromString(backgroundColor) === "dark"
-            ? darkNodeBorderColor
-            : lightNodeBorderColor,
-      }
-    },
-    [childrenPropInData, colorModel, customD3ColorScale, data, valuePropInData]
-  )
-
   const renderNode = React.useCallback(
     (node: CustomHierarchyRectangularNode<TreeMapInputData>) => {
       const { customId, data, x0, x1, y0, y1 } = node
@@ -208,14 +121,21 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
 
       const nodeTotalNodes = node.descendants().length - 1
 
-      const { bgColor, textColor, borderColor } = getColorsFromNode(
+      const { bgColor, textColor, borderColor } = getColorsFromNode({
         node,
+        childrenPropInData,
+        data,
+        colorModel,
+        customD3ColorScale,
+        valuePropInData,
         nodeTotalNodes,
-        darkNodeTextColor,
-        darkNodeBorderColor,
-        lightNodeTextColor,
-        lightNodeBorderColor
-      )
+        defaultColors: {
+          darkNodeTextColor,
+          darkNodeBorderColor,
+          lightNodeTextColor,
+          lightNodeBorderColor,
+        },
+      })
 
       const isSelectedNode = customId === selectedNode.customId
 
@@ -246,7 +166,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
           key={customId}
           label={name}
           nodeTotalNodes={nodeTotalNodes}
-          onClick={!isSelectedNode ? handleNodeZoom : undefined}
+          onClick={!isSelectedNode ? () => zoomTo(customId) : undefined}
           treemapId={id}
           url={url}
           value={!hideValue && formattedValue}
@@ -264,10 +184,10 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     },
     [
       childrenPropInData,
+      colorModel,
+      customD3ColorScale,
       darkNodeBorderColor,
       darkNodeTextColor,
-      getColorsFromNode,
-      handleNodeZoom,
       height,
       hideNumberOfChildren,
       hideValue,
@@ -280,13 +200,18 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
       nodeStyle,
       numberOfChildrenPlacement,
       paddingInner,
-      selectedNode,
+      selectedNode.customId,
+      selectedNode.x0,
+      selectedNode.x1,
+      selectedNode.y0,
+      selectedNode.y1,
       splitRegExp,
       valueFn,
       valueFormat,
       valuePropInData,
       valueUnit,
       width,
+      zoomTo,
     ]
   )
 
