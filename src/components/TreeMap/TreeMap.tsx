@@ -101,7 +101,6 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
       const name = data[namePropInData]
       const url = data[linkPropInData]
       const nodeClassNameFromData = data["className"]
-
       const hasChildren =
         node[childrenPropInData] && node[childrenPropInData].length > 0
           ? true
@@ -145,7 +144,6 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
         .range([0, height])
         .domain([selectedNode.y0, selectedNode.y1])
 
-      console.log("node", selectedNode)
       return (
         <Node
           bgColor={bgColor}
@@ -168,6 +166,11 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
           label={name}
           nodeTotalNodes={nodeTotalNodes}
           onClick={!isSelectedNode ? () => zoomTo(customId) : undefined}
+          onClickBack={
+            isSelectedNode && node.parent
+              ? () => zoomTo(node.parent.customId)
+              : undefined
+          }
           treemapId={id}
           url={url}
           value={!hideValue && formattedValue}
@@ -253,6 +256,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
             zoomTo={zoomTo}
             initialBreadcrumbItem={{ text: data[namePropInData], key: 0 }}
             className={breadCrumbClassName}
+            namePropInData={namePropInData}
           />
         ) : null}
         <svg
