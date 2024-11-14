@@ -205,15 +205,23 @@ export const getColorsFromNode = <
     }
   }
 
+  const textColor =
+    getHighContrastColorFromString(backgroundColor) === "dark"
+      ? darkNodeTextColor
+      : lightNodeTextColor
+  const borderColor =
+    getHighContrastColorFromString(backgroundColor) === "dark"
+      ? darkNodeBorderColor
+      : lightNodeBorderColor
+  const textColorBorderColorBg =
+    getHighContrastColorFromString(borderColor) === "dark"
+      ? darkNodeTextColor
+      : lightNodeTextColor
+
   return {
     bgColor: backgroundColor,
-    textColor:
-      getHighContrastColorFromString(backgroundColor) === "dark"
-        ? darkNodeTextColor
-        : lightNodeTextColor,
-    borderColor:
-      getHighContrastColorFromString(backgroundColor) === "dark"
-        ? darkNodeBorderColor
-        : lightNodeBorderColor,
+    textColor,
+    borderColor,
+    textColorBorderColorBg,
   }
 }

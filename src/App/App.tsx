@@ -4,8 +4,8 @@ import { scaleSequential } from "d3-scale"
 import * as chromatic from "d3-scale-chromatic"
 
 import * as React from "react"
-// import { data } from "../data/data";
-import { data as generatedData } from "../data/generateData"
+import { data as generatedData } from "../data/data"
+// import { data as generatedData } from "../data/generateData"
 import TreeMap, { ColorModel } from "../components/TreeMap"
 import { NumberOfChildrenPlacement } from "../components/Node"
 import { useMeasure } from "@react-hookz/web"
@@ -36,7 +36,7 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
             className="AppTreeMap"
             nodeClassName="AppTreeMap__node"
             valueFn={(value: number) => {
-              return `${value.toString().charAt(0)} min`
+              return `${value.toString()} pages`
             }}
             // levelsToDisplay={2}
             // tooltipOffsetY={25}
@@ -54,17 +54,18 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
               paddingRight: 5,
             }}
             numberOfChildrenPlacement={NumberOfChildrenPlacement.TopRight}
-            customD3ColorScale={scaleSequential(chromatic.interpolateSpectral)}
-            colorModel={ColorModel.OneEachChildren}
+            customD3ColorScale={scaleSequential(chromatic.interpolateGreens)}
+            // customD3ColorScale={scaleSequential(chromatic.interpolatePuBuGn)}
+            colorModel={ColorModel.Value}
             // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
             // nodeStyle={{fill: "black", stroke: "white"}}
             // disableBreadcrumb={true}
             // hideNumberOfChildren={true}
             // hideValue={true}
-            darkNodeBorderColor="silver"
+            darkNodeBorderColor="white"
+            lightNodeBorderColor="black"
             darkNodeTextColor="white"
-            lightNodeBorderColor="brown"
-            lightNodeTextColor="brown"
+            lightNodeTextColor="black"
             // splitRegExp={/(?=[A-Z][^A-Z])/g}
           />
         ) : null}

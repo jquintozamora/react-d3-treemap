@@ -20,6 +20,8 @@ export interface NodeProps {
 
   bgColor: string
   borderColor: string
+  textColorBorderColorBg: string
+  textColor: string
   className?: string
   hasChildren: boolean
   hideNumberOfChildren?: boolean
@@ -30,7 +32,6 @@ export interface NodeProps {
   numberOfChildrenPlacement: NumberOfChildrenPlacement
   onClick?: (ev?: React.MouseEvent<SVGElement>) => void
   style?: React.CSSProperties
-  textColor: string
   treemapId?: string
   url: string
   value: string
@@ -43,6 +44,7 @@ export interface NodeProps {
 const Node: React.FunctionComponent<NodeProps> = ({
   bgColor,
   borderColor,
+  textColorBorderColorBg,
   className,
   hasChildren,
   hideNumberOfChildren,
@@ -172,7 +174,9 @@ const Node: React.FunctionComponent<NodeProps> = ({
           width={currentWidth}
           height={currentHeight}
           style={style}
-          textColor={textColor}
+          textColor={textColorBorderColorBg}
+          borderColor={borderColor}
+          bgColor={borderColor}
           nodeTotalNodes={nodeTotalNodes}
           isSelectedNode={isSelectedNode}
           placement={numberOfChildrenPlacement}
