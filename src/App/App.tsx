@@ -38,7 +38,6 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
             valueFn={(value: number) => {
               return `${value.toString()} pages`
             }}
-            // levelsToDisplay={2}
             // tooltipOffsetY={25}
             // tooltipClassName="MyCustomTooltip"
             // tooltipPlacement="top"

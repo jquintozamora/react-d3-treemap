@@ -55,7 +55,7 @@ const NumberOfChildren: React.FunctionComponent<NumberOfChildrenProps> = ({
         <rect
           id={`rectNumberItems-${customId}`}
           x={width - itemsWidth}
-          y={0}
+          y={0.5}
           width={itemsWidth}
           height={itemsHeight}
           fill={bgColor}
