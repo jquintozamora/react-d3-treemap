@@ -169,6 +169,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
       >
         <text
           clipPath={`url(#clip-${treemapId}-${id})`}
+          fill={textColor}
           transform={`translate(${
             nodePaddingLeft + backButtonWidth
           },${nodePaddingTop})`}
