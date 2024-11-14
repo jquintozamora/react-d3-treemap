@@ -16,6 +16,7 @@ export interface BreadcrumbProps<TreeMapInputData> {
   className?: string
   zoomTo: (nodeId: number) => void
   initialBreadcrumbItem: BreadcrumbItem
+  namePropInData: string
 }
 
 export interface BreadcrumbItem {
@@ -38,6 +39,7 @@ export const Breadcrumb = <TreeMapInputData extends BaseTreeMapInPutData>({
   selectedNode,
   zoomTo,
   initialBreadcrumbItem,
+  namePropInData,
 }: BreadcrumbProps<TreeMapInputData>) => {
   const items = getTopParent(selectedNode)
     .path(selectedNode)
@@ -47,7 +49,7 @@ export const Breadcrumb = <TreeMapInputData extends BaseTreeMapInPutData>({
         customId,
       }: CustomHierarchyRectangularNode<TreeMapInputData>) => {
         return {
-          text: data["name"],
+          text: data[namePropInData],
           key: customId,
           onClick:
             customId !== selectedNode.customId
