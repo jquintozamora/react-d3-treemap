@@ -6,9 +6,9 @@
   fill: violet;
 }
 
-.AppTreeMap__node {
+/* .AppTreeMap__node {
   rx: 5;
-}
+} */
 
 .AppTreeMap__svg {
   font-family: "Courier New", Courier, monospace;

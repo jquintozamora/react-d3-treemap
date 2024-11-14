@@ -35,8 +35,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     valueFormat = ",d",
     disableBreadcrumb = false,
     colorModel = ColorModel.OneEachChildren,
-    paddingInner = 4,
-    paddingOuter = 4,
+    paddingInner = 0,
     customD3ColorScale = scaleSequential(interpolateSpectral),
     namePropInData = "name",
     linkPropInData = "link",
@@ -72,7 +71,6 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     height,
     data,
     valuePropInData,
-    paddingOuter,
   })
   const [selectedNode, setSelectedNode] = React.useState(topNode)
 
@@ -121,21 +119,22 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
 
       const nodeTotalNodes = node.descendants().length - 1
 
-      const { bgColor, textColor, borderColor } = getColorsFromNode({
-        node,
-        childrenPropInData,
-        data,
-        colorModel,
-        customD3ColorScale,
-        valuePropInData,
-        nodeTotalNodes,
-        defaultColors: {
-          darkNodeTextColor,
-          darkNodeBorderColor,
-          lightNodeTextColor,
-          lightNodeBorderColor,
-        },
-      })
+      const { bgColor, textColor, borderColor, textColorBorderColorBg } =
+        getColorsFromNode({
+          node,
+          childrenPropInData,
+          data,
+          colorModel,
+          customD3ColorScale,
+          valuePropInData,
+          nodeTotalNodes,
+          defaultColors: {
+            darkNodeTextColor,
+            darkNodeBorderColor,
+            lightNodeTextColor,
+            lightNodeBorderColor,
+          },
+        })
 
       const isSelectedNode = customId === selectedNode.customId
 
@@ -146,11 +145,13 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
         .range([0, height])
         .domain([selectedNode.y0, selectedNode.y1])
 
+      console.log("node", selectedNode)
       return (
         <Node
           bgColor={bgColor}
           textColor={textColor}
           borderColor={borderColor}
+          textColorBorderColorBg={textColorBorderColorBg}
           className={classnames(nodeClassName, nodeClassNameFromData)}
           style={{
             fontVariant: "normal",
@@ -200,11 +201,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
       nodeStyle,
       numberOfChildrenPlacement,
       paddingInner,
-      selectedNode.customId,
-      selectedNode.x0,
-      selectedNode.x1,
-      selectedNode.y0,
-      selectedNode.y1,
+      selectedNode,
       splitRegExp,
       valueFn,
       valueFormat,

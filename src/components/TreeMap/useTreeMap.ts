@@ -7,7 +7,6 @@ interface TreeMapContext<TreeMapInputData> {
   height: number
   data: TreeMapInputData
   valuePropInData: string
-  paddingOuter: number
 }
 
 export const useTreeMap = <TreeMapInputData>({
@@ -15,22 +14,12 @@ export const useTreeMap = <TreeMapInputData>({
   height,
   data,
   valuePropInData,
-  paddingOuter,
 }: TreeMapContext<TreeMapInputData>): CustomHierarchyRectangularNode<TreeMapInputData> => {
   const nodes = React.useMemo(() => {
     const d3TreeMap = treemap<TreeMapInputData>()
       .tile(treemapSquarify.ratio(1))
       .size([width, height])
       .round(true)
-      .paddingOuter((node) => {
-        if (node.depth > 2) {
-          return 1
-        }
-        if (node.depth > 1) {
-          return 2
-        }
-        return paddingOuter
-      })
       .paddingTop((node) => {
         if (node.depth > 2) {
           return 3
@@ -51,7 +40,7 @@ export const useTreeMap = <TreeMapInputData>({
         item.customId = numberItemId++
       }
     ) as CustomHierarchyRectangularNode<TreeMapInputData>
-  }, [data, height, paddingOuter, valuePropInData, width])
+  }, [data, height, valuePropInData, width])
 
   return nodes
 }

@@ -1,5 +1,5 @@
-import * as React from "react";
-import { getNumberItemsWidthByNumberOfChars } from "../helpers";
+import * as React from "react"
+import { getNumberItemsWidthByNumberOfChars } from "../helpers"
 
 export enum NumberOfChildrenPlacement {
   TopRight,
@@ -7,14 +7,16 @@ export enum NumberOfChildrenPlacement {
 }
 
 interface NumberOfChildrenProps {
-  customId: number;
-  width: number;
-  height: number;
-  textColor: string;
-  nodeTotalNodes: number;
-  isSelectedNode: boolean;
-  placement: NumberOfChildrenPlacement;
-  style: React.CSSProperties;
+  customId: number
+  width: number
+  height: number
+  textColor: string
+  borderColor: string
+  bgColor: string
+  nodeTotalNodes: number
+  isSelectedNode: boolean
+  placement: NumberOfChildrenPlacement
+  style: React.CSSProperties
 }
 
 const NumberOfChildren: React.FunctionComponent<NumberOfChildrenProps> = ({
@@ -22,6 +24,8 @@ const NumberOfChildren: React.FunctionComponent<NumberOfChildrenProps> = ({
   width,
   height,
   textColor,
+  borderColor,
+  bgColor,
   nodeTotalNodes,
   isSelectedNode,
   placement,
@@ -29,16 +33,16 @@ const NumberOfChildren: React.FunctionComponent<NumberOfChildrenProps> = ({
 }) => {
   const realPlacement = isSelectedNode
     ? NumberOfChildrenPlacement.TopRight
-    : placement;
+    : placement
 
-  const fontSize = Number(style.fontSize);
+  const fontSize = Number(style.fontSize)
   const itemsWidth = getNumberItemsWidthByNumberOfChars(
     fontSize,
     nodeTotalNodes.toString().length
-  );
-  const itemHeightFactor = 2;
-  const itemsHeight = fontSize + itemHeightFactor;
-  const strokeDasharrayTotal = itemsWidth + itemsHeight;
+  )
+  const itemHeightFactor = 2
+  const itemsHeight = fontSize + itemHeightFactor
+  const strokeDasharrayTotal = itemsWidth + itemsHeight
   if (width > itemsWidth && height > itemsHeight) {
     return (
       <g
@@ -54,8 +58,8 @@ const NumberOfChildren: React.FunctionComponent<NumberOfChildrenProps> = ({
           y={0}
           width={itemsWidth}
           height={itemsHeight}
-          fill="none"
-          stroke={textColor}
+          fill={bgColor}
+          stroke={borderColor}
           strokeDasharray={`${
             realPlacement === NumberOfChildrenPlacement.BottomRight
               ? itemsWidth
@@ -77,9 +81,9 @@ const NumberOfChildren: React.FunctionComponent<NumberOfChildrenProps> = ({
           {nodeTotalNodes}
         </text>
       </g>
-    );
+    )
   }
-  return null;
-};
+  return null
+}
 
-export default NumberOfChildren;
+export default NumberOfChildren
