@@ -194,7 +194,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
       </a>
       {showNumberOfItems && (
         <NumberOfChildren
-          customId={id}
+          id={id}
           width={currentWidth}
           height={currentHeight}
           style={style}

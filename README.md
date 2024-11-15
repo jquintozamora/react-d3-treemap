@@ -59,7 +59,7 @@ interface TreeMapInPutData {
 
 ```ts
   /**
-   * TreeMap id, will be use for create customId for each node
+   * TreeMap id, will be use for create a unique for each node
    */
   id: string;
 
@@ -196,9 +196,7 @@ interface TreeMapInPutData {
    * Captures on zoom event
    */
   onZoom?: (
-    zoomLevel: number,
-    zoomId: number,
-    currentNode: CustomHierarchyRectangularNode<TreeMapInputData>
+    currentNode: HierarchyRectangularNode<TreeMapInputData>
   ) => void;
 
   /**

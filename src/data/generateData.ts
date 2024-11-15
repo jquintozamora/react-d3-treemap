@@ -12,8 +12,10 @@ const randomNumber = (low = 5, high = 15) => {
   return Math.floor(Math.random() * (high - low + 1)) + low
 }
 
+let count = 0
 export const generateData = (level = 1, maxLevels = 4) => {
   const dataObj: TreeMapInPutData = {
+    id: count++,
     name: randomName(level * 10),
   }
   if (level <= maxLevels) {
