@@ -23,7 +23,6 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     valueFormat = ",d",
     disableBreadcrumb = false,
     colorModel = ColorModel.OneEachChildren,
-    paddingInner = 0,
     customD3ColorScale = scaleSequential(interpolateSpectral),
     namePropInData = "name",
     linkPropInData = "link",
@@ -52,6 +51,8 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     nodeStyle,
     onZoom,
     valueUnit,
+    paddingOuter = 1,
+    paddingInner = 1,
   } = props
 
   const originalTopNode = React.useMemo<
@@ -63,8 +64,10 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
         height,
         data,
         valuePropInData,
+        paddingOuter,
+        paddingInner,
       }) as HierarchyRectangularNode<TreeMapInputData>,
-    [data, height, valuePropInData, width]
+    [data, height, paddingInner, paddingOuter, valuePropInData, width]
   )
 
   const originalTopNodeColorsLookup = React.useMemo(() => {
@@ -119,13 +122,23 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
             height,
             data: currentNode.data,
             valuePropInData,
+            paddingOuter,
+            paddingInner,
           })
         )
       } else {
         console.warn("No node found for " + currentNode.name)
       }
     },
-    [height, onZoom, originalTopNode, valuePropInData, width]
+    [
+      height,
+      onZoom,
+      originalTopNode,
+      paddingInner,
+      paddingOuter,
+      valuePropInData,
+      width,
+    ]
   )
 
   const renderNode = React.useCallback(
@@ -208,7 +221,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
           y1={y1}
           yScaleFunction={yScaleFunction}
           numberOfChildrenPlacement={numberOfChildrenPlacement}
-          paddingInner={paddingInner}
+          // paddingInner={paddingInner}
           splitRegExp={splitRegExp}
         />
       )
@@ -225,7 +238,6 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
       numberOfChildrenPlacement,
       originalTopNode,
       originalTopNodeColorsLookup,
-      paddingInner,
       selectedNode.data.id,
       selectedNode.x0,
       selectedNode.x1,

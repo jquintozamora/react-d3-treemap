@@ -47,7 +47,8 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
             // disableTooltip={true}
             // valueUnit={"MB"}
             // svgClassName="AppTreeMap__svg"
-            // paddingInner={2}
+            paddingInner={1}
+            paddingOuter={1}
             // onZoom={(level, id, items) => console.log({ level, id, items })}
             nodeStyle={{
               fontSize: 12,
