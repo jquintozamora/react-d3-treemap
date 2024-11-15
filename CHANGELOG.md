@@ -1,4 +1,4 @@
-## 2.0.0 (2024-11-15)
+## 2.0.1 (2024-11-15)
 
 - Migrate State Componets to Functional Components
 - Breaking change: remove `onTreeMapDidMount` from api
