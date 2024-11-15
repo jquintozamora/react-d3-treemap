@@ -24,12 +24,14 @@ export interface TreeMapProps<TreeMapInputData extends BaseTreeMapInPutData> {
    * TreeMap data. Normally should have at least name, value and children.
    *
    * Example:
-   *  interface TreeMapInPutData {
-   *      name: string;
-   *      value?: number;
-   *      children?: Array<TreeMapInPutData>;
-   *      className?: string;
-   *  }
+   * interface TreeMapInPutData {
+   *   id: number
+   *   name: string
+   *   value?: number
+   *   children?: Array<TreeMapInPutData>
+   *   className?: string
+   *   link?: string
+   * }
    */
   data: TreeMapInputData
 
