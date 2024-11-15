@@ -1,6 +1,6 @@
 import * as React from "react"
 import classnames from "classnames"
-import { scaleLinear, scaleSequential } from "d3-scale"
+import { scaleSequential } from "d3-scale"
 import { interpolateSpectral } from "d3-scale-chromatic"
 
 import Node, { NumberOfChildrenPlacement } from "../Node"
@@ -177,13 +177,6 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
         })
         .pop()
 
-      const xScaleFunction = scaleLinear()
-        .range([0, width])
-        .domain([selectedNode.x0, selectedNode.x1])
-      const yScaleFunction = scaleLinear()
-        .range([0, height])
-        .domain([selectedNode.y0, selectedNode.y1])
-
       return (
         <Node
           bgColor={bgColor}
@@ -216,19 +209,15 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
           value={!hideValue && formattedValue}
           x0={x0}
           x1={x1}
-          xScaleFunction={xScaleFunction}
           y0={y0}
           y1={y1}
-          yScaleFunction={yScaleFunction}
           numberOfChildrenPlacement={numberOfChildrenPlacement}
-          // paddingInner={paddingInner}
           splitRegExp={splitRegExp}
         />
       )
     },
     [
       childrenPropInData,
-      height,
       hideNumberOfChildren,
       hideValue,
       linkPropInData,
@@ -239,17 +228,12 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
       originalTopNode,
       originalTopNodeColorsLookup,
       selectedNode.data.id,
-      selectedNode.x0,
-      selectedNode.x1,
-      selectedNode.y0,
-      selectedNode.y1,
       splitRegExp,
       treemapId,
       valueFn,
       valueFormat,
       valuePropInData,
       valueUnit,
-      width,
       zoomTo,
     ]
   )
