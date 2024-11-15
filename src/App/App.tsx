@@ -50,15 +50,15 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
             paddingInner={1}
             paddingOuter={1}
             // onZoom={(level, id, items) => console.log({ level, id, items })}
-            nodeStyle={{
-              fontSize: 12,
-              paddingTop: 2,
-              paddingLeft: 5,
-              paddingRight: 5,
-            }}
+            // nodeStyle={{
+            //   fontSize: 12,
+            //   paddingTop: 2,
+            //   paddingLeft: 5,
+            //   paddingRight: 5,
+            // }}
             // nodeStyle={{fill: "black", stroke: "white"}}
             numberOfChildrenPlacement={NumberOfChildrenPlacement.TopRight}
-            customD3ColorScale={scaleSequential(chromatic.interpolateGreens)}
+            customD3ColorScale={scaleSequential(chromatic.interpolateSpectral)}
             // customD3ColorScale={scaleSequential(chromatic.interpolatePuBuGn)}
             colorModel={ColorModel.Value}
             // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
