@@ -1,7 +1,8 @@
 import { ScaleSequential } from "d3-scale"
 import { NumberOfChildrenPlacement } from "../Node"
 import { TooltipPlacement } from "../Tooltip/types"
-import { BaseTreeMapInPutData, CustomHierarchyRectangularNode } from "./TreeMap"
+import { BaseTreeMapInPutData } from "./types"
+import { HierarchyRectangularNode } from "d3-hierarchy"
 
 export interface TreeMapProps<TreeMapInputData extends BaseTreeMapInPutData> {
   /**
@@ -146,11 +147,7 @@ export interface TreeMapProps<TreeMapInputData extends BaseTreeMapInPutData> {
   /**
    * Captures on zoom event
    */
-  onZoom?: (
-    zoomLevel: number,
-    zoomId: number,
-    currentNode: CustomHierarchyRectangularNode<TreeMapInputData>
-  ) => void
+  onZoom?: (currentNode: HierarchyRectangularNode<TreeMapInputData>) => void
 
   /**
    * Indicates where to place NumberOfChildren box

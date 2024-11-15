@@ -1,27 +1,21 @@
-import { BaseTreeMapInPutData, CustomHierarchyRectangularNode } from "./TreeMap"
 import { rgb } from "d3-color"
 import { ScaleSequential, scaleLinear } from "d3-scale"
 import { ColorModel } from "./TreeMapProps"
 import { extent } from "d3-array"
 import { format } from "d3-format"
 import { interpolateHcl } from "d3-interpolate"
+import { BaseTreeMapInPutData, NodeColors } from "./types"
+import { HierarchyRectangularNode } from "d3-hierarchy"
 
-export const getTopSubParentId = <TreeMapInputData>(
-  node: CustomHierarchyRectangularNode<TreeMapInputData>
+export const getTopSubParentId = <
+  TreeMapInputData extends BaseTreeMapInPutData
+>(
+  node: HierarchyRectangularNode<TreeMapInputData>
 ): number => {
   if (node.parent && node.parent.parent) {
     return getTopSubParentId(node.parent)
   }
-  return node.customId
-}
-
-export const getTopParent = <TreeMapInputData>(
-  node: CustomHierarchyRectangularNode<TreeMapInputData>
-): CustomHierarchyRectangularNode<TreeMapInputData> => {
-  if (node.parent) {
-    return getTopParent(node.parent)
-  }
-  return node
+  return node.data.id
 }
 
 export const getDepth = <TreeMapInputData>(
@@ -87,7 +81,7 @@ export const getValueFormatFn = (
 }
 
 export const getColorDomainFn = <TreeMapInputData>(
-  topNode: CustomHierarchyRectangularNode<TreeMapInputData>,
+  topNode: HierarchyRectangularNode<TreeMapInputData>,
   data: TreeMapInputData,
   colorModel: ColorModel,
   childrenPropInData: string,
@@ -95,7 +89,7 @@ export const getColorDomainFn = <TreeMapInputData>(
   customD3ColorScale: ScaleSequential<string>
 ): ScaleSequential<string> => {
   const nodes = topNode.descendants() as Array<
-    CustomHierarchyRectangularNode<TreeMapInputData>
+    HierarchyRectangularNode<TreeMapInputData>
   >
 
   let d: [number | { valueOf(): number }, number | { valueOf(): number }]
@@ -127,38 +121,32 @@ export const getColorsFromNode = <
   TreeMapInputData extends BaseTreeMapInPutData
 >({
   node,
-  nodeTotalNodes,
-  data,
+  originalTopNode,
   colorModel,
   childrenPropInData,
   valuePropInData,
   customD3ColorScale,
-  defaultColors,
+  darkNodeTextColor,
+  darkNodeBorderColor,
+  lightNodeTextColor,
+  lightNodeBorderColor,
 }: {
-  node: CustomHierarchyRectangularNode<TreeMapInputData>
-  nodeTotalNodes: number
-  data: TreeMapInputData
+  node: HierarchyRectangularNode<TreeMapInputData>
+  originalTopNode: HierarchyRectangularNode<TreeMapInputData>
   colorModel: ColorModel
   childrenPropInData: string
   valuePropInData: string
   customD3ColorScale: ScaleSequential<string>
-  defaultColors: {
-    darkNodeTextColor: string
-    darkNodeBorderColor: string
-    lightNodeTextColor: string
-    lightNodeBorderColor: string
-  }
-}) => {
-  const {
-    darkNodeTextColor,
-    darkNodeBorderColor,
-    lightNodeTextColor,
-    lightNodeBorderColor,
-  } = defaultColors
+  darkNodeTextColor: string
+  darkNodeBorderColor: string
+  lightNodeTextColor: string
+  lightNodeBorderColor: string
+}): NodeColors => {
+  const nodeTotalNodes = node.descendants().length - 1
 
   const colorDomainFn = getColorDomainFn(
-    getTopParent(node),
-    data,
+    originalTopNode,
+    node.data,
     colorModel,
     childrenPropInData,
     valuePropInData,

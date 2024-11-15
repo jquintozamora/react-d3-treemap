@@ -2,7 +2,7 @@
 
 - Migrate to Functional Components
 - remove `onTreeMapDidMount` from api
-- replace last params for `onZoom`, before was breadcrumbItems and now is currentNode: CustomHierarchyRectangularNode<TreeMapInputData>
+- replace last params for `onZoom`, before was breadcrumbItems and now is currentNode: HierarchyRectangularNode<TreeMapInputData>
 
 ## 1.0.29 (2021-09-27)
 

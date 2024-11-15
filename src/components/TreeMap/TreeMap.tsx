@@ -1,7 +1,5 @@
 import * as React from "react"
 import classnames from "classnames"
-
-import { HierarchyRectangularNode } from "d3-hierarchy"
 import { scaleLinear, scaleSequential } from "d3-scale"
 import { interpolateSpectral } from "d3-scale-chromatic"
 
@@ -9,26 +7,16 @@ import Node, { NumberOfChildrenPlacement } from "../Node"
 import Breadcrumb from "../Breadcrumb"
 import { TreeMapProps, ColorModel } from "./TreeMapProps"
 import TooltipProvider from "../Tooltip/TooltipProvider"
-import { getColorsFromNode, getTopParent, getValueFormatFn } from "./helpers"
-import { useTreeMap } from "./useTreeMap"
-
-export interface BaseTreeMapInPutData {
-  name: string
-  value?: number
-  children?: Array<BaseTreeMapInPutData>
-  className?: string
-}
-
-export interface CustomHierarchyRectangularNode<TreeMapInputData>
-  extends HierarchyRectangularNode<TreeMapInputData> {
-  customId: number
-}
+import { getColorsFromNode, getValueFormatFn } from "./helpers"
+import { calculateTreeMap } from "./calculateTreeMap"
+import { BaseTreeMapInPutData, NodeColorsLookup } from "./types"
+import { HierarchyRectangularNode } from "d3-hierarchy"
 
 const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
   props: React.PropsWithChildren<TreeMapProps<TreeMapInputData>>
 ) => {
   const {
-    id = "myTreeMap",
+    id: treemapId = "myTreeMap",
     data = null,
     height = 600,
     width = 600,
@@ -66,38 +54,85 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     valueUnit,
   } = props
 
-  const topNode = useTreeMap({
-    width,
-    height,
-    data,
+  const originalTopNode = React.useMemo<
+    HierarchyRectangularNode<TreeMapInputData>
+  >(
+    () =>
+      calculateTreeMap({
+        width,
+        height,
+        data,
+        valuePropInData,
+      }) as HierarchyRectangularNode<TreeMapInputData>,
+    [data, height, valuePropInData, width]
+  )
+
+  const originalTopNodeColorsLookup = React.useMemo(() => {
+    const lookup: NodeColorsLookup = {}
+    originalTopNode.each((node: HierarchyRectangularNode<TreeMapInputData>) => {
+      lookup[node.data.id] = getColorsFromNode({
+        node,
+        originalTopNode,
+        childrenPropInData,
+        colorModel,
+        customD3ColorScale,
+        valuePropInData,
+        darkNodeTextColor,
+        darkNodeBorderColor,
+        lightNodeTextColor,
+        lightNodeBorderColor,
+      })
+    })
+    return lookup
+  }, [
+    childrenPropInData,
+    colorModel,
+    customD3ColorScale,
+    darkNodeBorderColor,
+    darkNodeTextColor,
+    lightNodeBorderColor,
+    lightNodeTextColor,
+    originalTopNode,
     valuePropInData,
-  })
-  const [selectedNode, setSelectedNode] = React.useState(topNode)
+  ])
+
+  const [selectedNode, setSelectedNode] = React.useState(originalTopNode)
 
   const zoomTo = React.useCallback(
     (nodeId: number) => {
-      const currentNode = getTopParent(selectedNode)
+      // selectedNode is a subtree where parent is null, but nodeId could be any element
+      // for the whole original tree
+      const currentNode = originalTopNode
         .descendants()
-        .filter((item: CustomHierarchyRectangularNode<TreeMapInputData>) => {
-          return item.customId.toString() === nodeId.toString()
+        .filter((item: HierarchyRectangularNode<TreeMapInputData>) => {
+          return item.data.id === nodeId
         })
         .pop()
-      if (currentNode) {
+
+      if (currentNode && "data" in currentNode && currentNode.data) {
         if (onZoom) {
-          onZoom(currentNode.depth, nodeId, currentNode)
+          onZoom(currentNode)
         }
-        setSelectedNode(currentNode)
+        setSelectedNode(
+          calculateTreeMap({
+            width,
+            height,
+            data: currentNode.data,
+            valuePropInData,
+          })
+        )
       } else {
-        console.warn("No node found for " + nodeId)
+        console.warn("No node found for " + currentNode.name)
       }
     },
-    [onZoom, selectedNode]
+    [height, onZoom, originalTopNode, valuePropInData, width]
   )
 
   const renderNode = React.useCallback(
-    (node: CustomHierarchyRectangularNode<TreeMapInputData>) => {
-      const { customId, data, x0, x1, y0, y1 } = node
+    (node: HierarchyRectangularNode<TreeMapInputData>) => {
+      const { data, x0, x1, y0, y1 } = node
 
+      const id = data.id
       const name = data[namePropInData]
       const url = data[linkPropInData]
       const nodeClassNameFromData = data["className"]
@@ -119,23 +154,15 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
       const nodeTotalNodes = node.descendants().length - 1
 
       const { bgColor, textColor, borderColor, textColorBorderColorBg } =
-        getColorsFromNode({
-          node,
-          childrenPropInData,
-          data,
-          colorModel,
-          customD3ColorScale,
-          valuePropInData,
-          nodeTotalNodes,
-          defaultColors: {
-            darkNodeTextColor,
-            darkNodeBorderColor,
-            lightNodeTextColor,
-            lightNodeBorderColor,
-          },
-        })
+        originalTopNodeColorsLookup[id]
 
-      const isSelectedNode = customId === selectedNode.customId
+      const isSelectedNode = id === selectedNode.data.id
+      const selectedNodeFromOriginalTree = originalTopNode
+        .descendants()
+        .filter((n: HierarchyRectangularNode<TreeMapInputData>) => {
+          return n.data.id === selectedNode.data.id
+        })
+        .pop()
 
       const xScaleFunction = scaleLinear()
         .range([0, width])
@@ -160,18 +187,18 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
           }}
           hasChildren={hasChildren}
           hideNumberOfChildren={hideNumberOfChildren}
-          id={customId}
+          id={id}
           isSelectedNode={isSelectedNode}
-          key={customId}
+          key={id}
           label={name}
           nodeTotalNodes={nodeTotalNodes}
-          onClick={!isSelectedNode ? () => zoomTo(customId) : undefined}
+          onClick={!isSelectedNode ? () => zoomTo(node.data.id) : undefined}
           onClickBack={
-            isSelectedNode && node.parent
-              ? () => zoomTo(node.parent.customId)
+            isSelectedNode && selectedNodeFromOriginalTree.parent
+              ? () => zoomTo(selectedNodeFromOriginalTree.parent.data.id)
               : undefined
           }
-          treemapId={id}
+          treemapId={treemapId}
           url={url}
           value={!hideValue && formattedValue}
           x0={x0}
@@ -188,24 +215,24 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     },
     [
       childrenPropInData,
-      colorModel,
-      customD3ColorScale,
-      darkNodeBorderColor,
-      darkNodeTextColor,
       height,
       hideNumberOfChildren,
       hideValue,
-      id,
-      lightNodeBorderColor,
-      lightNodeTextColor,
       linkPropInData,
       namePropInData,
       nodeClassName,
       nodeStyle,
       numberOfChildrenPlacement,
+      originalTopNode,
+      originalTopNodeColorsLookup,
       paddingInner,
-      selectedNode,
+      selectedNode.data.id,
+      selectedNode.x0,
+      selectedNode.x1,
+      selectedNode.y0,
+      selectedNode.y1,
       splitRegExp,
+      treemapId,
       valueFn,
       valueFormat,
       valuePropInData,
@@ -219,7 +246,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     let nodes: Array<React.ReactNode> = []
     const maxLevel = selectedNode.depth === 0 ? levelsToDisplay : 1
     const iterateAllChildren = (
-      mainNode: CustomHierarchyRectangularNode<TreeMapInputData>,
+      mainNode: HierarchyRectangularNode<TreeMapInputData>,
       level: number
     ) => {
       nodes = nodes.concat(renderNode(mainNode))
@@ -230,7 +257,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
           mainNode[childrenPropInData].length > 0
         ) {
           mainNode[childrenPropInData].forEach(
-            (element: CustomHierarchyRectangularNode<TreeMapInputData>) => {
+            (element: HierarchyRectangularNode<TreeMapInputData>) => {
               iterateAllChildren(element, level + 1)
             }
           )
@@ -252,9 +279,9 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
       <div className={className}>
         {disableBreadcrumb === false ? (
           <Breadcrumb
-            selectedNode={selectedNode}
+            originalTopNode={originalTopNode}
+            selectedNodeId={selectedNode.data.id}
             zoomTo={zoomTo}
-            initialBreadcrumbItem={{ text: data[namePropInData], key: 0 }}
             className={breadCrumbClassName}
             namePropInData={namePropInData}
           />

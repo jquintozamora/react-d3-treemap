@@ -2,20 +2,14 @@ import "./Breadcrumb.css"
 
 import * as React from "react"
 import classnames from "classnames"
-import { getTopParent } from "../TreeMap/helpers"
-import {
-  BaseTreeMapInPutData,
-  CustomHierarchyRectangularNode,
-} from "../TreeMap/TreeMap"
+import { BaseTreeMapInPutData } from "../TreeMap/types"
+import { HierarchyRectangularNode } from "d3-hierarchy"
 
 export interface BreadcrumbProps<TreeMapInputData> {
-  /**
-   * Collection of breadcrumbs to render
-   */
-  selectedNode: CustomHierarchyRectangularNode<TreeMapInputData>
+  originalTopNode: HierarchyRectangularNode<TreeMapInputData>
+  selectedNodeId: number
   className?: string
   zoomTo: (nodeId: number) => void
-  initialBreadcrumbItem: BreadcrumbItem
   namePropInData: string
 }
 
@@ -36,30 +30,32 @@ export interface BreadcrumbItem {
 
 export const Breadcrumb = <TreeMapInputData extends BaseTreeMapInPutData>({
   className,
-  selectedNode,
+  originalTopNode,
+  selectedNodeId,
   zoomTo,
-  initialBreadcrumbItem,
   namePropInData,
 }: BreadcrumbProps<TreeMapInputData>) => {
-  const items = getTopParent(selectedNode)
-    .path(selectedNode)
-    .map(
-      ({
-        data,
-        customId,
-      }: CustomHierarchyRectangularNode<TreeMapInputData>) => {
-        return {
-          text: data[namePropInData],
-          key: customId,
-          onClick:
-            customId !== selectedNode.customId
-              ? () => zoomTo(Number(customId))
-              : undefined,
-        }
-      }
-    )
+  const selectedNodeFromOriginalTree = originalTopNode
+    .descendants()
+    .filter((n: HierarchyRectangularNode<TreeMapInputData>) => {
+      return n.data.id === selectedNodeId
+    })
+    .pop()
 
-  const itemsFinal = items && items.length ? items : [initialBreadcrumbItem]
+  const items = originalTopNode
+    .path(selectedNodeFromOriginalTree)
+    .map(({ data }: HierarchyRectangularNode<TreeMapInputData>) => {
+      return {
+        text: data[namePropInData],
+        key: data.id,
+        onClick: data.id !== selectedNodeId ? () => zoomTo(data.id) : undefined,
+      }
+    })
+
+  const itemsFinal =
+    items && items.length
+      ? items
+      : [{ text: originalTopNode.data[namePropInData], key: 0 }]
 
   return (
     <div className={classnames("TreeMap__breadcrumb", className)}>

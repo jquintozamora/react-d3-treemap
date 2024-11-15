@@ -7,7 +7,7 @@ export enum NumberOfChildrenPlacement {
 }
 
 interface NumberOfChildrenProps {
-  customId: number
+  id: number
   width: number
   height: number
   textColor: string
@@ -20,7 +20,7 @@ interface NumberOfChildrenProps {
 }
 
 const NumberOfChildren: React.FunctionComponent<NumberOfChildrenProps> = ({
-  customId,
+  id,
   width,
   height,
   textColor,
@@ -53,7 +53,7 @@ const NumberOfChildren: React.FunctionComponent<NumberOfChildrenProps> = ({
         })`}
       >
         <rect
-          id={`rectNumberItems-${customId}`}
+          id={`rectNumberItems-${id}`}
           x={width - itemsWidth}
           y={0.5}
           width={itemsWidth}

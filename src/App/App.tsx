@@ -11,10 +11,12 @@ import { NumberOfChildrenPlacement } from "../components/Node"
 import { useMeasure } from "@react-hookz/web"
 
 export interface TreeMapInPutData {
+  id: number
   name: string
   value?: number
   children?: Array<TreeMapInPutData>
   className?: string
+  link?: string
 }
 
 const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
@@ -38,6 +40,7 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
             valueFn={(value: number) => {
               return `${value.toString()} pages`
             }}
+            // disableBreadcrumb={true}
             // tooltipOffsetY={25}
             // tooltipClassName="MyCustomTooltip"
             // tooltipPlacement="top"
@@ -52,13 +55,12 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
               paddingLeft: 5,
               paddingRight: 5,
             }}
+            // nodeStyle={{fill: "black", stroke: "white"}}
             numberOfChildrenPlacement={NumberOfChildrenPlacement.TopRight}
             customD3ColorScale={scaleSequential(chromatic.interpolateGreens)}
             // customD3ColorScale={scaleSequential(chromatic.interpolatePuBuGn)}
             colorModel={ColorModel.Value}
             // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
-            // nodeStyle={{fill: "black", stroke: "white"}}
-            // disableBreadcrumb={true}
             // hideNumberOfChildren={true}
             // hideValue={true}
             darkNodeBorderColor="white"
