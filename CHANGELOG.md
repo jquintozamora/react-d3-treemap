@@ -1,3 +1,7 @@
+## 2.0.2 (2024-11-15)
+
+- Fix text issue
+
 ## 2.0.1 (2024-11-15)
 
 - Migrate State Componets to Functional Components
