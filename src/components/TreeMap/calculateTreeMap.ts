@@ -10,6 +10,8 @@ interface TreeMapContext<TreeMapInputData> {
   height: number
   data: TreeMapInputData
   valuePropInData: string
+  paddingOuter: number
+  paddingInner: number
 }
 
 export const calculateTreeMap = <TreeMapInputData>({
@@ -17,11 +19,15 @@ export const calculateTreeMap = <TreeMapInputData>({
   height,
   data,
   valuePropInData,
+  paddingOuter,
+  paddingInner,
 }: TreeMapContext<TreeMapInputData>): HierarchyRectangularNode<TreeMapInputData> =>
   treemap<TreeMapInputData>()
     .tile(treemapSquarify.ratio(1))
     .size([width, height])
     .round(true)
+    .paddingOuter(paddingOuter)
+    .paddingInner(paddingInner)
     .paddingTop(19)(
     hierarchy(data)
       .sum((s) => s[valuePropInData])

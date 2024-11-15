@@ -38,7 +38,7 @@ export interface NodeProps {
   value: string
   xScaleFunction?: ScaleLinear<number, number>
   yScaleFunction?: ScaleLinear<number, number>
-  paddingInner: number
+  // paddingInner: number
   splitRegExp?: RegExp
 }
 
@@ -67,9 +67,10 @@ const Node: React.FunctionComponent<NodeProps> = ({
   yScaleFunction,
   style,
   numberOfChildrenPlacement,
-  paddingInner,
   splitRegExp,
 }) => {
+  // legacy padding inner, when we had issue with zoom
+  const paddingInner = 0
   const currentXTranslated = Math.max(0, xScaleFunction(x0) + paddingInner)
   const currentYTranslated = Math.max(0, yScaleFunction(y0) + paddingInner)
   const currentWidth = Math.max(
