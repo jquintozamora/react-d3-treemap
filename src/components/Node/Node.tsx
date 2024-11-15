@@ -78,15 +78,15 @@ const Node: React.FunctionComponent<NodeProps> = ({
   )
   const showNumberOfItems = !hideNumberOfChildren && hasChildren
 
-  const nodePaddingLeft = !Number.isNaN(style.paddingLeft)
-    ? Number(style.paddingLeft)
-    : 0
-  const nodePaddingTop = !Number.isNaN(style.paddingTop)
+  const nodePaddingTop = !isNaN(style.paddingTop as number)
     ? Number(style.paddingTop)
-    : 0
-  const nodePaddingRight = !Number.isNaN(style.paddingRight)
+    : 2
+  const nodePaddingLeft = !isNaN(style.paddingLeft as number)
+    ? Number(style.paddingLeft)
+    : 5
+  const nodePaddingRight = !isNaN(style.paddingRight as number)
     ? Number(style.paddingRight)
-    : 4
+    : 5
   const paddedCurrentWidth = currentWidth - nodePaddingLeft - nodePaddingRight
   const clipWidth = Math.max(
     0,

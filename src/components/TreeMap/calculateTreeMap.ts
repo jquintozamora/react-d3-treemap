@@ -28,7 +28,7 @@ export const calculateTreeMap = <TreeMapInputData>({
     .round(true)
     .paddingOuter(paddingOuter)
     .paddingInner(paddingInner)
-    .paddingTop(19)(
+    .paddingTop(22)(
     hierarchy(data)
       .sum((s) => s[valuePropInData])
       .sort((a, b) => b[valuePropInData] - a[valuePropInData])
