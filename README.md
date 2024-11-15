@@ -40,10 +40,12 @@ import "react-d3-treemap/dist/react.d3.treemap.css"
 
 ```ts
 interface TreeMapInPutData {
-  name: string;
-  value?: number;
-  children?: Array<TreeMapInPutData>;
-  className?: string;
+  id: number
+  name: string
+  value?: number
+  children?: Array<TreeMapInPutData>
+  className?: string
+  link?: string
 }
 
 <TreeMap<TreeMapInPutData>
@@ -77,12 +79,14 @@ interface TreeMapInPutData {
    * TreeMap data. Normally should have at least name, value and children.
    *
    * Example:
-   *  interface TreeMapInPutData {
-   *      name: string;
-   *      value?: number;
-   *      children?: Array<TreeMapInPutData>;
-   *      className?: string;
-   *  }
+   * interface TreeMapInPutData {
+   *   id: number
+   *   name: string
+   *   value?: number
+   *   children?: Array<TreeMapInPutData>
+   *   className?: string
+   *   link?: string
+   * }
    */
   data: TreeMapInputData;
 
