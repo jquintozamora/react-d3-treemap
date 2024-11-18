@@ -28,7 +28,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     linkPropInData = "link",
     valuePropInData = "value", // can be value, count, ...
     childrenPropInData = "children",
-    numberOfChildrenPlacement = NumberOfChildrenPlacement.BottomRight,
+    numberOfChildrenPlacement = NumberOfChildrenPlacement.None,
     darkNodeTextColor = "white",
     darkNodeBorderColor = "white",
     lightNodeTextColor = "black",
@@ -45,7 +45,6 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     tooltipClassName,
     valueFn,
     splitRegExp,
-    hideNumberOfChildren,
     hideValue,
     nodeClassName,
     nodeStyle,
@@ -53,6 +52,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     valueUnit,
     paddingOuter = 1,
     paddingInner = 1,
+    onNodeClick,
   } = props
 
   const originalTopNode = React.useMemo<
@@ -141,6 +141,16 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     ]
   )
 
+  const handleNodeClick = React.useCallback(
+    (node: HierarchyRectangularNode<TreeMapInputData>) =>
+      onNodeClick
+        ? () => {
+            onNodeClick(node)
+          }
+        : undefined,
+    [onNodeClick]
+  )
+
   const renderNode = React.useCallback(
     (node: HierarchyRectangularNode<TreeMapInputData>) => {
       const { data, x0, x1, y0, y1 } = node
@@ -192,13 +202,17 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
             ...nodeStyle,
           }}
           hasChildren={hasChildren}
-          hideNumberOfChildren={hideNumberOfChildren}
           id={id}
           isSelectedNode={isSelectedNode}
           key={id}
           label={name}
           nodeTotalNodes={nodeTotalNodes}
-          onClick={!isSelectedNode ? () => zoomTo(node.data.id) : undefined}
+          onClick={handleNodeClick(node)}
+          onClickDrillDown={
+            !isSelectedNode && hasChildren
+              ? () => zoomTo(node.data.id)
+              : undefined
+          }
           onClickBack={
             isSelectedNode && selectedNodeFromOriginalTree.parent
               ? () => zoomTo(selectedNodeFromOriginalTree.parent.data.id)
@@ -218,7 +232,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
     },
     [
       childrenPropInData,
-      hideNumberOfChildren,
+      handleNodeClick,
       hideValue,
       linkPropInData,
       namePropInData,

@@ -119,11 +119,6 @@ interface TreeMapInPutData {
   colorModel?: ColorModel;
 
   /**
-   * Don't show the top right corner box indicating number of children
-   */
-  hideNumberOfChildren?: boolean;
-
-  /**
    * Don't show the value
    */
   hideValue?: boolean;

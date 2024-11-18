@@ -23,12 +23,12 @@ export interface NodeProps {
   textColor: string
   className?: string
   hasChildren: boolean
-  hideNumberOfChildren?: boolean
   id: number
   isSelectedNode: boolean
   label: string
   nodeTotalNodes: number
   numberOfChildrenPlacement: NumberOfChildrenPlacement
+  onClickDrillDown?: (ev?: React.MouseEvent<SVGElement>) => void
   onClick?: (ev?: React.MouseEvent<SVGElement>) => void
   onClickBack?: (ev?: React.MouseEvent<SVGElement>) => void
   style?: React.CSSProperties
@@ -44,13 +44,13 @@ const Node: React.FunctionComponent<NodeProps> = ({
   textColorBorderColorBg,
   className,
   hasChildren,
-  hideNumberOfChildren,
   id,
   isSelectedNode,
   label,
   nodeTotalNodes,
   onClick,
   onClickBack,
+  onClickDrillDown,
   textColor,
   treemapId,
   url,
@@ -68,15 +68,14 @@ const Node: React.FunctionComponent<NodeProps> = ({
   const currentWidth = Math.max(0, x1 - x0)
   const currentHeight = Math.max(0, y1 - y0)
 
-  const cursor =
-    hasChildren === true && isSelectedNode === false ? "pointer" : "auto"
-
   const fontSize = Number(style.fontSize)
   const itemsWidth = getNumberItemsWidthByNumberOfChars(
     fontSize,
     nodeTotalNodes.toString().length
   )
-  const showNumberOfItems = !hideNumberOfChildren && hasChildren
+  const showNumberOfItems =
+    !(numberOfChildrenPlacement === NumberOfChildrenPlacement.None) &&
+    hasChildren
 
   const nodePaddingTop = !isNaN(style.paddingTop as number)
     ? Number(style.paddingTop)
@@ -109,7 +108,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
     hideTooltip()
   }, [hideTooltip])
 
-  const backButtonWidth = onClickBack ? 20 : 0
+  const extraPadding = onClickBack || onClickDrillDown ? 20 : 0
 
   return (
     <g
@@ -118,8 +117,8 @@ const Node: React.FunctionComponent<NodeProps> = ({
       onMouseMove={disableTooltip ? undefined : handleMouseMove}
       transform={`translate(${currentXTranslated},${currentYTranslated})`}
       id={`${id}`}
-      onClick={hasChildren ? onClick : null}
-      style={{ cursor }}
+      onClick={onClick}
+      style={{ cursor: onClick ? "pointer" : "auto" }}
     >
       <rect
         id={`rect-${id}`}
@@ -143,6 +142,29 @@ const Node: React.FunctionComponent<NodeProps> = ({
             fill={textColor}
             d="M26.105,21.891c-0.229,0-0.439-0.131-0.529-0.346l0,0c-0.066-0.156-1.716-3.857-7.885-4.59   c-1.285-0.156-2.824-0.236-4.693-0.25v4.613c0,0.213-0.115,0.406-0.304,0.508c-0.188,0.098-0.413,0.084-0.588-0.033L0.254,13.815   C0.094,13.708,0,13.528,0,13.339c0-0.191,0.094-0.365,0.254-0.477l11.857-7.979c0.175-0.121,0.398-0.129,0.588-0.029   c0.19,0.102,0.303,0.295,0.303,0.502v4.293c2.578,0.336,13.674,2.33,13.674,11.674c0,0.271-0.191,0.508-0.459,0.562   C26.18,21.891,26.141,21.891,26.105,21.891z"
           />
+          <path fill="transparent" d="M0 0h32v32H0z" />
+        </g>
+      ) : null}
+      {onClickDrillDown ? (
+        <g
+          style={{ cursor: "pointer" }}
+          onClick={onClickDrillDown}
+          transform={`translate(${nodePaddingLeft},${nodePaddingTop}) scale(0.55)`}
+        >
+          <rect />
+          <path
+            fill={textColor}
+            d="m10 6 1.4-1.4L15 8.2V0h2v8.2l3.6-3.6L22 6l-6 6-6-6z"
+          />
+          <path
+            fill={textColor}
+            d="M22 16a6 6 0 0 0-1.8-4.2L16 16l-4.2-4.2A6 6 0 1 0 22 16Z"
+          />
+          <path
+            fill={textColor}
+            d="M30 16a14 14 0 0 0-4.1-9.9l-1.4 1.4a12 12 0 1 1-17 0L6.1 6.1A14 14 0 1 0 30 16Z"
+          />
+          <path fill="transparent" d="M0 0h32v32H0z" />
         </g>
       ) : null}
       <clipPath id={`clip-${treemapId}-${id}`}>
@@ -158,7 +180,7 @@ const Node: React.FunctionComponent<NodeProps> = ({
           clipPath={`url(#clip-${treemapId}-${id})`}
           fill={textColor}
           transform={`translate(${
-            nodePaddingLeft + backButtonWidth
+            nodePaddingLeft + extraPadding
           },${nodePaddingTop})`}
           style={{
             fontVariant: style.fontVariant,

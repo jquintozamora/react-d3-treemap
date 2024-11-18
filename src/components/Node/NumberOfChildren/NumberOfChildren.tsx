@@ -2,6 +2,10 @@ import * as React from "react"
 import { getNumberItemsWidthByNumberOfChars } from "../helpers"
 
 export enum NumberOfChildrenPlacement {
+  /**
+   * Don't show the top right corner box indicating number of children
+   */
+  None,
   TopRight,
   BottomRight,
 }

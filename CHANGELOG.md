@@ -1,3 +1,7 @@
+## 2.0.6 (2024-11-18)
+
+- Add `onNodeClick` event
+
 ## 2.0.5 (2024-11-17)
 
 - Update npm ignore file

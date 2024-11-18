@@ -40,6 +40,8 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
             valueFn={(value: number) => {
               return `${value.toString()} pages`
             }}
+            // levelsToDisplay={3}
+            onNodeClick={(node) => console.log("clicked", node)}
             // disableBreadcrumb={true}
             // tooltipOffsetY={25}
             // tooltipClassName="MyCustomTooltip"
@@ -57,12 +59,11 @@ const App: React.FunctionComponent<{ data?: TreeMapInPutData }> = ({
             //   paddingRight: 5,
             // }}
             // nodeStyle={{fill: "black", stroke: "white"}}
-            numberOfChildrenPlacement={NumberOfChildrenPlacement.TopRight}
+            numberOfChildrenPlacement={NumberOfChildrenPlacement.None}
             customD3ColorScale={scaleSequential(chromatic.interpolateGreens)}
             // customD3ColorScale={scaleSequential(chromatic.interpolatePuBuGn)}
             colorModel={ColorModel.Value}
             // svgStyle={{fontFamily: "'Courier New', Courier, monospace"}}
-            // hideNumberOfChildren={true}
             // hideValue={true}
             darkNodeBorderColor="white"
             lightNodeBorderColor="black"
