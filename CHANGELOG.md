@@ -1,3 +1,7 @@
+## 2.0.4 (2024-11-17)
+
+- Add npm ignore file
+
 ## 2.0.3 (2024-11-17)
 
 - Package.json updates
