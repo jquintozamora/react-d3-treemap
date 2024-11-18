@@ -9,3 +9,6 @@ tsconfig.json
 webpack/common-paths.ts
 webpack/webpack.config.dev.ts
 webpack/webpack.config.prod.ts
+.cache/
+coverage/
+public/

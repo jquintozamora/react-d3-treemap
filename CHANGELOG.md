@@ -1,3 +1,7 @@
+## 2.0.5 (2024-11-17)
+
+- Update npm ignore file
+
 ## 2.0.4 (2024-11-17)
 
 - Add npm ignore file
