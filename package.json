@@ -1,6 +1,6 @@
 {
   "name": "react-d3-treemap",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Integrating D3 Treemap with React",
   "main": "dist/react.d3.treemap.js",
   "types": "dist/indexPackage.d.ts",
