@@ -7,7 +7,7 @@ and [React](https://facebook.github.io/react) based on [Mike Bostock´s Treemap]
 [![Code Climate](https://codeclimate.com/github/jquintozamora/react-d3-treemap/badges/gpa.svg)](https://codeclimate.com/github/jquintozamora/react-d3-treemap)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](Readme.md#want-to-contribute)
 
-![React-d3-treemap-gif](./assets/treeMap.1.0.26.gif)
+![React-d3-treemap-gif](./assets/treeMap.2.0.2.gif)
 
 ## DEMO
 
