@@ -1,3 +1,8 @@
+## 2.0.3 (2024-11-17)
+
+- Package.json updates
+- Gif update
+
 ## 2.0.2 (2024-11-15)
 
 - Fix text issue
