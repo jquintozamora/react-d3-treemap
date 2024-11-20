@@ -85,4 +85,4 @@ export const TooltipContainer = ({
   )
 }
 
-export default TooltipContainer
+export default React.memo<TooltipContainerProps>(TooltipContainer)
