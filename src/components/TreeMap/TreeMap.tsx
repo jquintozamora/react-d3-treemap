@@ -220,7 +220,7 @@ const TreeMap = <TreeMapInputData extends BaseTreeMapInPutData>(
           }
           treemapId={treemapId}
           url={url}
-          value={!hideValue && formattedValue}
+          value={hideValue ? "" : formattedValue}
           x0={x0}
           x1={x1}
           y0={y0}
